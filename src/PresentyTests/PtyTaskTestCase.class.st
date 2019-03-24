@@ -34,6 +34,42 @@ PtyTaskTestCase >> taskClass [
 ]
 
 { #category : #tests }
+PtyTaskTestCase >> testBecomeDefferedTask [
+
+	| executionStrategy |
+	executionStrategy := task beDeferred.
+
+	task executionStrategy should be: executionStrategy.
+	executionStrategy should beInstanceOf: PtyDeferredTaskExecution
+]
+
+{ #category : #tests }
+PtyTaskTestCase >> testBecomeImmediateTask [
+
+	| executionStrategy |
+	executionStrategy := task beImmediate.
+
+	task executionStrategy should be: executionStrategy.
+	executionStrategy should beInstanceOf: PtyImmediateTaskExecution
+]
+
+{ #category : #tests }
+PtyTaskTestCase >> testBecomeOneShotTask [
+
+	| executionStrategy |
+	executionStrategy := task beOneShot.
+
+	task executionStrategy should be: executionStrategy.
+	executionStrategy should beInstanceOf: PtyOneShotTaskExecution
+]
+
+{ #category : #tests }
+PtyTaskTestCase >> testHasDefaultExecutionStrategy [
+
+	task executionStrategy should equals: task defaultExecutionStrategy
+]
+
+{ #category : #tests }
 PtyTaskTestCase >> testKindOfSameTask [
 
 	| actual |

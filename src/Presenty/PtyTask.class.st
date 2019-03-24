@@ -6,9 +6,9 @@ Class {
 		'user',
 		'name',
 		'announcer',
-		'activationStrategy',
 		'prototype',
-		'context'
+		'context',
+		'executionStrategy'
 	],
 	#category : #'Presenty-Core'
 }
@@ -26,12 +26,12 @@ PtyTask >> activationRequest [
 
 { #category : #accessing }
 PtyTask >> activationStrategy [
-	^ activationStrategy
+	^ executionStrategy
 ]
 
 { #category : #accessing }
 PtyTask >> activationStrategy: anObject [
-	activationStrategy := anObject
+	executionStrategy := anObject
 ]
 
 { #category : #testing }
@@ -79,6 +79,24 @@ PtyTask >> asUserAction [
 { #category : #accessing }
 PtyTask >> basePrototypeContexts [
 	^{PtyTaskPrototypeContext of: self}
+]
+
+{ #category : #'initialize-release' }
+PtyTask >> beDeferred [
+
+	^executionStrategy := PtyDeferredTaskExecution new
+]
+
+{ #category : #'initialize-release' }
+PtyTask >> beImmediate [
+
+	^executionStrategy := PtyImmediateTaskExecution new
+]
+
+{ #category : #'initialize-release' }
+PtyTask >> beOneShot [
+
+	^executionStrategy := PtyOneShotTaskExecution new
 ]
 
 { #category : #execution }
@@ -131,6 +149,11 @@ PtyTask >> defaultActivationStrategy [
 		yourself 
 ]
 
+{ #category : #'initialize-release' }
+PtyTask >> defaultExecutionStrategy [
+	^PtyOneShotTaskExecution new
+]
+
 { #category : #accessing }
 PtyTask >> defaultPrototypeContextName [
 	^self class name
@@ -138,12 +161,12 @@ PtyTask >> defaultPrototypeContextName [
 
 { #category : #accessing }
 PtyTask >> executionStrategy [
-	^ activationStrategy
+	^ executionStrategy
 ]
 
 { #category : #accessing }
 PtyTask >> executionStrategy: aTaskExecutionStrategy [
-	activationStrategy := aTaskExecutionStrategy
+	executionStrategy := aTaskExecutionStrategy
 ]
 
 { #category : #accessing }
@@ -191,13 +214,13 @@ PtyTask >> initialize [
 	super initialize.
 	
 	announcer := Announcer new.
-	activationStrategy := self defaultActivationStrategy
+	executionStrategy := self defaultExecutionStrategy
 ]
 
 { #category : #testing }
 PtyTask >> isChildrenShouldRestoreParentArea [
 
-	activationStrategy shouldRestoreParentArea ifFalse: [^false].
+	executionStrategy shouldRestoreParentArea ifFalse: [^false].
 	
 	context ifNil: [^true].
 	
@@ -277,7 +300,7 @@ PtyTask >> performExtraRequestBy: aGuide [
 PtyTask >> populateSettingsMenu: aMenu for: aPrototype [ 
 
 	| activations subMenu |
-	activations := PtyTaskActivationStrategy allSubclasses copyWithout: activationStrategy class.
+	activations := PtyTaskActivationStrategy allSubclasses copyWithout: executionStrategy class.
 	activations ifEmpty: [ ^ self ].
 	
 	subMenu := MenuMorph new defaultTarget: self.
@@ -288,9 +311,9 @@ PtyTask >> populateSettingsMenu: aMenu for: aPrototype [
 				target: (aPrototype proxyForSample: self)
 				selector: #useTaskActivationOf:
 				argumentList: {each} ].
-	aMenu add: 'replace ' , activationStrategy class name , ' with:' subMenu: subMenu.
+	aMenu add: 'replace ' , executionStrategy class name , ' with:' subMenu: subMenu.
 	
-	activationStrategy populateSettingsMenu: aMenu for: aPrototype
+	executionStrategy populateSettingsMenu: aMenu for: aPrototype
 ]
 
 { #category : #controlling }
@@ -301,7 +324,7 @@ PtyTask >> prepareActivationBy: aGuide [
 	user := aGuide user.
 	context := aGuide context.
 	
-	newActivation := activationStrategy createCopy.
+	newActivation := executionStrategy createCopy.
 	newActivation 
 		guide: aGuide;
 		parent: context activation.

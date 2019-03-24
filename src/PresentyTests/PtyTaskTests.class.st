@@ -252,6 +252,12 @@ PtyTaskTests >> testHasAnnouncerByDefault [
 ]
 
 { #category : #tests }
+PtyTaskTests >> testIsOneShotByDefault [
+
+	task executionStrategy should beInstanceOf: PtyOneShotTaskExecution 
+]
+
+{ #category : #tests }
 PtyTaskTests >> testNotCreatedByRequestFromParentWhenItAbsent [
 	
 	task context: nil.
