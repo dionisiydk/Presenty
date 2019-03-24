@@ -15,12 +15,40 @@ PtyInteractionScenariosTest >> setUp [
 ]
 
 { #category : #tests }
-PtyInteractionScenariosTest >> testSingleTask [ 
+PtyInteractionScenariosTest >> testSingleDeferredTask [ 
 
-	| task |
-	task := [ #result ] asTask.
+	| task result |
+	task := [ result := #done ] asTask.
+	task activationStrategy: PtyDeferredTaskActivationStrategy new.
 	
 	workspace addTask: task.
 	
-	workspace activeTasks should equal: { task }
+	workspace activeTasks should equal: { task }.
+	result should be: nil
+]
+
+{ #category : #tests }
+PtyInteractionScenariosTest >> testSingleImmediateTask [ 
+
+	| task result |
+	task := [ result := #done ] asTask.
+	task activationStrategy: PtyImmediateTaskActivationStrategy new.
+	
+	workspace addTask: task.
+	
+	workspace activeTasks should equal: { task }.
+	result should be: #done
+]
+
+{ #category : #tests }
+PtyInteractionScenariosTest >> testSingleOneShotTask [ 
+
+	| task result |
+	task := [ result := #done ] asTask.
+	task activationStrategy: PtyOneShotTaskActivationStrategy new.
+	
+	workspace addTask: task.
+	
+	workspace activeTasks should be isEmpty.
+	result should be: #done
 ]
