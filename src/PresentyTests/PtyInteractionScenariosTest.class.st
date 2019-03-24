@@ -15,7 +15,7 @@ PtyInteractionScenariosTest >> setUp [
 ]
 
 { #category : #tests }
-PtyInteractionScenariosTest >> testAddSingleDeferredTask [ 
+PtyInteractionScenariosTest >> testAddDeferredTask [ 
 
 	| task result |
 	task := [ result := #done ] asTask.
@@ -28,7 +28,7 @@ PtyInteractionScenariosTest >> testAddSingleDeferredTask [
 ]
 
 { #category : #tests }
-PtyInteractionScenariosTest >> testAddSingleImmediateTask [ 
+PtyInteractionScenariosTest >> testAddImmediateTask [ 
 
 	| task result |
 	task := [ result := #done ] asTask.
@@ -41,7 +41,7 @@ PtyInteractionScenariosTest >> testAddSingleImmediateTask [
 ]
 
 { #category : #tests }
-PtyInteractionScenariosTest >> testAddSingleOneShotTask [ 
+PtyInteractionScenariosTest >> testAddOneShotTask [ 
 
 	| task result |
 	task := [ result := #done ] asTask.
@@ -63,6 +63,50 @@ PtyInteractionScenariosTest >> testExecutionDeferredTaskFromWorkspace [
 	 
 	workspace resumeExecutionOf: task.
 	result should be: #done
+]
+
+{ #category : #tests }
+PtyInteractionScenariosTest >> testForkTask [ 
+	| task result requestedTask forkedTask executions |
+	requestedTask := [ #requestedResult ] asTask.
+	requestedTask beDeferred.
+	forkedTask := [ result := workspace requestUserFor: requestedTask ] asTask.
+	forkedTask beForked.
+	executions := 0.
+	task := [ workspace addTask: forkedTask. executions := executions + 1 ] asTask.
+	task beImmediate.
+	
+	workspace addTask: task.
+	result should be: nil.
+	executions should be: 1.
+	workspace activeTasks should equal: { task. forkedTask. requestedTask }.
+	
+	workspace resumeExecutionOf: requestedTask.
+	result should be: #requestedResult.
+	executions should be: 1.
+	workspace activeTasks should equal: { task. forkedTask. requestedTask }.
+]
+
+{ #category : #tests }
+PtyInteractionScenariosTest >> testForkTaskWithModalUserRequest [
+	| task result requestedTask forkedTask executions |
+	requestedTask := [ #requestedResult ] asTask.
+	requestedTask beDeferred beModal.
+	forkedTask := [ result := workspace requestUserFor: requestedTask ] asTask.
+	forkedTask beForked.
+	executions := 0.
+	task := [ workspace addTask: forkedTask. executions := executions + 1 ] asTask.
+	task beImmediate.
+	
+	workspace addTask: task.
+	result should be: nil.
+	executions should be: 1.
+	workspace activeTasks should equal: { task. requestedTask }.
+	
+	workspace resumeExecutionOf: requestedTask.
+	result should be: #requestedResult.
+	executions should be: 1.
+	workspace activeTasks should equal: { task. forkedTask }.
 ]
 
 { #category : #tests }
