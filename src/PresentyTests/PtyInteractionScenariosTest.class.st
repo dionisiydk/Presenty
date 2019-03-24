@@ -223,6 +223,28 @@ PtyInteractionScenariosTest >> testRequestUserForModalTask [
 ]
 
 { #category : #tests }
+PtyInteractionScenariosTest >> testRequestUserForModalTaskFromAnotherImmediateTask [ 
+	| task result requestedTask childTask executions |
+	requestedTask := [ #requestedResult ] asTask.
+	requestedTask beDeferred beModal.
+	childTask := [ result := workspace requestUserFor: requestedTask ] asTask.
+	childTask beImmediate.
+	executions := 0.
+	task := [ workspace addTask: childTask. executions := executions + 1 ] asTask.
+	task beImmediate.
+	
+	workspace addTask: task.
+	result should be: nil.
+	executions should be: 0.
+	workspace activeTasks should equal: { requestedTask }.
+	
+	workspace resumeExecutionOf: requestedTask.
+	result should be: #requestedResult.
+	executions should be: 1.
+	workspace activeTasks should equal: { task. childTask }.
+]
+
+{ #category : #tests }
 PtyInteractionScenariosTest >> testRequestUserForOneShotTask [ 
 	| task result requestedTask done requestedResult |
 	requestedResult := #requestedResult.
