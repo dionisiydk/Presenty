@@ -110,6 +110,36 @@ PtyInteractionScenariosTest >> testForkTaskWithModalUserRequest [
 ]
 
 { #category : #tests }
+PtyInteractionScenariosTest >> testForkTwoTasksWithModalRequests [
+	| task result requestedTask forkedTask done requestedTask2 result2 forkedTask2 |
+	requestedTask := [ #requestedResult ] asTask.
+	requestedTask beDeferred beModal.
+	forkedTask := [ result := workspace requestUserFor: requestedTask ] asTask.
+	forkedTask beForked.
+	requestedTask2 := [ #requestedResult2 ] asTask.
+	requestedTask2 beDeferred beModal.
+	forkedTask2 := [ result2 := workspace requestUserFor: requestedTask2 ] asTask.
+	forkedTask2 beForked.
+	
+	task := [ workspace addTask: forkedTask; addTask: forkedTask2. done := true ] asTask.
+	task beImmediate.
+	
+	workspace addTask: task.
+	done should be: true.
+	result should be: nil.
+	result2 should be: nil.
+	workspace activeTasks should equal: { task. requestedTask. requestedTask2 }.
+	
+	workspace resumeExecutionOf: requestedTask.
+	result should be: #requestedResult.
+	workspace activeTasks should equal: { task. forkedTask. requestedTask2 }.
+	
+	workspace resumeExecutionOf: requestedTask2.
+	result2 should be: #requestedResult2.
+	workspace activeTasks should equal: { task. forkedTask. forkedTask2 }.
+]
+
+{ #category : #tests }
 PtyInteractionScenariosTest >> testRequestUserForDeferredTask [ 
 	| task result requestedTask done |
 	requestedTask := [ #requestedResult ] asTask.
