@@ -88,6 +88,27 @@ PtyInteractionScenariosTest >> testForkTask [
 ]
 
 { #category : #tests }
+PtyInteractionScenariosTest >> testForkTaskWithModalRequestFromAnotherForkedTask [
+	| task result requestedTask forkedTask forkedTask2 |
+	requestedTask := [ #requestedResult ] asTask.
+	requestedTask beDeferred beModal.
+	forkedTask := [ result := workspace requestUserFor: requestedTask ] asTask.
+	forkedTask beForked.
+	forkedTask2 := [ workspace addTask: forkedTask ] asTask.
+	forkedTask2 beForked.
+	task := [ workspace addTask: forkedTask2 ] asTask.
+	task beImmediate.
+	
+	workspace addTask: task.
+	result should be: nil.
+	workspace activeTasks should equal: { task. forkedTask2. requestedTask }.
+	
+	workspace resumeExecutionOf: requestedTask.
+	result should be: #requestedResult.
+	workspace activeTasks should equal: { task. forkedTask2. forkedTask }.
+]
+
+{ #category : #tests }
 PtyInteractionScenariosTest >> testForkTaskWithModalUserRequest [
 	| task result requestedTask forkedTask executions |
 	requestedTask := [ #requestedResult ] asTask.
