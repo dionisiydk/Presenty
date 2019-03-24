@@ -137,6 +137,16 @@ PtyTask >> defaultPrototypeContextName [
 ]
 
 { #category : #accessing }
+PtyTask >> executionStrategy [
+	^ activationStrategy
+]
+
+{ #category : #accessing }
+PtyTask >> executionStrategy: aTaskExecutionStrategy [
+	activationStrategy := aTaskExecutionStrategy
+]
+
+{ #category : #accessing }
 PtyTask >> findCommonParentWith: aTask [
 
 	| commonParent |

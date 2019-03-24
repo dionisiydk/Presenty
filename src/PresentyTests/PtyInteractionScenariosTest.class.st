@@ -15,11 +15,23 @@ PtyInteractionScenariosTest >> setUp [
 ]
 
 { #category : #tests }
+PtyInteractionScenariosTest >> testExecutionDeferredTaskFromWorkspace [ 
+
+	| task result |
+	task := [ result := #done ] asTask.
+	task executionStrategy: PtyDeferredTaskExecution new.
+	workspace addTask: task.
+	 
+	workspace activeTasks last resumeExecution.	 
+	result should be: #done
+]
+
+{ #category : #tests }
 PtyInteractionScenariosTest >> testSingleDeferredTask [ 
 
 	| task result |
 	task := [ result := #done ] asTask.
-	task activationStrategy: PtyDeferredTaskActivationStrategy new.
+	task executionStrategy: PtyDeferredTaskExecution new.
 	
 	workspace addTask: task.
 	
@@ -32,7 +44,7 @@ PtyInteractionScenariosTest >> testSingleImmediateTask [
 
 	| task result |
 	task := [ result := #done ] asTask.
-	task activationStrategy: PtyImmediateTaskActivationStrategy new.
+	task executionStrategy: PtyImmediateTaskExecution new.
 	
 	workspace addTask: task.
 	
@@ -45,7 +57,7 @@ PtyInteractionScenariosTest >> testSingleOneShotTask [
 
 	| task result |
 	task := [ result := #done ] asTask.
-	task activationStrategy: PtyOneShotTaskActivationStrategy new.
+	task executionStrategy: PtyOneShotTaskExecution new.
 	
 	workspace addTask: task.
 	
