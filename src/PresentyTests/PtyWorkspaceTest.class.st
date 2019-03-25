@@ -1,18 +1,8 @@
 Class {
 	#name : #PtyWorkspaceTest,
-	#superclass : #TestCase,
-	#instVars : [
-		'workspace'
-	],
+	#superclass : #PtyWorkspaceTestCase,
 	#category : #'PresentyTests-NewCore'
 }
-
-{ #category : #running }
-PtyWorkspaceTest >> setUp [
-	super setUp.
-	
-	workspace := PtyWorkspace new.
-]
 
 { #category : #tests }
 PtyWorkspaceTest >> testHasNoActiveTasksByDefault [

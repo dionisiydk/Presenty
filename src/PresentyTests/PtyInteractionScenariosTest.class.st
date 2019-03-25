@@ -1,18 +1,8 @@
 Class {
 	#name : #PtyInteractionScenariosTest,
-	#superclass : #TestCase,
-	#instVars : [
-		'workspace'
-	],
+	#superclass : #PtyWorkspaceTestCase,
 	#category : #'PresentyTests-NewCore'
 }
-
-{ #category : #running }
-PtyInteractionScenariosTest >> setUp [
-	super setUp.
-	
-	workspace := PtyWorkspace new.
-]
 
 { #category : #tests }
 PtyInteractionScenariosTest >> testAddDeferredTask [ 
