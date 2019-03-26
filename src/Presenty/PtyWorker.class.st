@@ -2,8 +2,9 @@ Class {
 	#name : #PtyWorker,
 	#superclass : #Object,
 	#instVars : [
-		'process',
-		'workspace'
+		'workspace',
+		'executionPriority',
+		'process'
 	],
 	#category : #'Presenty-NewCore'
 }
@@ -30,6 +31,16 @@ PtyWorker >> executeTask: aTask [
 ]
 
 { #category : #accessing }
+PtyWorker >> executionPriority [
+	^ executionPriority ifNil: [ workspace defaultTaskExecutionPriority ]
+]
+
+{ #category : #accessing }
+PtyWorker >> executionPriority: anObject [
+	executionPriority := anObject
+]
+
+{ #category : #accessing }
 PtyWorker >> process [
 	^ process
 ]
@@ -43,7 +54,7 @@ PtyWorker >> process: anObject [
 PtyWorker >> runTask: aTask [
 	process := [ self executeTask: aTask ] newProcess.
 	process name: 'Execution process of ', aTask printString.
-	process priority: Processor userSchedulingPriority + 1.
+	process priority: self executionPriority.
 	process resume
 ]
 

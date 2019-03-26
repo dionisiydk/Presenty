@@ -11,7 +11,9 @@ Class {
 PtyWorkerTest >> setUp [ 
 	super setUp.
 	
-	worker := PtyWorker at: workspace
+	workspace := Mock new.
+	worker := PtyWorker at: workspace.
+	worker executionPriority: Processor activePriority + 1.
 ]
 
 { #category : #tests }
@@ -60,19 +62,41 @@ PtyWorkerTest >> testExecutionTaskWhenUserRequestSignalled [
 ]
 
 { #category : #tests }
-PtyWorkerTest >> testRunningTask [
+PtyWorkerTest >> testRunTaskInBackgroundProcess [
 
-	[:task |
+	| task |
+	task := Mock new.
 		
-		[worker runTask: task. 50 milliSeconds asDelay wait]
-			should strictly satisfy: 
-		[task printString willReturn: 'test task'; useArbitrarily.
-		(workspace requestUserFor: task) 
-			shouldBeSentInAnotherProcess;
-			will: [worker process should be: Processor activeProcess].
-		workspace waitUserAction].
+	worker runTask: task.
+	
+	(workspace should receive requestUserFor: task) inAnotherProcess
+]
 
-	] runWithMocks 
+{ #category : #tests }
+PtyWorkerTest >> testRunTaskInBackgroundProcessWithDefaultWorkspacePriorityWhenNotSpecified [
+
+	| task |
+	task := Mock new.
+	
+	worker executionPriority: nil.
+	workspace stub defaultTaskExecutionPriority willReturn: Processor activePriority + 3.
+	worker runTask: task.
+	
+	(workspace should receive requestUserFor: task) 
+		inProcessWhich priority should equal: workspace defaultTaskExecutionPriority
+]
+
+{ #category : #tests }
+PtyWorkerTest >> testRunTaskInBackgroundProcessWithSpecifiedPriority [
+
+	| task |
+	task := Mock new.
+	
+	worker executionPriority: Processor activePriority + 2.
+	worker runTask: task.
+	
+	(workspace should receive requestUserFor: task) 
+		inProcessWhich priority should equal: worker executionPriority
 ]
 
 { #category : #tests }
