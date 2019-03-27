@@ -210,6 +210,16 @@ PtyTaskTests >> testCreationContextForActivation [
 ]
 
 { #category : #tests }
+PtyTaskTests >> testDefaultExecutionPriorityIsReturnedFromWorkspace [
+
+	| workspace |
+	workspace := Mock new.
+	task workspace: workspace.
+	
+	task executionPriority should beReturnedFrom: [ workspace defaultTaskExecutionPriority ]
+]
+
+{ #category : #tests }
 PtyTaskTests >> testGettingParent [
 	
 	[
