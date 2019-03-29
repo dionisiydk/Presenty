@@ -48,7 +48,7 @@ PtyWorker >> process: anObject [
 PtyWorker >> runTask: aTask [
 	process := [ self executeTask: aTask ] newProcess.
 	process name: 'Execution process of ', aTask printString.
-	process priority: self executionPriority.
+	process priority: aTask executionPriority.
 	process resume
 ]
 
