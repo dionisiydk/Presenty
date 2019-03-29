@@ -19,11 +19,11 @@ PtyEditRequisiteWithToolTask >> body [
 		on: PtyInputComplete, PtyInputSubmitted, PtyInputLeftRequested, PtyValueChanged 
 		send: #announce: to: self.
 	"input on: PtyValueChanged send: #valueChanged to: self."
-	guide add: input toViewAreaOn: (name ifNil: ['editor']).	
+	worker add: input toViewAreaOn: (name ifNil: ['editor']).	
 	
-	guide add: input inputTool toViewAreaOn: 'editorTool'.
+	worker add: input inputTool toViewAreaOn: 'editorTool'.
 	
-	user execute: [guide showViewArea.
+	user execute: [worker showViewArea.
 		input focusSilently]
 	
 ]

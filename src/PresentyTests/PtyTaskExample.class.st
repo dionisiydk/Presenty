@@ -8,7 +8,7 @@ Class {
 PtyTaskExample >> body [
 
 	| answer item item2 |
-	guide addBackAction.
+	worker addBackAction.
 		user warn: 'start'.
 
 		answer := user confirm: 'Do you want wait?'.
@@ -23,7 +23,7 @@ PtyTaskExample >> body [
 
 		user warn: 'You choose: ', item asString.				
 
-		guide addTask: [
+		worker addTask: [
 			item2 := user select: 'NewNumber' from: (200 to: 300).		
 
 			user warn: 'You choose from left: ', item2 asString.	
@@ -31,7 +31,7 @@ PtyTaskExample >> body [
 			user warn: 'sum: ', (item + item2) asString.				
 		] named: 'SelectLeftNumber'.
 
-		guide addTask: [
+		worker addTask: [
 			item := user select: 'NewInteger' from: (10 to: 15).		
 
 			user warn: 'You choose from right: ', item asString.					

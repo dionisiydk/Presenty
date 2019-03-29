@@ -8,12 +8,12 @@ Class {
 PtyModalBlockExecutionTask >> body [
 
 	| warning |
-	guide addCancelAction.
+	worker addCancelAction.
 	
 	warning := PtyPresentersDecorator named: 'WaitingWarning'.
 	
 	user lookAt: warning and: [
-		guide executeTask: (PtyReturnValueFromPresenterTask from: warning)].
+		worker executeTask: (PtyReturnValueFromPresenterTask from: warning)].
 
 	block value
 ]

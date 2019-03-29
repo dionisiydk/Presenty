@@ -11,12 +11,12 @@ Class {
 { #category : #execution }
 PtyExecuteBlockWithProgressTask >> body [
 
-	guide addCancelAction.
+	worker addCancelAction.
 	
 	warning := PtyPresentersDecorator named: 'WaitingWarning'.
 	
 	user lookAt: warning and: [
-		guide executeTask: (PtyReturnValueFromPresenterTask from: warning)].
+		worker executeTask: (PtyReturnValueFromPresenterTask from: warning)].
 
 	executionProcess := block newProcess.
 	executionProcess
@@ -52,10 +52,10 @@ PtyExecuteBlockWithProgressTask >> showProgressInfo [
 	
 	info := progressContext progressInfo.
 	presenter := info preferredPreviewPresenter.
-	guide runInUI: [
-		presenter context: guide context.
-		guide preparePresenter: presenter.
-		(guide context viewAreaActivator baseArea view panelNamed: 'body') 
+	worker runInUI: [
+		presenter context: worker context.
+		worker preparePresenter: presenter.
+		(worker context viewAreaActivator baseArea view panelNamed: 'body') 
 			clear;
 			add: presenter view.	
 	]

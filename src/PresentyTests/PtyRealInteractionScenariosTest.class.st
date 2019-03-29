@@ -1,11 +1,21 @@
 Class {
-	#name : #PtyInteractionScenariosTest,
+	#name : #PtyRealInteractionScenariosTest,
 	#superclass : #PtyWorkspaceTestCase,
+	#instVars : [
+		'worker'
+	],
 	#category : #'PresentyTests-NewCore'
 }
 
+{ #category : #running }
+PtyRealInteractionScenariosTest >> setUp [
+	super setUp.
+	
+	worker := PtyWorker at: workspace.
+]
+
 { #category : #tests }
-PtyInteractionScenariosTest >> testAddDeferredTask [ 
+PtyRealInteractionScenariosTest >> testAddDeferredTask [ 
 
 	| task result |
 	task := [ result := #done ] asTask.
@@ -18,7 +28,7 @@ PtyInteractionScenariosTest >> testAddDeferredTask [
 ]
 
 { #category : #tests }
-PtyInteractionScenariosTest >> testAddImmediateTask [ 
+PtyRealInteractionScenariosTest >> testAddImmediateTask [ 
 
 	| task result |
 	task := [ result := #done ] asTask.
@@ -31,7 +41,7 @@ PtyInteractionScenariosTest >> testAddImmediateTask [
 ]
 
 { #category : #tests }
-PtyInteractionScenariosTest >> testAddOneShotTask [ 
+PtyRealInteractionScenariosTest >> testAddOneShotTask [ 
 
 	| task result |
 	task := [ result := #done ] asTask.
@@ -44,7 +54,7 @@ PtyInteractionScenariosTest >> testAddOneShotTask [
 ]
 
 { #category : #tests }
-PtyInteractionScenariosTest >> testExecutionDeferredTaskFromWorkspace [ 
+PtyRealInteractionScenariosTest >> testExecutionDeferredTaskFromWorkspace [ 
 
 	| task result |
 	task := [ result := #done ] asTask.
@@ -56,14 +66,14 @@ PtyInteractionScenariosTest >> testExecutionDeferredTaskFromWorkspace [
 ]
 
 { #category : #tests }
-PtyInteractionScenariosTest >> testForkTask [ 
+PtyRealInteractionScenariosTest >> testForkTask [ 
 	| task result requestedTask forkedTask executions |
 	requestedTask := [ #requestedResult ] asTask.
 	requestedTask beDeferred.
-	forkedTask := [ result := workspace requestUserFor: requestedTask ] asTask.
+	forkedTask := [ result := worker requestUserFor: requestedTask ] asTask.
 	forkedTask beForked.
 	executions := 0.
-	task := [ workspace addTask: forkedTask. executions := executions + 1 ] asTask.
+	task := [ worker addTask: forkedTask. worker := executions + 1 ] asTask.
 	task beImmediate.
 	
 	workspace addTask: task.
@@ -78,15 +88,15 @@ PtyInteractionScenariosTest >> testForkTask [
 ]
 
 { #category : #tests }
-PtyInteractionScenariosTest >> testForkTaskWithModalRequestFromAnotherForkedTask [
+PtyRealInteractionScenariosTest >> testForkTaskWithModalRequestFromAnotherForkedTask [
 	| task result requestedTask forkedTask forkedTask2 |
 	requestedTask := [ #requestedResult ] asTask.
 	requestedTask beDeferred beModal.
-	forkedTask := [ result := workspace requestUserFor: requestedTask ] asTask.
+	forkedTask := [ result := worker requestUserFor: requestedTask ] asTask.
 	forkedTask beForked.
-	forkedTask2 := [ workspace addTask: forkedTask ] asTask.
+	forkedTask2 := [ worker addTask: forkedTask ] asTask.
 	forkedTask2 beForked.
-	task := [ workspace addTask: forkedTask2 ] asTask.
+	task := [ worker addTask: forkedTask2 ] asTask.
 	task beImmediate.
 	
 	workspace addTask: task.
@@ -99,14 +109,14 @@ PtyInteractionScenariosTest >> testForkTaskWithModalRequestFromAnotherForkedTask
 ]
 
 { #category : #tests }
-PtyInteractionScenariosTest >> testForkTaskWithModalUserRequest [
+PtyRealInteractionScenariosTest >> testForkTaskWithModalUserRequest [
 	| task result requestedTask forkedTask executions |
 	requestedTask := [ #requestedResult ] asTask.
 	requestedTask beDeferred beModal.
-	forkedTask := [ result := workspace requestUserFor: requestedTask ] asTask.
+	forkedTask := [ result := worker requestUserFor: requestedTask ] asTask.
 	forkedTask beForked.
 	executions := 0.
-	task := [ workspace addTask: forkedTask. executions := executions + 1 ] asTask.
+	task := [ worker addTask: forkedTask. executions := executions + 1 ] asTask.
 	task beImmediate.
 	
 	workspace addTask: task.
@@ -121,18 +131,18 @@ PtyInteractionScenariosTest >> testForkTaskWithModalUserRequest [
 ]
 
 { #category : #tests }
-PtyInteractionScenariosTest >> testForkTwoTasksWithModalRequests [
+PtyRealInteractionScenariosTest >> testForkTwoTasksWithModalRequests [
 	| task result requestedTask forkedTask done requestedTask2 result2 forkedTask2 |
 	requestedTask := [ #requestedResult ] asTask.
 	requestedTask beDeferred beModal.
-	forkedTask := [ result := workspace requestUserFor: requestedTask ] asTask.
+	forkedTask := [ result := worker requestUserFor: requestedTask ] asTask.
 	forkedTask beForked.
 	requestedTask2 := [ #requestedResult2 ] asTask.
 	requestedTask2 beDeferred beModal.
-	forkedTask2 := [ result2 := workspace requestUserFor: requestedTask2 ] asTask.
+	forkedTask2 := [ result2 := worker requestUserFor: requestedTask2 ] asTask.
 	forkedTask2 beForked.
 	
-	task := [ workspace addTask: forkedTask; addTask: forkedTask2. done := true ] asTask.
+	task := [ worker addTask: forkedTask; addTask: forkedTask2. done := true ] asTask.
 	task beImmediate.
 	
 	workspace addTask: task.
@@ -151,11 +161,11 @@ PtyInteractionScenariosTest >> testForkTwoTasksWithModalRequests [
 ]
 
 { #category : #tests }
-PtyInteractionScenariosTest >> testRequestUserForDeferredTask [ 
+PtyRealInteractionScenariosTest >> testRequestUserForDeferredTask [ 
 	| task result requestedTask done |
 	requestedTask := [ #requestedResult ] asTask.
 	requestedTask beDeferred.
-	task := [ result := workspace requestUserFor: requestedTask. done := true ] asTask.
+	task := [ result := worker requestUserFor: requestedTask. done := true ] asTask.
 	task beImmediate.
 	
 	workspace addTask: task.
@@ -172,12 +182,12 @@ PtyInteractionScenariosTest >> testRequestUserForDeferredTask [
 ]
 
 { #category : #tests }
-PtyInteractionScenariosTest >> testRequestUserForImmediateTask [ 
+PtyRealInteractionScenariosTest >> testRequestUserForImmediateTask [ 
 	| task result requestedTask done requestedResult |
 	requestedResult := #requestedResult.
 	requestedTask := [ requestedResult ] asTask.
 	requestedTask beImmediate.
-	task := [ result := workspace requestUserFor: requestedTask. done := true ] asTask.
+	task := [ result := worker requestUserFor: requestedTask. done := true ] asTask.
 	task beImmediate.
 	
 	workspace addTask: task.
@@ -194,11 +204,11 @@ PtyInteractionScenariosTest >> testRequestUserForImmediateTask [
 ]
 
 { #category : #tests }
-PtyInteractionScenariosTest >> testRequestUserForModalTask [ 
+PtyRealInteractionScenariosTest >> testRequestUserForModalTask [ 
 	| task result requestedTask done |
 	requestedTask := [ #requestedResult ] asTask.
 	requestedTask beDeferred beModal.
-	task := [ result := workspace requestUserFor: requestedTask. done := true ] asTask.
+	task := [ result := worker requestUserFor: requestedTask. done := true ] asTask.
 	task beImmediate.
 	
 	workspace addTask: task.
@@ -213,14 +223,14 @@ PtyInteractionScenariosTest >> testRequestUserForModalTask [
 ]
 
 { #category : #tests }
-PtyInteractionScenariosTest >> testRequestUserForModalTaskFromAnotherImmediateTask [ 
+PtyRealInteractionScenariosTest >> testRequestUserForModalTaskFromAnotherImmediateTask [ 
 	| task result requestedTask childTask executions |
 	requestedTask := [ #requestedResult ] asTask.
 	requestedTask beDeferred beModal.
-	childTask := [ result := workspace requestUserFor: requestedTask ] asTask.
+	childTask := [ result := worker requestUserFor: requestedTask ] asTask.
 	childTask beImmediate.
 	executions := 0.
-	task := [ workspace addTask: childTask. executions := executions + 1 ] asTask.
+	task := [ worker addTask: childTask. executions := executions + 1 ] asTask.
 	task beImmediate.
 	
 	workspace addTask: task.
@@ -235,12 +245,12 @@ PtyInteractionScenariosTest >> testRequestUserForModalTaskFromAnotherImmediateTa
 ]
 
 { #category : #tests }
-PtyInteractionScenariosTest >> testRequestUserForOneShotTask [ 
+PtyRealInteractionScenariosTest >> testRequestUserForOneShotTask [ 
 	| task result requestedTask done requestedResult |
 	requestedResult := #requestedResult.
 	requestedTask := [ requestedResult ] asTask.
 	requestedTask beOneShot.
-	task := [ result := workspace requestUserFor: requestedTask. done := true ] asTask.
+	task := [ result := worker requestUserFor: requestedTask. done := true ] asTask.
 	task beImmediate.
 	
 	workspace addTask: task.

@@ -12,5 +12,5 @@ PtyModalInputRequisitiesTask class >> defaultItemsName [
 
 { #category : #execution }
 PtyModalInputRequisitiesTask >> body [
-	items do: [ :dataField | guide requestUserFor: (PtyInputRequisiteTask on: dataField) ]
+	items do: [ :dataField | worker requestUserFor: (PtyInputRequisiteTask on: dataField) ]
 ]

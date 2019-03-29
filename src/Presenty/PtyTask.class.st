@@ -2,13 +2,14 @@ Class {
 	#name : #PtyTask,
 	#superclass : #Object,
 	#instVars : [
-		'guide',
 		'user',
 		'name',
 		'announcer',
 		'prototype',
 		'context',
-		'executionStrategy'
+		'executionStrategy',
+		'worker',
+		'executionPriority'
 	],
 	#category : #'Presenty-Core'
 }
@@ -160,6 +161,16 @@ PtyTask >> defaultPrototypeContextName [
 ]
 
 { #category : #accessing }
+PtyTask >> executionPriority [
+	^ executionPriority ifNil: [ worker defaultTaskExecutionPriority ]
+]
+
+{ #category : #accessing }
+PtyTask >> executionPriority: anObject [
+	executionPriority := anObject
+]
+
+{ #category : #accessing }
 PtyTask >> executionStrategy [
 	^ executionStrategy
 ]
@@ -185,12 +196,12 @@ PtyTask >> findCommonParentWith: aTask [
 
 { #category : #accessing }
 PtyTask >> guide [
-	^ guide
+	^ worker
 ]
 
 { #category : #accessing }
 PtyTask >> guide: anObject [
-	guide := anObject
+	worker := anObject
 ]
 
 { #category : #testing }
@@ -232,7 +243,7 @@ PtyTask >> isChildrenShouldRestoreParentArea [
 { #category : #testing }
 PtyTask >> isCreatedByCurrentRequest [
 
-	^guide isCurrentRequestIncludesTask: self
+	^worker isCurrentRequestIncludesTask: self
 ]
 
 { #category : #testing }
@@ -320,7 +331,7 @@ PtyTask >> populateSettingsMenu: aMenu for: aPrototype [
 PtyTask >> prepareActivationBy: aGuide [
 
 	| newActivation |
-	guide := aGuide.
+	worker := aGuide.
 	user := aGuide user.
 	context := aGuide context.
 	
@@ -413,4 +424,14 @@ PtyTask >> user [
 { #category : #accessing }
 PtyTask >> user: anObject [
 	user := anObject
+]
+
+{ #category : #accessing }
+PtyTask >> worker [
+	^ worker
+]
+
+{ #category : #accessing }
+PtyTask >> worker: anObject [
+	worker := anObject
 ]

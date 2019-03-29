@@ -35,7 +35,7 @@ PtyPluggableTask >> blockBody: anObject [
 { #category : #execution }
 PtyPluggableTask >> body [
 
-	^blockBody cull: guide cull: user
+	^blockBody cull: worker cull: user
 ]
 
 { #category : #testing }

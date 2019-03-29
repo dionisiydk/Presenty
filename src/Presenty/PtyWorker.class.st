@@ -3,7 +3,6 @@ Class {
 	#superclass : #Object,
 	#instVars : [
 		'workspace',
-		'executionPriority',
 		'process'
 	],
 	#category : #'Presenty-NewCore'
@@ -14,6 +13,11 @@ PtyWorker class >> at: aWorkspace [
 
 	^self new 
 		workspace: aWorkspace
+]
+
+{ #category : #accessing }
+PtyWorker >> defaultTaskExecutionPriority [
+	^ workspace defaultTaskExecutionPriority
 ]
 
 { #category : #controlling }
@@ -28,16 +32,6 @@ PtyWorker >> executeTask: aTask [
 	
 	workspace waitUserAction
 	
-]
-
-{ #category : #accessing }
-PtyWorker >> executionPriority [
-	^ executionPriority ifNil: [ workspace defaultTaskExecutionPriority ]
-]
-
-{ #category : #accessing }
-PtyWorker >> executionPriority: anObject [
-	executionPriority := anObject
 ]
 
 { #category : #accessing }

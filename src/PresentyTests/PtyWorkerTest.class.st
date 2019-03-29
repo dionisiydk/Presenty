@@ -19,6 +19,12 @@ PtyWorkerTest >> setUp [
 ]
 
 { #category : #tests }
+PtyWorkerTest >> testDefaultExecutionPriorityIsReturnedFromWorkspace [
+		
+	worker defaultTaskExecutionPriority should beReturnedFrom: [ workspace defaultTaskExecutionPriority ]
+]
+
+{ #category : #tests }
 PtyWorkerTest >> testExecutionTask [
 
 	[:task |

@@ -23,11 +23,11 @@ PtySearchItemTask >> body [
 	searchField becomeActive.
 	searchField on: PtyValueChanged send: #filterItems to: self.
 		
-	editTask := searchField createEditorBy: guide.
+	editTask := searchField createEditorBy: worker.
 	
-	guide addTask: [guide requestUserFor: editTask] named: 'InputFilterString'.	
+	worker addTask: [worker requestUserFor: editTask] named: 'InputFilterString'.	
 	
-	onlyEditorViewArea := guide viewArea.
+	onlyEditorViewArea := worker viewArea.
 					
 	item := user select: itemsName from: items.
 	
@@ -38,10 +38,10 @@ PtySearchItemTask >> body [
 { #category : #execution }
 PtySearchItemTask >> filterItems [
 
-	guide setUpContext: (editTask  parentLike: PtyForkTask) context.
-	guide viewArea: onlyEditorViewArea.
+	worker setUpContext: (editTask  parentLike: PtyForkTask) context.
+	worker viewArea: onlyEditorViewArea.
 	
-	guide executeTask: ([
+	worker executeTask: ([
 		self showFilteredItems	
 	] asTaskNamed: 'FilterItemsTask')
 ]

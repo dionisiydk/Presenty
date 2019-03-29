@@ -15,12 +15,12 @@ PtyInputRequisiteTask class >> on: dataField [
 { #category : #execution }
 PtyInputRequisiteTask >> body [
 	| action tracker |
-	action := guide addContinueAction.
-	tracker := guide modelManager trackChangesOf: dataField.
+	action := worker addContinueAction.
+	tracker := worker modelManager trackChangesOf: dataField.
 	tracker
 		on: PtyValueFilled send: #enable to: action;
 		on: PtyValueUnfilled send: #disable to: action.
-	guide requestUserFor: (tracker createEditorBy: guide)
+	worker requestUserFor: (tracker createEditorBy: worker)
 ]
 
 { #category : #private }

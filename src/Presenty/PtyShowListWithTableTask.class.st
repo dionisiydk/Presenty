@@ -178,6 +178,6 @@ PtyShowListWithTableTask >> showHeader [
 	| header |
 	header := self createHeader.
 	
-	guide add: header toViewAreaOn: itemsName asString, 'TableHeader'
+	worker add: header toViewAreaOn: itemsName asString, 'TableHeader'
 
 ]
