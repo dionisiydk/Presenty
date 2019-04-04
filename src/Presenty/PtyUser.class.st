@@ -2,9 +2,9 @@ Class {
 	#name : #PtyUser,
 	#superclass : #Object,
 	#instVars : [
-		'guide'
+		'workplace'
 	],
-	#category : #'Presenty-Core'
+	#category : #'Presenty-NewCore'
 }
 
 { #category : #'instance creation' }
@@ -13,55 +13,62 @@ PtyUser class >> guide: aGuide [
 	^self new guide: aGuide 
 ]
 
-{ #category : #'*Presenty-NotificationTasks' }
+{ #category : #'instance creation' }
+PtyUser class >> of: aWorkplace [
+
+	^self new 
+		workplace: aWorkplace 
+]
+
+{ #category : #'as yet unclassified' }
 PtyUser >> confirm: userMessage [
 
-	^guide requestUserFor: (PtyShowConfirmationTask with: userMessage)
+	^workplace requestUserFor: (PtyShowConfirmationTask with: userMessage)
 ]
 
 { #category : #requests }
 PtyUser >> goToBack [
 
-	guide taskNavigator forgetCurrentRequest.
+	workplace taskNavigator forgetCurrentRequest.
 	
-	guide retryLastTask 
+	workplace retryLastTask 
 	
 ]
 
 { #category : #requests }
 PtyUser >> goToStart [
 
-	guide taskNavigator forgetAllButFirst.
+	workplace taskNavigator forgetAllButFirst.
 	
-	guide retryLastTask 
+	workplace retryLastTask 
 ]
 
 { #category : #accessing }
 PtyUser >> guide [
-	^ guide
+	^ workplace
 ]
 
 { #category : #accessing }
 PtyUser >> guide: anObject [
-	guide := anObject
+	workplace := anObject
 ]
 
-{ #category : #'*Presenty-Editor' }
+{ #category : #'as yet unclassified' }
 PtyUser >> input: aFields [
 
 	^self goTo: (PtyInputRequisitiesTask on: aFields)
 ]
 
-{ #category : #'*Presenty-Editor' }
+{ #category : #'as yet unclassified' }
 PtyUser >> input: aFields for: taskName [
 	
-	^guide requestUserFor:  (PtyModalInputRequisitiesTask on: aFields)
+	^workplace requestUserFor:  (PtyModalInputRequisitiesTask on: aFields)
 ]
 
 { #category : #requests }
 PtyUser >> lookAt: aBlockOrPresenter [
 
-	^guide requestUserFor: aBlockOrPresenter asUserRequestTask
+	^workplace requestUserFor: aBlockOrPresenter asUserRequestTask
 ]
 
 { #category : #requests }
@@ -72,21 +79,21 @@ PtyUser >> lookAt: aPresenter and: uiActionBlock [
 		presenter: aPresenter;
 		action: uiActionBlock.
 		
-	^guide requestUserFor: task
+	^workplace requestUserFor: task
 ]
 
-{ #category : #'*Presenty-ShowListTasks' }
+{ #category : #'as yet unclassified' }
 PtyUser >> lookAtList: itemsCollection of: itemsClass [
 
 	| listTask |
 	listTask := PtyShowListTask forItems: itemsCollection of: itemsClass.
 	
-	^guide requestUserFor: listTask
+	^workplace requestUserFor: listTask
 ]
 
 { #category : #requests }
 PtyUser >> lookAtViewArea [
-	^guide requestUserFor: PtyUserRequestTask new
+	^workplace requestUserFor: PtyUserRequestTask new
 ]
 
 { #category : #requests }
@@ -95,10 +102,10 @@ PtyUser >> lookAtViewAreaAnd: uiActionBlock [
 	| task |
 	task := PtyUserRequestTask new 
 		action: uiActionBlock.
-	^guide requestUserFor: task
+	^workplace requestUserFor: task
 ]
 
-{ #category : #'*Presenty-ItemSelectionTasks' }
+{ #category : #'as yet unclassified' }
 PtyUser >> navigateThrough: items of: itemClass [
 
 	| task |
@@ -106,16 +113,16 @@ PtyUser >> navigateThrough: items of: itemClass [
 	task 
 		items: items;
 		itemsName: itemClass.
-	^guide requestUserFor: task
+	^workplace requestUserFor: task
 ]
 
-{ #category : #'*Presenty-ItemSelectionTasks' }
+{ #category : #'as yet unclassified' }
 PtyUser >> select: itemsClass from: itemsCollection [
 
 	| listTask |
 	listTask := (PtyItemsRequestTask forItems: itemsCollection of: itemsClass).
 
-	^guide requestUserFor: listTask
+	^workplace requestUserFor: listTask
 ]
 
 { #category : #requests }
@@ -123,23 +130,23 @@ PtyUser >> stopCurrentTask [
 
 	| navigator |
 	
-	navigator := guide taskNavigator.
+	navigator := workplace taskNavigator.
 	
-	navigator forgetTask: guide context task.
+	navigator forgetTask: workplace context task.
 	
-	guide retryLastTask
+	workplace retryLastTask
 ]
 
-{ #category : #'*Presenty-BlockExecutionTasks' }
+{ #category : #'as yet unclassified' }
 PtyUser >> wait: actionName while: aBlock [
 	
-	guide requestUserFor: (PtyBlockExecutionTask named: actionName with: aBlock)
+	workplace requestUserFor: (PtyBlockExecutionTask named: actionName with: aBlock)
 	
 	
 	
 ]
 
-{ #category : #'*Presenty-BlockExecutionTasks' }
+{ #category : #'as yet unclassified' }
 PtyUser >> waitWhile: aBlock [
 	
 	self wait: nil while: aBlock 
@@ -148,8 +155,18 @@ PtyUser >> waitWhile: aBlock [
 	
 ]
 
-{ #category : #'*Presenty-NotificationTasks' }
+{ #category : #'as yet unclassified' }
 PtyUser >> warn: userMessage [
 
-	^guide requestUserFor: (PtyShowWarningTask with: userMessage)
+	^workplace requestUserFor: (PtyShowWarningTask with: userMessage)
+]
+
+{ #category : #accessing }
+PtyUser >> workplace [
+	^ workplace
+]
+
+{ #category : #accessing }
+PtyUser >> workplace: anObject [
+	workplace := anObject
 ]

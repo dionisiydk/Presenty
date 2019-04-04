@@ -1,5 +1,5 @@
 Class {
-	#name : #PtyWorkspace,
+	#name : #PtyWorkplace,
 	#superclass : #Object,
 	#instVars : [
 		'activeTasks'
@@ -8,23 +8,23 @@ Class {
 }
 
 { #category : #accessing }
-PtyWorkspace >> activeTasks [
+PtyWorkplace >> activeTasks [
 	^ activeTasks
 ]
 
 { #category : #accessing }
-PtyWorkspace >> activeTasks: anObject [
+PtyWorkplace >> activeTasks: anObject [
 	activeTasks := anObject
 ]
 
 { #category : #accessing }
-PtyWorkspace >> addTask: aTask [
+PtyWorkplace >> addTask: aTask [
 
 	activeTasks add: aTask
 ]
 
 { #category : #initialization }
-PtyWorkspace >> initialize [
+PtyWorkplace >> initialize [
 	super initialize.
 	
 	activeTasks := OrderedCollection new

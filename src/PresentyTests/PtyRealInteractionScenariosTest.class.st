@@ -1,8 +1,8 @@
 Class {
 	#name : #PtyRealInteractionScenariosTest,
-	#superclass : #PtyWorkspaceTestCase,
+	#superclass : #PtyWorkplaceTestCase,
 	#instVars : [
-		'worker'
+		'user'
 	],
 	#category : #'PresentyTests-NewCore'
 }
@@ -11,7 +11,7 @@ Class {
 PtyRealInteractionScenariosTest >> setUp [
 	super setUp.
 	
-	worker := PtyWorker at: workspace.
+	user := PtyUser of: workplace.
 ]
 
 { #category : #tests }
@@ -21,9 +21,9 @@ PtyRealInteractionScenariosTest >> testAddDeferredTask [
 	task := [ result := #done ] asTask.
 	task beDeferred.
 	
-	workspace addTask: task.
+	workplace addTask: task.
 	
-	workspace activeTasks should equal: { task }.
+	workplace activeTasks should equal: { task }.
 	result should be: nil
 ]
 
@@ -34,9 +34,9 @@ PtyRealInteractionScenariosTest >> testAddImmediateTask [
 	task := [ result := #done ] asTask.
 	task beImmediate.
 	
-	workspace addTask: task.
+	workplace addTask: task.
 	
-	workspace activeTasks should equal: { task }.
+	workplace activeTasks should equal: { task }.
 	result should be: #done
 ]
 
@@ -47,9 +47,9 @@ PtyRealInteractionScenariosTest >> testAddOneShotTask [
 	task := [ result := #done ] asTask.
 	task beOneShot.
 	
-	workspace addTask: task.
+	workplace addTask: task.
 	
-	workspace activeTasks should be isEmpty.
+	workplace activeTasks should be isEmpty.
 	result should be: #done
 ]
 
@@ -59,9 +59,9 @@ PtyRealInteractionScenariosTest >> testExecutionDeferredTaskFromWorkspace [
 	| task result |
 	task := [ result := #done ] asTask.
 	task beDeferred.
-	workspace addTask: task.
+	workplace addTask: task.
 	 
-	workspace resumeExecutionOf: task.
+	workplace resumeExecutionOf: task.
 	result should be: #done
 ]
 
@@ -70,21 +70,21 @@ PtyRealInteractionScenariosTest >> testForkTask [
 	| task result requestedTask forkedTask executions |
 	requestedTask := [ #requestedResult ] asTask.
 	requestedTask beDeferred.
-	forkedTask := [ result := worker requestUserFor: requestedTask ] asTask.
+	forkedTask := [ result := user requestUserFor: requestedTask ] asTask.
 	forkedTask beForked.
 	executions := 0.
-	task := [ worker addTask: forkedTask. worker := executions + 1 ] asTask.
+	task := [ user addTask: forkedTask. user := executions + 1 ] asTask.
 	task beImmediate.
 	
-	workspace addTask: task.
+	workplace addTask: task.
 	result should be: nil.
 	executions should be: 1.
-	workspace activeTasks should equal: { task. forkedTask. requestedTask }.
+	workplace activeTasks should equal: { task. forkedTask. requestedTask }.
 	
-	workspace resumeExecutionOf: requestedTask.
+	workplace resumeExecutionOf: requestedTask.
 	result should be: #requestedResult.
 	executions should be: 1.
-	workspace activeTasks should equal: { task. forkedTask. requestedTask }.
+	workplace activeTasks should equal: { task. forkedTask. requestedTask }.
 ]
 
 { #category : #tests }
@@ -92,20 +92,20 @@ PtyRealInteractionScenariosTest >> testForkTaskWithModalRequestFromAnotherForked
 	| task result requestedTask forkedTask forkedTask2 |
 	requestedTask := [ #requestedResult ] asTask.
 	requestedTask beDeferred beModal.
-	forkedTask := [ result := worker requestUserFor: requestedTask ] asTask.
+	forkedTask := [ result := user requestUserFor: requestedTask ] asTask.
 	forkedTask beForked.
-	forkedTask2 := [ worker addTask: forkedTask ] asTask.
+	forkedTask2 := [ user addTask: forkedTask ] asTask.
 	forkedTask2 beForked.
-	task := [ worker addTask: forkedTask2 ] asTask.
+	task := [ user addTask: forkedTask2 ] asTask.
 	task beImmediate.
 	
-	workspace addTask: task.
+	workplace addTask: task.
 	result should be: nil.
-	workspace activeTasks should equal: { task. forkedTask2. requestedTask }.
+	workplace activeTasks should equal: { task. forkedTask2. requestedTask }.
 	
-	workspace resumeExecutionOf: requestedTask.
+	workplace resumeExecutionOf: requestedTask.
 	result should be: #requestedResult.
-	workspace activeTasks should equal: { task. forkedTask2. forkedTask }.
+	workplace activeTasks should equal: { task. forkedTask2. forkedTask }.
 ]
 
 { #category : #tests }
@@ -113,21 +113,21 @@ PtyRealInteractionScenariosTest >> testForkTaskWithModalUserRequest [
 	| task result requestedTask forkedTask executions |
 	requestedTask := [ #requestedResult ] asTask.
 	requestedTask beDeferred beModal.
-	forkedTask := [ result := worker requestUserFor: requestedTask ] asTask.
+	forkedTask := [ result := user requestUserFor: requestedTask ] asTask.
 	forkedTask beForked.
 	executions := 0.
-	task := [ worker addTask: forkedTask. executions := executions + 1 ] asTask.
+	task := [ user addTask: forkedTask. executions := executions + 1 ] asTask.
 	task beImmediate.
 	
-	workspace addTask: task.
+	workplace addTask: task.
 	result should be: nil.
 	executions should be: 1.
-	workspace activeTasks should equal: { task. requestedTask }.
+	workplace activeTasks should equal: { task. requestedTask }.
 	
-	workspace resumeExecutionOf: requestedTask.
+	workplace resumeExecutionOf: requestedTask.
 	result should be: #requestedResult.
 	executions should be: 1.
-	workspace activeTasks should equal: { task. forkedTask }.
+	workplace activeTasks should equal: { task. forkedTask }.
 ]
 
 { #category : #tests }
@@ -135,29 +135,29 @@ PtyRealInteractionScenariosTest >> testForkTwoTasksWithModalRequests [
 	| task result requestedTask forkedTask done requestedTask2 result2 forkedTask2 |
 	requestedTask := [ #requestedResult ] asTask.
 	requestedTask beDeferred beModal.
-	forkedTask := [ result := worker requestUserFor: requestedTask ] asTask.
+	forkedTask := [ result := user requestUserFor: requestedTask ] asTask.
 	forkedTask beForked.
 	requestedTask2 := [ #requestedResult2 ] asTask.
 	requestedTask2 beDeferred beModal.
-	forkedTask2 := [ result2 := worker requestUserFor: requestedTask2 ] asTask.
+	forkedTask2 := [ result2 := user requestUserFor: requestedTask2 ] asTask.
 	forkedTask2 beForked.
 	
-	task := [ worker addTask: forkedTask; addTask: forkedTask2. done := true ] asTask.
+	task := [ user addTask: forkedTask; addTask: forkedTask2. done := true ] asTask.
 	task beImmediate.
 	
-	workspace addTask: task.
+	workplace addTask: task.
 	done should be: true.
 	result should be: nil.
 	result2 should be: nil.
-	workspace activeTasks should equal: { task. requestedTask. requestedTask2 }.
+	workplace activeTasks should equal: { task. requestedTask. requestedTask2 }.
 	
-	workspace resumeExecutionOf: requestedTask.
+	workplace resumeExecutionOf: requestedTask.
 	result should be: #requestedResult.
-	workspace activeTasks should equal: { task. forkedTask. requestedTask2 }.
+	workplace activeTasks should equal: { task. forkedTask. requestedTask2 }.
 	
-	workspace resumeExecutionOf: requestedTask2.
+	workplace resumeExecutionOf: requestedTask2.
 	result2 should be: #requestedResult2.
-	workspace activeTasks should equal: { task. forkedTask. forkedTask2 }.
+	workplace activeTasks should equal: { task. forkedTask. forkedTask2 }.
 ]
 
 { #category : #tests }
@@ -165,19 +165,19 @@ PtyRealInteractionScenariosTest >> testRequestUserForDeferredTask [
 	| task result requestedTask done |
 	requestedTask := [ #requestedResult ] asTask.
 	requestedTask beDeferred.
-	task := [ result := worker requestUserFor: requestedTask. done := true ] asTask.
+	task := [ result := user requestUserFor: requestedTask. done := true ] asTask.
 	task beImmediate.
 	
-	workspace addTask: task.
+	workplace addTask: task.
 	result should be: nil.
 	done should not be: true.
-	workspace activeTasks should equal: { task. requestedTask }.
+	workplace activeTasks should equal: { task. requestedTask }.
 	
-	workspace resumeExecutionOf: requestedTask.
+	workplace resumeExecutionOf: requestedTask.
 	result should be: #requestedResult.
 	done should be: true.
 	
-	workspace resumeExecutionOf: task with: #newResult.
+	workplace resumeExecutionOf: task with: #newResult.
 	result should be: #newResult
 ]
 
@@ -187,19 +187,19 @@ PtyRealInteractionScenariosTest >> testRequestUserForImmediateTask [
 	requestedResult := #requestedResult.
 	requestedTask := [ requestedResult ] asTask.
 	requestedTask beImmediate.
-	task := [ result := worker requestUserFor: requestedTask. done := true ] asTask.
+	task := [ result := user requestUserFor: requestedTask. done := true ] asTask.
 	task beImmediate.
 	
-	workspace addTask: task.
+	workplace addTask: task.
 	result should be: requestedResult.
 	done should be: true.
-	workspace activeTasks should equal: { task. requestedTask }.
+	workplace activeTasks should equal: { task. requestedTask }.
 	
 	requestedResult := #newResult1.
-	workspace resumeExecutionOf: requestedResult.
+	workplace resumeExecutionOf: requestedResult.
 	result should be: requestedResult.
 	
-	workspace resumeExecutionOf: task with: #newResult2.
+	workplace resumeExecutionOf: task with: #newResult2.
 	result should be: #newResult2
 ]
 
@@ -208,18 +208,18 @@ PtyRealInteractionScenariosTest >> testRequestUserForModalTask [
 	| task result requestedTask done |
 	requestedTask := [ #requestedResult ] asTask.
 	requestedTask beDeferred beModal.
-	task := [ result := worker requestUserFor: requestedTask. done := true ] asTask.
+	task := [ result := user requestUserFor: requestedTask. done := true ] asTask.
 	task beImmediate.
 	
-	workspace addTask: task.
+	workplace addTask: task.
 	result should be: nil.
 	done should not be: true.
-	workspace activeTasks should equal: { requestedTask }.
+	workplace activeTasks should equal: { requestedTask }.
 	
-	workspace resumeExecutionOf: requestedTask.
+	workplace resumeExecutionOf: requestedTask.
 	result should be: #requestedResult.
 	done should be: true.
-	workspace activeTasks should equal: { task }.
+	workplace activeTasks should equal: { task }.
 ]
 
 { #category : #tests }
@@ -227,21 +227,21 @@ PtyRealInteractionScenariosTest >> testRequestUserForModalTaskFromAnotherImmedia
 	| task result requestedTask childTask executions |
 	requestedTask := [ #requestedResult ] asTask.
 	requestedTask beDeferred beModal.
-	childTask := [ result := worker requestUserFor: requestedTask ] asTask.
+	childTask := [ result := user requestUserFor: requestedTask ] asTask.
 	childTask beImmediate.
 	executions := 0.
-	task := [ worker addTask: childTask. executions := executions + 1 ] asTask.
+	task := [ user addTask: childTask. executions := executions + 1 ] asTask.
 	task beImmediate.
 	
-	workspace addTask: task.
+	workplace addTask: task.
 	result should be: nil.
 	executions should be: 0.
-	workspace activeTasks should equal: { requestedTask }.
+	workplace activeTasks should equal: { requestedTask }.
 	
-	workspace resumeExecutionOf: requestedTask.
+	workplace resumeExecutionOf: requestedTask.
 	result should be: #requestedResult.
 	executions should be: 1.
-	workspace activeTasks should equal: { task. childTask }.
+	workplace activeTasks should equal: { task. childTask }.
 ]
 
 { #category : #tests }
@@ -250,19 +250,19 @@ PtyRealInteractionScenariosTest >> testRequestUserForOneShotTask [
 	requestedResult := #requestedResult.
 	requestedTask := [ requestedResult ] asTask.
 	requestedTask beOneShot.
-	task := [ result := worker requestUserFor: requestedTask. done := true ] asTask.
+	task := [ result := user requestUserFor: requestedTask. done := true ] asTask.
 	task beImmediate.
 	
-	workspace addTask: task.
+	workplace addTask: task.
 	result should be: requestedResult.
 	done should be: true.
-	workspace activeTasks should equal: { task }.
+	workplace activeTasks should equal: { task }.
 	
 	requestedResult := #newResult1.
-	[workspace resumeExecutionOf: requestedTask] should fail.
+	[workplace resumeExecutionOf: requestedTask] should fail.
 	result should be: #requestedResult.
-	workspace activeTasks should equal: { task }.
+	workplace activeTasks should equal: { task }.
 	
-	workspace resumeExecutionOf: task with: #newResult2.
+	workplace resumeExecutionOf: task with: #newResult2.
 	result should be: #newResult2
 ]

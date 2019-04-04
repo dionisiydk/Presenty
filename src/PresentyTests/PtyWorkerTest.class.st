@@ -1,6 +1,6 @@
 Class {
 	#name : #PtyWorkerTest,
-	#superclass : #PtyWorkspaceTestCase,
+	#superclass : #PtyWorkplaceTestCase,
 	#instVars : [
 		'worker',
 		'task'
@@ -12,8 +12,8 @@ Class {
 PtyWorkerTest >> setUp [ 
 	super setUp.
 	
-	workspace := Mock new.
-	worker := PtyWorker at: workspace.
+	workplace := Mock new.
+	worker := PtyWorker at: workplace.
 	task := Mock new.
 	task stub executionPriority willReturn: Processor activePriority + 1
 ]
@@ -21,7 +21,7 @@ PtyWorkerTest >> setUp [
 { #category : #tests }
 PtyWorkerTest >> testDefaultExecutionPriorityIsReturnedFromWorkspace [
 		
-	worker defaultTaskExecutionPriority should beReturnedFrom: [ workspace defaultTaskExecutionPriority ]
+	worker defaultTaskExecutionPriority should beReturnedFrom: [ workplace defaultTaskExecutionPriority ]
 ]
 
 { #category : #tests }
@@ -31,8 +31,8 @@ PtyWorkerTest >> testExecutionTask [
 	
 		[worker executeTask: task]
 			should strictly satisfy: 
-		[workspace requestUserFor: task.
-		workspace waitUserAction].
+		[workplace requestUserFor: task.
+		workplace waitUserAction].
 	
 	] runWithMocks 
 ]
@@ -47,9 +47,9 @@ PtyWorkerTest >> testExecutionTaskWhenErrorHappen [
 		
 		[worker executeTask: task]
 			should strictly satisfy: 
-		[(workspace requestUserFor: task) willRaise: error.
-		(workspace notifyUserAbout: error) willRaise: request.
-		workspace waitUserAction when: [request isExecuted] is: true].
+		[(workplace requestUserFor: task) willRaise: error.
+		(workplace notifyUserAbout: error) willRaise: request.
+		workplace waitUserAction when: [request isExecuted] is: true].
 	
 	] runWithMocks 
 ]
@@ -63,8 +63,8 @@ PtyWorkerTest >> testExecutionTaskWhenUserRequestSignalled [
 		
 		[worker executeTask: task]
 			should strictly satisfy: 
-		[(workspace requestUserFor: task) willRaise: request.
-		workspace waitUserAction when: [request isExecuted] is: true].
+		[(workplace requestUserFor: task) willRaise: request.
+		workplace waitUserAction when: [request isExecuted] is: true].
 	
 	] runWithMocks 
 ]
@@ -74,7 +74,7 @@ PtyWorkerTest >> testRunTaskInBackgroundProcess [
 		
 	worker runTask: task.
 	
-	(workspace should receive requestUserFor: task) inAnotherProcess
+	(workplace should receive requestUserFor: task) inAnotherProcess
 ]
 
 { #category : #tests }
@@ -82,7 +82,7 @@ PtyWorkerTest >> testRunTaskInBackgroundProcessWithSpecifiedPriority [
 
 	worker runTask: task.
 	
-	(workspace should receive requestUserFor: task) 
+	(workplace should receive requestUserFor: task) 
 		inProcessWhich priority should equal: task executionPriority
 ]
 
