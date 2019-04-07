@@ -1,5 +1,5 @@
 Class {
 	#name : #PtyImmediateTaskExecution,
 	#superclass : #PtyTaskExecutionStrategy,
-	#category : #'Presenty-Core'
+	#category : #'Presenty-NewCore'
 }
