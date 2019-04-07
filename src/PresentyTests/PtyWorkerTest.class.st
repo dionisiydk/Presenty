@@ -78,7 +78,7 @@ PtyWorkerTest >> testRunTaskInBackgroundProcess [
 ]
 
 { #category : #tests }
-PtyWorkerTest >> testRunTaskInBackgroundProcessWithSpecifiedPriority [
+PtyWorkerTest >> testRunTaskInBackgroundProcessWithTaskExecutionPriority [
 
 	worker runTask: task.
 	
@@ -89,13 +89,13 @@ PtyWorkerTest >> testRunTaskInBackgroundProcessWithSpecifiedPriority [
 { #category : #tests }
 PtyWorkerTest >> testStoppingTask [
 
-	[:process |
-		worker process: process.
-		
-		[worker stopTask]
-			should strictly satisfy: 
-		[process terminate]
-	] runWithMocks 
+	| process |
+	process := Mock new.
+
+	worker process: process.	
+	worker stopTask.
+	
+	process should receive terminate
 ]
 
 { #category : #tests }
