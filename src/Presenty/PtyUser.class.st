@@ -27,6 +27,12 @@ PtyUser >> confirm: userMessage [
 ]
 
 { #category : #requests }
+PtyUser >> executeTask: aTask [
+
+  self shouldBeImplemented.
+]
+
+{ #category : #requests }
 PtyUser >> goToBack [
 
 	workplace taskNavigator forgetCurrentRequest.

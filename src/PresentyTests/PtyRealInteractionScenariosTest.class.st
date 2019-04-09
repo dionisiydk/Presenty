@@ -21,7 +21,7 @@ PtyRealInteractionScenariosTest >> testAddDeferredTask [
 	task := [ result := #done ] asTask.
 	task beDeferred.
 	
-	workplace addTask: task.
+	user executeTask: task.
 	
 	workplace activeTasks should equal: { task }.
 	result should be: nil
@@ -34,7 +34,7 @@ PtyRealInteractionScenariosTest >> testAddImmediateTask [
 	task := [ result := #done ] asTask.
 	task beImmediate.
 	
-	workplace addTask: task.
+	user executeTask: task.
 	
 	workplace activeTasks should equal: { task }.
 	result should be: #done
@@ -47,19 +47,19 @@ PtyRealInteractionScenariosTest >> testAddOneShotTask [
 	task := [ result := #done ] asTask.
 	task beOneShot.
 	
-	workplace addTask: task.
+	user executeTask: task.
 	
 	workplace activeTasks should be isEmpty.
 	result should be: #done
 ]
 
 { #category : #tests }
-PtyRealInteractionScenariosTest >> testExecutionDeferredTaskFromWorkspace [ 
+PtyRealInteractionScenariosTest >> testExecutionDeferredTaskFromWorkplace [ 
 
 	| task result |
 	task := [ result := #done ] asTask.
 	task beDeferred.
-	workplace addTask: task.
+	user executeTask: task.
 	 
 	workplace resumeExecutionOf: task.
 	result should be: #done
@@ -70,13 +70,13 @@ PtyRealInteractionScenariosTest >> testForkTask [
 	| task result requestedTask forkedTask executions |
 	requestedTask := [ #requestedResult ] asTask.
 	requestedTask beDeferred.
-	forkedTask := [ result := user requestUserFor: requestedTask ] asTask.
+	forkedTask := [ result := user executeTask: requestedTask ] asTask.
 	forkedTask beForked.
 	executions := 0.
-	task := [ user addTask: forkedTask. user := executions + 1 ] asTask.
+	task := [ user executeTask: forkedTask. executions := executions + 1 ] asTask.
 	task beImmediate.
 	
-	workplace addTask: task.
+	user executeTask: task.
 	result should be: nil.
 	executions should be: 1.
 	workplace activeTasks should equal: { task. forkedTask. requestedTask }.
@@ -92,14 +92,14 @@ PtyRealInteractionScenariosTest >> testForkTaskWithModalRequestFromAnotherForked
 	| task result requestedTask forkedTask forkedTask2 |
 	requestedTask := [ #requestedResult ] asTask.
 	requestedTask beDeferred beModal.
-	forkedTask := [ result := user requestUserFor: requestedTask ] asTask.
+	forkedTask := [ result := user executeTask: requestedTask ] asTask.
 	forkedTask beForked.
-	forkedTask2 := [ user addTask: forkedTask ] asTask.
+	forkedTask2 := [ user executeTask: forkedTask ] asTask.
 	forkedTask2 beForked.
-	task := [ user addTask: forkedTask2 ] asTask.
+	task := [ user executeTask: forkedTask2 ] asTask.
 	task beImmediate.
 	
-	workplace addTask: task.
+	user executeTask: task.
 	result should be: nil.
 	workplace activeTasks should equal: { task. forkedTask2. requestedTask }.
 	
@@ -113,13 +113,13 @@ PtyRealInteractionScenariosTest >> testForkTaskWithModalUserRequest [
 	| task result requestedTask forkedTask executions |
 	requestedTask := [ #requestedResult ] asTask.
 	requestedTask beDeferred beModal.
-	forkedTask := [ result := user requestUserFor: requestedTask ] asTask.
+	forkedTask := [ result := user executeTask: requestedTask ] asTask.
 	forkedTask beForked.
 	executions := 0.
-	task := [ user addTask: forkedTask. executions := executions + 1 ] asTask.
+	task := [ user executeTask: forkedTask. executions := executions + 1 ] asTask.
 	task beImmediate.
 	
-	workplace addTask: task.
+	user executeTask: task.
 	result should be: nil.
 	executions should be: 1.
 	workplace activeTasks should equal: { task. requestedTask }.
@@ -135,17 +135,17 @@ PtyRealInteractionScenariosTest >> testForkTwoTasksWithModalRequests [
 	| task result requestedTask forkedTask done requestedTask2 result2 forkedTask2 |
 	requestedTask := [ #requestedResult ] asTask.
 	requestedTask beDeferred beModal.
-	forkedTask := [ result := user requestUserFor: requestedTask ] asTask.
+	forkedTask := [ result := user executeTask: requestedTask ] asTask.
 	forkedTask beForked.
 	requestedTask2 := [ #requestedResult2 ] asTask.
 	requestedTask2 beDeferred beModal.
-	forkedTask2 := [ result2 := user requestUserFor: requestedTask2 ] asTask.
+	forkedTask2 := [ result2 := user executeTask: requestedTask2 ] asTask.
 	forkedTask2 beForked.
 	
-	task := [ user addTask: forkedTask; addTask: forkedTask2. done := true ] asTask.
+	task := [ user executeTask: forkedTask; executeTask: forkedTask2. done := true ] asTask.
 	task beImmediate.
 	
-	workplace addTask: task.
+	user executeTask: task.
 	done should be: true.
 	result should be: nil.
 	result2 should be: nil.
@@ -165,10 +165,10 @@ PtyRealInteractionScenariosTest >> testRequestUserForDeferredTask [
 	| task result requestedTask done |
 	requestedTask := [ #requestedResult ] asTask.
 	requestedTask beDeferred.
-	task := [ result := user requestUserFor: requestedTask. done := true ] asTask.
+	task := [ result := user executeTask: requestedTask. done := true ] asTask.
 	task beImmediate.
 	
-	workplace addTask: task.
+	user executeTask: task.
 	result should be: nil.
 	done should not be: true.
 	workplace activeTasks should equal: { task. requestedTask }.
@@ -187,10 +187,10 @@ PtyRealInteractionScenariosTest >> testRequestUserForImmediateTask [
 	requestedResult := #requestedResult.
 	requestedTask := [ requestedResult ] asTask.
 	requestedTask beImmediate.
-	task := [ result := user requestUserFor: requestedTask. done := true ] asTask.
+	task := [ result := user executeTask: requestedTask. done := true ] asTask.
 	task beImmediate.
 	
-	workplace addTask: task.
+	user executeTask: task.
 	result should be: requestedResult.
 	done should be: true.
 	workplace activeTasks should equal: { task. requestedTask }.
@@ -208,10 +208,10 @@ PtyRealInteractionScenariosTest >> testRequestUserForModalTask [
 	| task result requestedTask done |
 	requestedTask := [ #requestedResult ] asTask.
 	requestedTask beDeferred beModal.
-	task := [ result := user requestUserFor: requestedTask. done := true ] asTask.
+	task := [ result := user executeTask: requestedTask. done := true ] asTask.
 	task beImmediate.
 	
-	workplace addTask: task.
+	user executeTask: task.
 	result should be: nil.
 	done should not be: true.
 	workplace activeTasks should equal: { requestedTask }.
@@ -227,13 +227,13 @@ PtyRealInteractionScenariosTest >> testRequestUserForModalTaskFromAnotherImmedia
 	| task result requestedTask childTask executions |
 	requestedTask := [ #requestedResult ] asTask.
 	requestedTask beDeferred beModal.
-	childTask := [ result := user requestUserFor: requestedTask ] asTask.
+	childTask := [ result := user executeTask: requestedTask ] asTask.
 	childTask beImmediate.
 	executions := 0.
-	task := [ user addTask: childTask. executions := executions + 1 ] asTask.
+	task := [ user executeTask: childTask. executions := executions + 1 ] asTask.
 	task beImmediate.
 	
-	workplace addTask: task.
+	user executeTask: task.
 	result should be: nil.
 	executions should be: 0.
 	workplace activeTasks should equal: { requestedTask }.
@@ -250,10 +250,10 @@ PtyRealInteractionScenariosTest >> testRequestUserForOneShotTask [
 	requestedResult := #requestedResult.
 	requestedTask := [ requestedResult ] asTask.
 	requestedTask beOneShot.
-	task := [ result := user requestUserFor: requestedTask. done := true ] asTask.
+	task := [ result := user executeTask: requestedTask. done := true ] asTask.
 	task beImmediate.
 	
-	workplace addTask: task.
+	user executeTask: task.
 	result should be: requestedResult.
 	done should be: true.
 	workplace activeTasks should equal: { task }.
