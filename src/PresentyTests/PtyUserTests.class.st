@@ -1,22 +1,21 @@
 Class {
 	#name : #PtyUserTests,
-	#superclass : #TestCase,
+	#superclass : #PtyWorkplaceTestCase,
 	#instVars : [
-		'user',
-		'guide'
+		'user'
 	],
-	#category : #'PresentyTests-Core'
+	#category : #'PresentyTests-NewCore'
 }
 
 { #category : #running }
 PtyUserTests >> setUp [
-
 	super setUp.
-	guide := Mock new.
-	user := PtyUser guide: guide
+
+	workplace := Mock new.
+	user := PtyUser of: workplace
 ]
 
-{ #category : #'*PresentyTests-NotificationTasks' }
+{ #category : #'as yet unclassified' }
 PtyUserTests >> testConfirm [
 	
 	| task |
@@ -104,7 +103,27 @@ PtyUserTests >> testStoppingCurrentTask [
 	] runWithMocks 
 ]
 
-{ #category : #'*PresentyTests-BlockExecutionTasks' }
+{ #category : #tests }
+PtyUserTests >> testTaskExecution [
+
+	| result task |
+	task := [] asTask.
+	result := user executeTask: task.
+	
+	result should beReturnedFrom: [workplace processTask: task]
+]
+
+{ #category : #tests }
+PtyUserTests >> testTaskExecutionShouldSetUpUserForTask [
+
+	| result task |
+	task := [] asTask.
+	result := user executeTask: task.
+	
+	task user should be: user
+]
+
+{ #category : #'as yet unclassified' }
 PtyUserTests >> testWaitingNamedActionExecution [
 	
 	| task |
@@ -120,7 +139,7 @@ PtyUserTests >> testWaitingNamedActionExecution [
 	] runWithMocks 
 ]
 
-{ #category : #'*PresentyTests-BlockExecutionTasks' }
+{ #category : #'as yet unclassified' }
 PtyUserTests >> testWaitingWhileBlockExecuted [
 	
 	| task |
@@ -135,7 +154,7 @@ PtyUserTests >> testWaitingWhileBlockExecuted [
 	] runWithMocks 
 ]
 
-{ #category : #'*PresentyTests-NotificationTasks' }
+{ #category : #'as yet unclassified' }
 PtyUserTests >> testWarning [ 
 	
 	| task |

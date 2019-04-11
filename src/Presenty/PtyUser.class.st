@@ -28,8 +28,8 @@ PtyUser >> confirm: userMessage [
 
 { #category : #requests }
 PtyUser >> executeTask: aTask [
-
-  self shouldBeImplemented.
+	aTask user: self.
+	^workplace processTask: aTask
 ]
 
 { #category : #requests }

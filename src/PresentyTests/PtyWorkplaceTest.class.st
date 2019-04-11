@@ -9,3 +9,11 @@ PtyWorkplaceTest >> testHasNoActiveTasksByDefault [
 
 	workplace activeTasks should be isEmpty
 ]
+
+{ #category : #tests }
+PtyWorkplaceTest >> testTaskProcessing [
+
+	| task |
+	task := [] asTask.
+	workplace processTask: task.
+]
