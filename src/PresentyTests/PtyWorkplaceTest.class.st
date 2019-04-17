@@ -11,9 +11,15 @@ PtyWorkplaceTest >> testHasNoActiveTasksByDefault [
 ]
 
 { #category : #tests }
-PtyWorkplaceTest >> testTaskProcessing [
+PtyWorkplaceTest >> testPlanningTaskExecutionWhenNoWorkersExists [
 
-	| task |
+	| task executionPlan |
 	task := [] asTask.
-	workplace processTask: task.
+	executionPlan := workplace planExecutionOf: task by: #user.
+	
+	executionPlan should beInstanceOf: PtyInitiateNewExecutionPlan.
+	executionPlan implementingTask should be: task.
+	task user should be: #user.
+	executionPlan worker should not be: nil.
+	workplace workers should include: executionPlan worker
 ]
