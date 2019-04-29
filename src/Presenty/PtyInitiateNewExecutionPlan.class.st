@@ -1,5 +1,5 @@
 Class {
 	#name : #PtyInitiateNewExecutionPlan,
-	#superclass : #Object,
+	#superclass : #PtyTaskExecutionPlan,
 	#category : #'Presenty-NewCore'
 }

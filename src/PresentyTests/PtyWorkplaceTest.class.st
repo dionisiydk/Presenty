@@ -5,6 +5,12 @@ Class {
 }
 
 { #category : #tests }
+PtyWorkplaceTest >> testHasEmptyWorkersByDefault [
+
+	workplace workers should be isEmpty
+]
+
+{ #category : #tests }
 PtyWorkplaceTest >> testHasNoActiveTasksByDefault [
 
 	workplace activeTasks should be isEmpty
@@ -18,7 +24,7 @@ PtyWorkplaceTest >> testPlanningTaskExecutionWhenNoWorkersExists [
 	executionPlan := workplace planExecutionOf: task by: #user.
 	
 	executionPlan should beInstanceOf: PtyInitiateNewExecutionPlan.
-	executionPlan implementingTask should be: task.
+	executionPlan task should be: task.
 	task user should be: #user.
 	executionPlan worker should not be: nil.
 	workplace workers should include: executionPlan worker

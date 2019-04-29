@@ -2,7 +2,8 @@ Class {
 	#name : #PtyWorkplace,
 	#superclass : #Object,
 	#instVars : [
-		'activeTasks'
+		'activeTasks',
+		'workers'
 	],
 	#category : #'Presenty-NewCore'
 }
@@ -27,5 +28,26 @@ PtyWorkplace >> addTask: aTask [
 PtyWorkplace >> initialize [
 	super initialize.
 	
-	activeTasks := OrderedCollection new
+	activeTasks := OrderedCollection new.
+	workers := OrderedCollection new
+]
+
+{ #category : #'task execution' }
+PtyWorkplace >> planExecutionOf: aTask by: aUser [
+
+	| worker |
+	worker := PtyWorker at: self.
+	workers add: worker.
+	aTask user: aUser.
+	^PtyInitiateNewExecutionPlan of: aTask by: worker
+]
+
+{ #category : #accessing }
+PtyWorkplace >> workers [
+	^ workers
+]
+
+{ #category : #accessing }
+PtyWorkplace >> workers: anObject [
+	workers := anObject
 ]
