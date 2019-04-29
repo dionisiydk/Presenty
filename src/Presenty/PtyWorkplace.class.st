@@ -24,6 +24,11 @@ PtyWorkplace >> addTask: aTask [
 	activeTasks add: aTask
 ]
 
+{ #category : #accessing }
+PtyWorkplace >> addWorker: aWorker [ 
+	workers add: aWorker
+]
+
 { #category : #initialization }
 PtyWorkplace >> initialize [
 	super initialize.
@@ -35,11 +40,15 @@ PtyWorkplace >> initialize [
 { #category : #'task execution' }
 PtyWorkplace >> planExecutionOf: aTask by: aUser [
 
-	| worker |
-	worker := PtyWorker at: self.
-	workers add: worker.
+	| activeWorker |
 	aTask user: aUser.
-	^PtyInitiateNewExecutionPlan of: aTask by: worker
+	
+	activeWorker := workers detect: [ :each | each isActive ] ifNone: [ | newWorker |
+		newWorker := PtyWorker at: self.
+		self addWorker: newWorker.
+		^PtyInitiateNewExecutionPlan of: aTask by: newWorker].
+	
+	^PtyContinueActiveExecutionPlan of: aTask by: activeWorker
 ]
 
 { #category : #accessing }
