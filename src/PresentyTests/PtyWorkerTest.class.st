@@ -25,48 +25,30 @@ PtyWorkerTest >> testDefaultExecutionPriorityIsReturnedFromWorkspace [
 ]
 
 { #category : #tests }
-PtyWorkerTest >> testExecutionTask [
+PtyWorkerTest >> testFailedTaskExecution [
 
-	[:task |
-	
-		[worker executeTask: task]
-			should strictly satisfy: 
-		[workplace requestUserFor: task.
-		workplace waitUserAction].
-	
-	] runWithMocks 
-]
-
-{ #category : #tests }
-PtyWorkerTest >> testExecutionTaskWhenErrorHappen [
-
-	| error request |
-	[:task |
-		error := Error new.
-		request := PtyUserRequestStub new.
+	| error |
+	error := Error new.
+	task stub body willRaise: error.
 		
-		[worker executeTask: task]
-			should strictly satisfy: 
-		[(workplace requestUserFor: task) willRaise: error.
-		(workplace notifyUserAbout: error) willRaise: request.
-		workplace waitUserAction when: [request isExecuted] is: true].
+	worker executeTask: task.
 	
-	] runWithMocks 
+	workplace should receive notifyUserAbout: error
+	
 ]
 
 { #category : #tests }
-PtyWorkerTest >> testExecutionTaskWhenUserRequestSignalled [
+PtyWorkerTest >> testFailedTaskExecutionNotificationShouldExpectNewUserRequests [
 
 	| request |
-	[:task |
-		request := PtyUserRequestStub new.
+	task stub body willRaise: Error new.
+	request := PtyUserRequestStub new.
+	(workplace stub notifyUserAbout: Any) willRaise: request.
 		
-		[worker executeTask: task]
-			should strictly satisfy: 
-		[(workplace requestUserFor: task) willRaise: request.
-		workplace waitUserAction when: [request isExecuted] is: true].
+	worker executeTask: task.
 	
-	] runWithMocks 
+	request should be isExecuted
+	
 ]
 
 { #category : #tests }
@@ -74,7 +56,7 @@ PtyWorkerTest >> testRunTaskInBackgroundProcess [
 		
 	worker runTask: task.
 	
-	(workplace should receive requestUserFor: task) inAnotherProcess
+	task should receive body inAnotherProcess
 ]
 
 { #category : #tests }
@@ -82,7 +64,7 @@ PtyWorkerTest >> testRunTaskInBackgroundProcessWithTaskExecutionPriority [
 
 	worker runTask: task.
 	
-	(workplace should receive requestUserFor: task) 
+	task should receive body
 		inProcessWhich priority should equal: task executionPriority
 ]
 
@@ -104,4 +86,24 @@ PtyWorkerTest >> testStoppingTaskWhenNoProcess [
 	worker process: nil.
 	
 	worker stopTask
+]
+
+{ #category : #tests }
+PtyWorkerTest >> testTaskExecution [
+
+	worker executeTask: task.
+	
+	task should receive body
+]
+
+{ #category : #tests }
+PtyWorkerTest >> testTaskExecutionShouldExpectUserRequest [
+
+	| request |
+	request := PtyUserRequestStub new.
+	task stub body willRaise: request.
+		
+	worker executeTask: task.
+	
+	request should be isExecuted
 ]

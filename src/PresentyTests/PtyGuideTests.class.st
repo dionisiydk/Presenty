@@ -262,20 +262,6 @@ PtyGuideTests >> testCreationTaskLikeRequested [
 ]
 
 { #category : #tests }
-PtyGuideTests >> testExecutionTask [
-	
-	[:taskController :task | 
-		guide taskController: taskController.
-		
-		[guide executeTask: task]
-			should strictly satisfy: 
-		[taskController stopTask.
-		taskController runTask: task]
-
-	] runWithMocks
-]
-
-{ #category : #tests }
 PtyGuideTests >> testExecutionTaskShouldResetCurrentTasks [
 	
 	[:taskController :task | 
@@ -544,6 +530,20 @@ PtyGuideTests >> testShowingViewArea [
 		[guide showViewAreaBy: #areaActivator] 
 			should strictly satisfy: 
 		[viewArea activateBy: #areaActivator]
+
+	] runWithMocks
+]
+
+{ #category : #tests }
+PtyGuideTests >> testTaskExecution [
+	
+	[:taskController :task | 
+		guide taskController: taskController.
+		
+		[guide executeTask: task]
+			should strictly satisfy: 
+		[taskController stopTask.
+		taskController runTask: task]
 
 	] runWithMocks
 ]

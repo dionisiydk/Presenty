@@ -24,14 +24,13 @@ PtyWorker >> defaultTaskExecutionPriority [
 PtyWorker >> executeTask: aTask [
 
 	[	
-		[workspace requestUserFor: aTask] 
+		[aTask body] 
 			on: Error do: [:err | workspace notifyUserAbout: err]
 
 	] on: PtyUserRequest do: [:request | 
 			request executeBy: workspace].
 	
 	workspace waitUserAction
-	
 ]
 
 { #category : #accessing }
@@ -47,7 +46,7 @@ PtyWorker >> process: anObject [
 { #category : #controlling }
 PtyWorker >> runTask: aTask [
 	process := [ self executeTask: aTask ] newProcess.
-	process name: 'Execution process of ', aTask printString.
+	process name: 'Worker process of ', aTask printString.
 	process priority: aTask executionPriority.
 	process resume
 ]

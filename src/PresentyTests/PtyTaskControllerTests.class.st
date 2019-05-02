@@ -17,20 +17,7 @@ PtyTaskControllerTests >> setUp [
 ]
 
 { #category : #tests }
-PtyTaskControllerTests >> testExecutionTask [
-
-	[:task |
-	
-		[controller executeTask: task]
-			should strictly satisfy: 
-		[guide requestUserFor: task.
-		guide waitUserAction].
-	
-	] runWithMocks 
-]
-
-{ #category : #tests }
-PtyTaskControllerTests >> testExecutionTaskWhenErrorHappen [
+PtyTaskControllerTests >> testFailedTaskExecution [
 
 	| error request |
 	[:task |
@@ -41,21 +28,6 @@ PtyTaskControllerTests >> testExecutionTaskWhenErrorHappen [
 			should strictly satisfy: 
 		[(guide requestUserFor: task) willRaise: error.
 		(guide notifyUserAbout: error) willRaise: request.
-		guide waitUserAction when: [request isExecuted] is: true].
-	
-	] runWithMocks 
-]
-
-{ #category : #tests }
-PtyTaskControllerTests >> testExecutionTaskWhenUserRequestSignalled [
-
-	| request |
-	[:task |
-		request := PtyUserRequestStub new.
-		
-		[controller executeTask: task]
-			should strictly satisfy: 
-		[(guide requestUserFor: task) willRaise: request.
 		guide waitUserAction when: [request isExecuted] is: true].
 	
 	] runWithMocks 
@@ -95,4 +67,32 @@ PtyTaskControllerTests >> testStoppingTaskWhenNoProcess [
 	controller process: nil.
 	
 	controller stopTask
+]
+
+{ #category : #tests }
+PtyTaskControllerTests >> testTaskExecution [
+
+	[:task |
+	
+		[controller executeTask: task]
+			should strictly satisfy: 
+		[guide requestUserFor: task.
+		guide waitUserAction].
+	
+	] runWithMocks 
+]
+
+{ #category : #tests }
+PtyTaskControllerTests >> testTaskExecutionShouldExpectUserRequest [
+
+	| request |
+	[:task |
+		request := PtyUserRequestStub new.
+		
+		[controller executeTask: task]
+			should strictly satisfy: 
+		[(guide requestUserFor: task) willRaise: request.
+		guide waitUserAction when: [request isExecuted] is: true].
+	
+	] runWithMocks 
 ]
