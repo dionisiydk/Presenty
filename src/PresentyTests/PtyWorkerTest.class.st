@@ -13,7 +13,7 @@ PtyWorkerTest >> setUp [
 	super setUp.
 	
 	workplace := Mock new.
-	worker := PtyWorker at: workplace.
+	worker := PtyWorker atWorkplace: workplace.
 	task := Mock new.
 	task stub executionPriority willReturn: Processor activePriority + 1
 ]

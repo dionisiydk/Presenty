@@ -8,7 +8,7 @@ Class {
 PtyWorkplaceTest >> testAddNewWorker [
 
 	| worker |
-	worker := PtyWorker at: workplace.
+	worker := PtyWorker atWorkplace: workplace.
 	
 	workplace addWorker: worker.
 	
@@ -31,47 +31,40 @@ PtyWorkplaceTest >> testHasNoActiveTasksByDefault [
 PtyWorkplaceTest >> testPlanningTaskExecutionWhenNoWorkersExists [
 
 	| task executionPlan |
-	task := [] asTask.
+	task := Mock new.
 	executionPlan := workplace planExecutionOf: task by: #user.
 	
-	executionPlan should beInstanceOf: PtyInitiateNewExecutionPlan.
-	executionPlan task should be: task.
-	task user should be: #user.
-	executionPlan worker should not be: nil.
-	workplace workers should include: executionPlan worker
+	workplace workers should haveSize: 1.
+	executionPlan should beReturnedFrom: [task prepareExecutionPlan: PtyInitiateNewExecutionPlan by: workplace workers first].
+	task should receive user: #user.
+	workplace workers first workplace should be: workplace
 ]
 
 { #category : #tests }
 PtyWorkplaceTest >> testPlanningTaskExecutionWhenThereAreWorkersButNobodyIsActive [
 
 	| task executionPlan worker |
-	task := [] asTask.
+	task := Mock new.
 	worker := Mock new.
 	workplace addWorker: worker.
 	worker stub isActive willReturn: false.
 	
 	executionPlan := workplace planExecutionOf: task by: #user.
 	
-	executionPlan should beInstanceOf: PtyInitiateNewExecutionPlan.
-	executionPlan task should be: task.
-	task user should be: #user.
-	executionPlan worker should not be: nil.
-	workplace workers should include: executionPlan worker
+	executionPlan should beReturnedFrom: [task prepareExecutionPlan: PtyInitiateNewExecutionPlan by: workplace workers last].
+	workplace workers should haveSize: 2
 ]
 
 { #category : #tests }
 PtyWorkplaceTest >> testPlanningTaskExecutionWhenThereIsActiveWorker [
 
 	| task executionPlan worker |
-	task := [] asTask.
+	task := Mock new.
 	worker := Mock new.
 	workplace addWorker: worker.
 	worker stub isActive willReturn: true.
 	
 	executionPlan := workplace planExecutionOf: task by: #user.
 	
-	executionPlan should beInstanceOf: PtyContinueActiveExecutionPlan.
-	executionPlan task should be: task.
-	task user should be: #user.
-	executionPlan worker should be: worker
+	executionPlan should beReturnedFrom: [task prepareExecutionPlan: PtyContinueActiveExecutionPlan by: worker].
 ]

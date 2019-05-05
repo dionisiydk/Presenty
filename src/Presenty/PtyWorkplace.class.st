@@ -44,11 +44,11 @@ PtyWorkplace >> planExecutionOf: aTask by: aUser [
 	aTask user: aUser.
 	
 	activeWorker := workers detect: [ :each | each isActive ] ifNone: [ | newWorker |
-		newWorker := PtyWorker at: self.
+		newWorker := PtyWorker atWorkplace: self.
 		self addWorker: newWorker.
-		^PtyInitiateNewExecutionPlan of: aTask by: newWorker].
+		^aTask prepareExecutionPlan: PtyInitiateNewExecutionPlan by: newWorker].
 	
-	^PtyContinueActiveExecutionPlan of: aTask by: activeWorker
+	^aTask prepareExecutionPlan: PtyContinueActiveExecutionPlan by: activeWorker
 ]
 
 { #category : #accessing }

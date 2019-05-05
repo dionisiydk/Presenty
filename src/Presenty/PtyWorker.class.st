@@ -2,22 +2,22 @@ Class {
 	#name : #PtyWorker,
 	#superclass : #Object,
 	#instVars : [
-		'workspace',
-		'process'
+		'process',
+		'workplace'
 	],
 	#category : #'Presenty-NewCore'
 }
 
 { #category : #'instance creation' }
-PtyWorker class >> at: aWorkspace [
+PtyWorker class >> atWorkplace: aWorkplace [
 
 	^self new 
-		workspace: aWorkspace
+		workplace: aWorkplace
 ]
 
 { #category : #accessing }
 PtyWorker >> defaultTaskExecutionPriority [
-	^ workspace defaultTaskExecutionPriority
+	^ workplace defaultTaskExecutionPriority
 ]
 
 { #category : #controlling }
@@ -25,12 +25,12 @@ PtyWorker >> executeTask: aTask [
 
 	[	
 		[aTask body] 
-			on: Error do: [:err | workspace notifyUserAbout: err]
+			on: Error do: [:err | workplace notifyUserAbout: err]
 
 	] on: PtyUserRequest do: [:request | 
-			request executeBy: workspace].
+			request executeBy: workplace].
 	
-	workspace waitUserAction
+	workplace waitUserAction
 ]
 
 { #category : #accessing }
@@ -57,11 +57,11 @@ PtyWorker >> stopTask [
 ]
 
 { #category : #accessing }
-PtyWorker >> workspace [
-	^ workspace
+PtyWorker >> workplace [
+	^ workplace
 ]
 
 { #category : #accessing }
-PtyWorker >> workspace: anObject [
-	workspace := anObject
+PtyWorker >> workplace: anObject [
+	workplace := anObject
 ]
