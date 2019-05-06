@@ -41,14 +41,20 @@ PtyWorkplace >> initialize [
 PtyWorkplace >> planExecutionOf: aTask by: aUser [
 
 	| activeWorker |
-	aTask user: aUser.
 	
-	activeWorker := workers detect: [ :each | each isActive ] ifNone: [ | newWorker |
-		newWorker := PtyWorker atWorkplace: self.
-		self addWorker: newWorker.
-		^aTask prepareExecutionPlan: PtyInitiateNewExecutionPlan by: newWorker].
+	activeWorker := workers detect: [ :each | each isActive ] ifNone: [
+		PtyWorker atWorkplace: self].
 	
-	^aTask prepareExecutionPlan: PtyContinueActiveExecutionPlan by: activeWorker
+	aTask 	user: aUser.
+	aTask 	worker: activeWorker.
+		
+	^self preferredTaskFor: aTask
+]
+
+{ #category : #'task execution' }
+PtyWorkplace >> preferredTaskFor: requestedTask [
+	"Here it should be call to workspace settings"
+	^requestedTask copy
 ]
 
 { #category : #accessing }

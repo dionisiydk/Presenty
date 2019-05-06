@@ -27,11 +27,11 @@ PtyUser >> confirm: userMessage [
 ]
 
 { #category : #requests }
-PtyUser >> executeTask: aTask [
+PtyUser >> executeTask: requestedTask [
 	
-	| executionPlan |
-	executionPlan := workplace planExecutionOf: aTask by: self.
-	^executionPlan run
+	| plannedTask |
+	plannedTask := workplace planExecutionOf: requestedTask by: self.
+	^plannedTask execute
 ]
 
 { #category : #requests }
