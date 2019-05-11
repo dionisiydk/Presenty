@@ -44,10 +44,11 @@ PtyWorkplace >> planExecutionOf: aTask by: aUser [
 	
 	activeWorker := workers detect: [ :each | each isActive ] ifNone: [
 		PtyWorker atWorkplace: self].
-	
+	self activeWorkerOrNewOne.
 	aTask 	user: aUser.
 	aTask 	worker: activeWorker.
-		
+	aTask beRequestedFor: aUser from: activeWorker.
+	
 	^self preferredTaskFor: aTask
 ]
 
