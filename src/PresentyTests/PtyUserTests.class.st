@@ -106,14 +106,14 @@ PtyUserTests >> testStoppingCurrentTask [
 { #category : #tests }
 PtyUserTests >> testTaskExecution [
 
-	| result executionPlan |
+	| result plannedTask |
 
-	executionPlan := Mock new.
-	(workplace stub planExecutionOf: #task by: user) willReturn: executionPlan.
+	plannedTask := Mock new.
+	(workplace stub planExecutionOf: #task by: user) willReturn: plannedTask.
 	
 	result := user executeTask: #task.
 	
-	result should beReturnedFrom: [executionPlan run]
+	result should beReturnedFrom: [plannedTask execute]
 ]
 
 { #category : #'as yet unclassified' }

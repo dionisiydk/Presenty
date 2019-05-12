@@ -1,6 +1,9 @@
 Class {
 	#name : #PtyWorkplaceTest,
 	#superclass : #PtyWorkplaceTestCase,
+	#instVars : [
+		'workplaceSettings'
+	],
 	#category : #'PresentyTests-NewCore'
 }
 
@@ -16,6 +19,45 @@ PtyWorkplaceTest >> testAddNewWorker [
 ]
 
 { #category : #tests }
+PtyWorkplaceTest >> testFindWorkerRequestingNewTaskWhenActiveWorkerExists [
+
+	| foundWorker activeWorker |
+	activeWorker := Mock new.
+	activeWorker stub isActive willReturn: true.
+	workplace addWorker: activeWorker.
+	
+	foundWorker := workplace findWorkerRequestingNewTask.
+	
+	foundWorker should be: activeWorker
+]
+
+{ #category : #tests }
+PtyWorkplaceTest >> testFindWorkerRequestingNewTaskWhenNoActiveWorkersExist [
+
+	| foundWorker existingWorker |
+	existingWorker := Mock new.
+	existingWorker stub isActive willReturn: false.
+	workplace addWorker: existingWorker.
+	
+	foundWorker := workplace findWorkerRequestingNewTask.
+	
+	workplace workers should not include: foundWorker.
+	foundWorker should beInstanceOf: PtyWorker.
+	foundWorker workplace should be: workplace
+]
+
+{ #category : #tests }
+PtyWorkplaceTest >> testFindWorkerRequestingNewTaskWhenNoWorkersExist [
+
+	| foundWorker |
+	foundWorker := workplace findWorkerRequestingNewTask.
+	
+	workplace workers should not include: foundWorker.
+	foundWorker should beInstanceOf: PtyWorker.
+	foundWorker workplace should be: workplace
+]
+
+{ #category : #tests }
 PtyWorkplaceTest >> testHasEmptyWorkersByDefault [
 
 	workplace workers should be isEmpty
@@ -28,43 +70,25 @@ PtyWorkplaceTest >> testHasNoActiveTasksByDefault [
 ]
 
 { #category : #tests }
-PtyWorkplaceTest >> testPlanningTaskExecutionWhenNoWorkersExists [
+PtyWorkplaceTest >> testPlanningTaskExecutionShouldPrepareRequestedTask [
 
-	| task executionPlan |
-	task := Mock new.
-	executionPlan := workplace planExecutionOf: task by: #user.
+	| requestedTask |
+	requestedTask := Mock new.
+	workplace stub findWorkerRequestingNewTask willReturn: #currentWorker.
 	
-	workplace workers should haveSize: 1.
-	executionPlan should beReturnedFrom: [task prepareExecutionPlan: PtyInitiateNewExecutionPlan by: workplace workers first].
-	task should receive user: #user.
-	workplace workers first workplace should be: workplace
+	workplace planExecutionOf: requestedTask by: #user.
+	
+	requestedTask should receive beRequestedFor: #user from: #currentWorker
 ]
 
 { #category : #tests }
-PtyWorkplaceTest >> testPlanningTaskExecutionWhenThereAreWorkersButNobodyIsActive [
+PtyWorkplaceTest >> testPlanningTaskExecutionShouldReturnPreferredTask [
 
-	| task executionPlan worker |
-	task := Mock new.
-	worker := Mock new.
-	workplace addWorker: worker.
-	worker stub isActive willReturn: false.
+	| requestedTask plannedTask |
+	requestedTask := Mock new.
+	(workplace stub findPreferredTaskImplementing: requestedTask) willReturn: #preferredTask.
 	
-	executionPlan := workplace planExecutionOf: task by: #user.
+	plannedTask := workplace planExecutionOf: requestedTask by: #user.
 	
-	executionPlan should beReturnedFrom: [task prepareExecutionPlan: PtyInitiateNewExecutionPlan by: workplace workers last].
-	workplace workers should haveSize: 2
-]
-
-{ #category : #tests }
-PtyWorkplaceTest >> testPlanningTaskExecutionWhenThereIsActiveWorker [
-
-	| task executionPlan worker |
-	task := Mock new.
-	worker := Mock new.
-	workplace addWorker: worker.
-	worker stub isActive willReturn: true.
-	
-	executionPlan := workplace planExecutionOf: task by: #user.
-	
-	executionPlan should beReturnedFrom: [task prepareExecutionPlan: PtyContinueActiveExecutionPlan by: worker].
+	plannedTask should be: #preferredTask
 ]

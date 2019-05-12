@@ -29,6 +29,27 @@ PtyWorkplace >> addWorker: aWorker [
 	workers add: aWorker
 ]
 
+{ #category : #'task execution' }
+PtyWorkplace >> findPreferredTaskImplementing: requestedTask [
+	"Here it should be call to workspace settings"
+	^requestedTask copy
+]
+
+{ #category : #'task execution' }
+PtyWorkplace >> findWorkerRequestingNewTask [
+	"Active worker is always one who requesting new tasks because it is executed from active process.
+	When it is not exist we assume that it is some implicit worker from the external system
+	(external for Presenty). And workplace will create an instance representing it as a result.
+	For example user can request new task from playground which is not managed by Presenty context.
+	In that case new worker will be created to represent this activity. 
+	When this worker will receive a command to execute a task 
+	it will became part of workplace environment (it will be added to workplace)"
+
+	^workers 
+		detect: [ :each | each isActive ] 
+		ifNone: [	PtyWorker atWorkplace: self]
+]
+
 { #category : #initialization }
 PtyWorkplace >> initialize [
 	super initialize.
@@ -40,22 +61,12 @@ PtyWorkplace >> initialize [
 { #category : #'task execution' }
 PtyWorkplace >> planExecutionOf: aTask by: aUser [
 
-	| activeWorker |
+	| currentWorker |
+	currentWorker := self findWorkerRequestingNewTask.
 	
-	activeWorker := workers detect: [ :each | each isActive ] ifNone: [
-		PtyWorker atWorkplace: self].
-	self activeWorkerOrNewOne.
-	aTask 	user: aUser.
-	aTask 	worker: activeWorker.
-	aTask beRequestedFor: aUser from: activeWorker.
+	aTask beRequestedFor: aUser from: currentWorker.
 	
-	^self preferredTaskFor: aTask
-]
-
-{ #category : #'task execution' }
-PtyWorkplace >> preferredTaskFor: requestedTask [
-	"Here it should be call to workspace settings"
-	^requestedTask copy
+	^self findPreferredTaskImplementing: aTask
 ]
 
 { #category : #accessing }
