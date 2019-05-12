@@ -9,7 +9,8 @@ Class {
 		'context',
 		'executionStrategy',
 		'worker',
-		'executionPriority'
+		'executionPriority',
+		'parentTask'
 	],
 	#category : #'Presenty-Core'
 }
@@ -98,6 +99,14 @@ PtyTask >> beImmediate [
 PtyTask >> beOneShot [
 
 	^executionStrategy := PtyOneShotTaskExecution new
+]
+
+{ #category : #controlling }
+PtyTask >> beRequestedFor: anUser from: aWorker [
+
+	user := anUser.
+	worker := aWorker.
+	parentTask := aWorker task
 ]
 
 { #category : #execution }
@@ -299,6 +308,16 @@ PtyTask >> parentLike: taskClass [
 	(self parent isKindOf: taskClass) ifTrue: [^self parent].
 	
 	^self parent parentLike: taskClass 
+]
+
+{ #category : #accessing }
+PtyTask >> parentTask [
+	^ parentTask
+]
+
+{ #category : #accessing }
+PtyTask >> parentTask: anObject [
+	parentTask := anObject
 ]
 
 { #category : #controlling }

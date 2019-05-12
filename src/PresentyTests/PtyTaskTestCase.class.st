@@ -64,6 +64,19 @@ PtyTaskTestCase >> testBecomeOneShotTask [
 ]
 
 { #category : #tests }
+PtyTaskTestCase >> testBecomeRequestedForUser [
+
+	| worker |
+	worker := Mock new.
+	
+	task beRequestedFor: #user from: worker.
+
+	task user should be: #user.
+	task worker should be: worker.
+	task parentTask should beReturnedFrom: [ worker task ] 
+]
+
+{ #category : #tests }
 PtyTaskTestCase >> testHasDefaultExecutionStrategy [
 
 	task executionStrategy should equals: task defaultExecutionStrategy
