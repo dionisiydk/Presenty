@@ -107,3 +107,15 @@ PtyWorkerTest >> testTaskExecutionShouldExpectUserRequest [
 	
 	request should be isExecuted
 ]
+
+{ #category : #tests }
+PtyWorkerTest >> testTaskExecutionWhenWorkerIsAlreadyActive [
+
+	| result |
+	worker stub isActive willReturn: true.
+	
+	result := worker executeTask: task.
+	
+	result should beReturnedFrom: [ task body].
+	worker activeTask should be: task
+]
