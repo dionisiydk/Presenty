@@ -77,6 +77,19 @@ PtyTaskTestCase >> testBecomeRequestedForUser [
 ]
 
 { #category : #tests }
+PtyTaskTestCase >> testExecution [
+
+	| executionStrategy result |
+	executionStrategy := Mock new.
+	task worker: #worker.
+	task executionStrategy: executionStrategy.
+
+	result := task execute.
+
+	result should beReturnedFrom: [ executionStrategy execute: task using: #worker ]
+]
+
+{ #category : #tests }
 PtyTaskTestCase >> testHasDefaultExecutionStrategy [
 
 	task executionStrategy should equals: task defaultExecutionStrategy
