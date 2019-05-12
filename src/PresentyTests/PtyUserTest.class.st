@@ -1,5 +1,5 @@
 Class {
-	#name : #PtyUserTests,
+	#name : #PtyUserTest,
 	#superclass : #PtyWorkplaceTestCase,
 	#instVars : [
 		'user'
@@ -8,7 +8,7 @@ Class {
 }
 
 { #category : #running }
-PtyUserTests >> setUp [
+PtyUserTest >> setUp [
 	super setUp.
 
 	workplace := Mock new.
@@ -16,7 +16,7 @@ PtyUserTests >> setUp [
 ]
 
 { #category : #'as yet unclassified' }
-PtyUserTests >> testConfirm [
+PtyUserTest >> testConfirm [
 	
 	| task |
 	[
@@ -30,7 +30,7 @@ PtyUserTests >> testConfirm [
 ]
 
 { #category : #tests }
-PtyUserTests >> testGoToBack [
+PtyUserTest >> testGoToBack [
 	
 	[:navigator | 
 		[user goToBack]  
@@ -42,7 +42,7 @@ PtyUserTests >> testGoToBack [
 ]
 
 { #category : #tests }
-PtyUserTests >> testGoToStart [
+PtyUserTest >> testGoToStart [
 	
 	[:navigator | 
 		[user goToStart]  
@@ -54,7 +54,7 @@ PtyUserTests >> testGoToStart [
 ]
 
 { #category : #tests }
-PtyUserTests >> testLookAtBlockOrPresenter [
+PtyUserTest >> testLookAtBlockOrPresenter [
 	
 	[:blockOrPresenter | 
 		[(user lookAt: blockOrPresenter) should be: #result]  
@@ -65,7 +65,7 @@ PtyUserTests >> testLookAtBlockOrPresenter [
 ]
 
 { #category : #tests }
-PtyUserTests >> testLookAtPresenterWithSomeUIAction [
+PtyUserTest >> testLookAtPresenterWithSomeUIAction [
 	
 	| task |
 	[
@@ -80,7 +80,7 @@ PtyUserTests >> testLookAtPresenterWithSomeUIAction [
 ]
 
 { #category : #tests }
-PtyUserTests >> testLookAtViewArea [
+PtyUserTest >> testLookAtViewArea [
 	
 	[:blockOrPresenter | 
 		[user lookAtViewArea should be: #result]  
@@ -90,7 +90,7 @@ PtyUserTests >> testLookAtViewArea [
 ]
 
 { #category : #tests }
-PtyUserTests >> testStoppingCurrentTask [
+PtyUserTest >> testStoppingCurrentTask [
 	
 	[:navigator :context | 
 		[user stopCurrentTask]  
@@ -104,7 +104,7 @@ PtyUserTests >> testStoppingCurrentTask [
 ]
 
 { #category : #tests }
-PtyUserTests >> testTaskExecution [
+PtyUserTest >> testTaskExecution [
 
 	| result plannedTask |
 
@@ -117,7 +117,7 @@ PtyUserTests >> testTaskExecution [
 ]
 
 { #category : #'as yet unclassified' }
-PtyUserTests >> testWaitingNamedActionExecution [
+PtyUserTest >> testWaitingNamedActionExecution [
 	
 	| task |
 	[
@@ -133,7 +133,7 @@ PtyUserTests >> testWaitingNamedActionExecution [
 ]
 
 { #category : #'as yet unclassified' }
-PtyUserTests >> testWaitingWhileBlockExecuted [
+PtyUserTest >> testWaitingWhileBlockExecuted [
 	
 	| task |
 	[
@@ -148,7 +148,7 @@ PtyUserTests >> testWaitingWhileBlockExecuted [
 ]
 
 { #category : #'as yet unclassified' }
-PtyUserTests >> testWarning [ 
+PtyUserTest >> testWarning [ 
 	
 	| task |
 	[
