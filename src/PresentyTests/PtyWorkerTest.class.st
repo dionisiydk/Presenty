@@ -25,44 +25,64 @@ PtyWorkerTest >> testDefaultExecutionPriorityIsReturnedFromWorkspace [
 ]
 
 { #category : #tests }
-PtyWorkerTest >> testFailedTaskExecution [
+PtyWorkerTest >> testInitialTaskExecution [
+
+	worker executeInitialTask: task.
+	
+	task should receive body
+]
+
+{ #category : #tests }
+PtyWorkerTest >> testInitialTaskExecutionShouldExpectUserRequest [
+
+	| request |
+	request := PtyUserRequestStub new.
+	task stub body willRaise: request.
+		
+	worker executeInitialTask: task.
+	
+	request should be isExecuted
+]
+
+{ #category : #tests }
+PtyWorkerTest >> testInitialTaskFailedExecution [
 
 	| error |
 	error := Error new.
 	task stub body willRaise: error.
 		
-	worker executeTask: task.
+	worker executeInitialTask: task.
 	
 	workplace should receive notifyUserAbout: error
 	
 ]
 
 { #category : #tests }
-PtyWorkerTest >> testFailedTaskExecutionNotificationShouldExpectNewUserRequests [
+PtyWorkerTest >> testInitialTaskFailedExecutionNotificationShouldExpectNewUserRequests [
 
 	| request |
 	task stub body willRaise: Error new.
 	request := PtyUserRequestStub new.
 	(workplace stub notifyUserAbout: Any) willRaise: request.
 		
-	worker executeTask: task.
+	worker executeInitialTask: task.
 	
 	request should be isExecuted
 	
 ]
 
 { #category : #tests }
-PtyWorkerTest >> testRunTaskInBackgroundProcess [
+PtyWorkerTest >> testStartWithTaskInBackgroundProcess [
 		
-	worker runTask: task.
+	worker startWithTask: task.
 	
 	task should receive body inAnotherProcess
 ]
 
 { #category : #tests }
-PtyWorkerTest >> testRunTaskInBackgroundProcessWithTaskExecutionPriority [
+PtyWorkerTest >> testStartWithTaskUsingTaskExecutionPriority [
 
-	worker runTask: task.
+	worker startWithTask: task.
 	
 	task should receive body
 		inProcessWhich priority should equal: task executionPriority
@@ -89,26 +109,6 @@ PtyWorkerTest >> testStoppingTaskWhenNoProcess [
 ]
 
 { #category : #tests }
-PtyWorkerTest >> testTaskExecution [
-
-	worker executeTask: task.
-	
-	task should receive body
-]
-
-{ #category : #tests }
-PtyWorkerTest >> testTaskExecutionShouldExpectUserRequest [
-
-	| request |
-	request := PtyUserRequestStub new.
-	task stub body willRaise: request.
-		
-	worker executeTask: task.
-	
-	request should be isExecuted
-]
-
-{ #category : #tests }
 PtyWorkerTest >> testTaskExecutionWhenWorkerIsAlreadyActive [
 
 	| result |
@@ -117,5 +117,16 @@ PtyWorkerTest >> testTaskExecutionWhenWorkerIsAlreadyActive [
 	result := worker executeTask: task.
 	
 	result should beReturnedFrom: [ task body].
+	worker activeTask should be: task
+]
+
+{ #category : #tests }
+PtyWorkerTest >> testTaskExecutionWhenWorkerIsNotActiveYet [
+
+	worker stub isActive willReturn: false.
+
+	worker executeTask: task.
+	
+	worker should receive startWithTask: task. 
 	worker activeTask should be: task
 ]

@@ -34,6 +34,21 @@ PtyTaskControllerTests >> testFailedTaskExecution [
 ]
 
 { #category : #tests }
+PtyTaskControllerTests >> testInitialTaskExecutionShouldExpectUserRequest [
+
+	| request |
+	[:task |
+		request := PtyUserRequestStub new.
+		
+		[controller executeTask: task]
+			should strictly satisfy: 
+		[(guide requestUserFor: task) willRaise: request.
+		guide waitUserAction when: [request isExecuted] is: true].
+	
+	] runWithMocks 
+]
+
+{ #category : #tests }
 PtyTaskControllerTests >> testRunningTask [
 
 	[:task |
@@ -78,21 +93,6 @@ PtyTaskControllerTests >> testTaskExecution [
 			should strictly satisfy: 
 		[guide requestUserFor: task.
 		guide waitUserAction].
-	
-	] runWithMocks 
-]
-
-{ #category : #tests }
-PtyTaskControllerTests >> testTaskExecutionShouldExpectUserRequest [
-
-	| request |
-	[:task |
-		request := PtyUserRequestStub new.
-		
-		[controller executeTask: task]
-			should strictly satisfy: 
-		[(guide requestUserFor: task) willRaise: request.
-		guide waitUserAction when: [request isExecuted] is: true].
 	
 	] runWithMocks 
 ]
