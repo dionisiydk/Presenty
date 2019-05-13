@@ -27,7 +27,7 @@ PtyWorkerTest >> testDefaultExecutionPriorityIsReturnedFromWorkspace [
 { #category : #tests }
 PtyWorkerTest >> testInitialTaskExecution [
 
-	worker executeInitialTask: task.
+	worker runInitialTask: task.
 	
 	task should receive body
 ]
@@ -39,7 +39,7 @@ PtyWorkerTest >> testInitialTaskExecutionShouldExpectUserRequest [
 	request := PtyUserRequestStub new.
 	task stub body willRaise: request.
 		
-	worker executeInitialTask: task.
+	worker runInitialTask: task.
 	
 	request should be isExecuted
 ]
@@ -51,7 +51,7 @@ PtyWorkerTest >> testInitialTaskFailedExecution [
 	error := Error new.
 	task stub body willRaise: error.
 		
-	worker executeInitialTask: task.
+	worker runInitialTask: task.
 	
 	workplace should receive notifyUserAbout: error
 	
@@ -65,10 +65,34 @@ PtyWorkerTest >> testInitialTaskFailedExecutionNotificationShouldExpectNewUserRe
 	request := PtyUserRequestStub new.
 	(workplace stub notifyUserAbout: Any) willRaise: request.
 		
-	worker executeInitialTask: task.
+	worker runInitialTask: task.
 	
 	request should be isExecuted
 	
+]
+
+{ #category : #tests }
+PtyWorkerTest >> testIsActiveWhenItRunsActiveProcess [
+
+	worker process: Processor activeProcess.	
+	
+	worker should be isActive
+]
+
+{ #category : #tests }
+PtyWorkerTest >> testIsNotActiveWhenItDoesNotRunActiveProcess [
+
+	worker process: [] newProcess.	
+	
+	worker should not be isActive
+]
+
+{ #category : #tests }
+PtyWorkerTest >> testIsNotActiveWhenItIsNotStartedYet [
+
+	worker process: nil.
+	
+	worker should not be isActive
 ]
 
 { #category : #tests }

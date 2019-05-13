@@ -31,26 +31,18 @@ PtyWorker >> defaultTaskExecutionPriority [
 	^ workplace defaultTaskExecutionPriority
 ]
 
-{ #category : #controlling }
-PtyWorker >> executeInitialTask: aTask [
-
-	[	
-		[aTask body] 
-			on: Error do: [:err | workplace notifyUserAbout: err]
-
-	] on: PtyUserRequest do: [:request | 
-			request executeBy: workplace].
-	
-	workplace waitUserAction
-]
-
-{ #category : #controlling }
+{ #category : #'execution API' }
 PtyWorker >> executeTask: aTask [
 
 	activeTask := aTask.
 	self isActive ifTrue: [ ^activeTask body].
 	
 	self startWithTask: aTask
+]
+
+{ #category : #testing }
+PtyWorker >> isActive [ 
+	^process == Processor activeProcess
 ]
 
 { #category : #accessing }
@@ -64,8 +56,21 @@ PtyWorker >> process: anObject [
 ]
 
 { #category : #controlling }
+PtyWorker >> runInitialTask: aTask [
+
+	[	
+		[aTask body] 
+			on: Error do: [:err | workplace notifyUserAbout: err]
+
+	] on: PtyUserRequest do: [:request | 
+			request executeBy: workplace].
+	
+	workplace waitUserAction
+]
+
+{ #category : #controlling }
 PtyWorker >> startWithTask: aTask [
-	process := [ self executeInitialTask: aTask ] newProcess.
+	process := [ self runInitialTask: aTask ] newProcess.
 	process name: 'Worker process of ', aTask printString.
 	process priority: aTask executionPriority.
 	process resume
