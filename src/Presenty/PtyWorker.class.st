@@ -35,6 +35,8 @@ PtyWorker >> defaultTaskExecutionPriority [
 PtyWorker >> executeTask: aTask [
 
 	activeTask := aTask.
+	workplace registerActiveTask: aTask.
+	
 	self isActive ifTrue: [ ^activeTask body].
 	
 	self startWithTask: aTask

@@ -133,6 +133,14 @@ PtyWorkerTest >> testStoppingTaskWhenNoProcess [
 ]
 
 { #category : #tests }
+PtyWorkerTest >> testTaskExecutionShouldRegisterTaskAtWorkplace [
+	
+	worker executeTask: task.
+	
+	workplace should receive registerActiveTask: task
+]
+
+{ #category : #tests }
 PtyWorkerTest >> testTaskExecutionWhenWorkerIsAlreadyActive [
 
 	| result |
