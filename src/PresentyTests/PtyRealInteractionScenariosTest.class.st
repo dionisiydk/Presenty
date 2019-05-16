@@ -45,7 +45,9 @@ PtyRealInteractionScenariosTest >> testAddImmediateTask [
 PtyRealInteractionScenariosTest >> testAddOneShotTask [ 
 
 	| task result |
-	task := [ result := #done ] asTask.
+	task := [
+		workplace activeTasks should include: task.
+		result := #done ] asTask.
 	task beOneShot.
 	
 	user executeTask: task.
