@@ -32,6 +32,12 @@ PtyWorker >> defaultTaskExecutionPriority [
 ]
 
 { #category : #'execution API' }
+PtyWorker >> deferTask: aTask [
+	
+	workplace registerActiveTask: aTask
+]
+
+{ #category : #'execution API' }
 PtyWorker >> executeTask: aTask [
 
 	activeTask := aTask.

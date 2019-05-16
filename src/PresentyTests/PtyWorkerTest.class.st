@@ -25,6 +25,15 @@ PtyWorkerTest >> testDefaultExecutionPriorityIsReturnedFromWorkspace [
 ]
 
 { #category : #tests }
+PtyWorkerTest >> testDeferringTaskShouldJustRegisterItInWorkplace [
+
+	worker deferTask: task.
+	
+	workplace should receive registerActiveTask: task.
+	task should not receive body
+]
+
+{ #category : #tests }
 PtyWorkerTest >> testInitialTaskExecution [
 
 	worker runInitialTask: task.
