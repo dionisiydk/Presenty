@@ -18,17 +18,6 @@ PtyWorkplace >> activeTasks: anObject [
 	activeTasks := anObject
 ]
 
-{ #category : #accessing }
-PtyWorkplace >> addTask: aTask [
-
-	activeTasks add: aTask
-]
-
-{ #category : #accessing }
-PtyWorkplace >> addWorker: aWorker [ 
-	workers add: aWorker
-]
-
 { #category : #'task execution' }
 PtyWorkplace >> findPreferredTaskImplementing: requestedTask [
 	"Here it should be call to workspace settings"
@@ -67,6 +56,21 @@ PtyWorkplace >> planExecutionOf: aTask by: aUser [
 	aTask beRequestedFor: aUser from: currentWorker.
 	
 	^self findPreferredTaskImplementing: aTask
+]
+
+{ #category : #controlling }
+PtyWorkplace >> registerActiveTask: aTask [
+
+	self registerWorker: aTask worker.	
+	activeTasks add: aTask
+]
+
+{ #category : #controlling }
+PtyWorkplace >> registerWorker: aWorker [ 
+
+	(workers includes: aWorker) ifTrue: [ ^self ].
+	
+	workers add: aWorker
 ]
 
 { #category : #accessing }

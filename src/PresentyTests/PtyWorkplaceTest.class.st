@@ -8,23 +8,12 @@ Class {
 }
 
 { #category : #tests }
-PtyWorkplaceTest >> testAddNewWorker [
-
-	| worker |
-	worker := PtyWorker atWorkplace: workplace.
-	
-	workplace addWorker: worker.
-	
-	workplace workers should include: worker
-]
-
-{ #category : #tests }
 PtyWorkplaceTest >> testFindWorkerRequestingNewTaskWhenActiveWorkerExists [
 
 	| foundWorker activeWorker |
 	activeWorker := Mock new.
 	activeWorker stub isActive willReturn: true.
-	workplace addWorker: activeWorker.
+	workplace registerWorker: activeWorker.
 	
 	foundWorker := workplace findWorkerRequestingNewTask.
 	
@@ -37,7 +26,7 @@ PtyWorkplaceTest >> testFindWorkerRequestingNewTaskWhenNoActiveWorkersExist [
 	| foundWorker existingWorker |
 	existingWorker := Mock new.
 	existingWorker stub isActive willReturn: false.
-	workplace addWorker: existingWorker.
+	workplace registerWorker: existingWorker.
 	
 	foundWorker := workplace findWorkerRequestingNewTask.
 	
@@ -91,4 +80,42 @@ PtyWorkplaceTest >> testPlanningTaskExecutionShouldReturnPreferredTask [
 	plannedTask := workplace planExecutionOf: requestedTask by: #user.
 	
 	plannedTask should be: #preferredTask
+]
+
+{ #category : #tests }
+PtyWorkplaceTest >> testRegisterActiveTask [
+
+	| worker task |
+	worker := PtyWorker atWorkplace: workplace.
+	task := [] asTask.
+	task worker: worker.
+	
+	workplace registerActiveTask: task.
+	
+	workplace workers should include: worker.
+	workplace activeTasks should include: task
+]
+
+{ #category : #tests }
+PtyWorkplaceTest >> testRegisteringNewWorker [
+
+	| worker |
+	worker := PtyWorker atWorkplace: workplace.
+	
+	workplace registerWorker: worker.
+	
+	workplace workers should include: worker
+]
+
+{ #category : #tests }
+PtyWorkplaceTest >> testRegisteringSameWorkerTwice [
+
+	| worker |
+	worker := PtyWorker atWorkplace: workplace.
+	
+	workplace registerWorker: worker.
+	workplace registerWorker: worker.
+	
+	workplace workers should haveSize: 1.
+	workplace workers should include: worker
 ]
