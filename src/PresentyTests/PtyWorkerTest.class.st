@@ -48,12 +48,13 @@ PtyWorkerTest >> testInitialTaskExecutionShouldExpectUserRequest [
 PtyWorkerTest >> testInitialTaskFailedExecution [
 
 	| error |
+	worker stub.
 	error := Error new.
 	task stub body willRaise: error.
 		
 	worker runInitialTask: task.
 	
-	workplace should receive notifyUserAbout: error
+	worker should receive notifyUserAbout: error
 	
 ]
 
@@ -61,14 +62,14 @@ PtyWorkerTest >> testInitialTaskFailedExecution [
 PtyWorkerTest >> testInitialTaskFailedExecutionNotificationShouldExpectNewUserRequests [
 
 	| request |
+	worker stub.
 	task stub body willRaise: Error new.
 	request := PtyUserRequestStub new.
-	(workplace stub notifyUserAbout: Any) willRaise: request.
+	(worker stub notifyUserAbout: Any) willRaise: request.
 		
 	worker runInitialTask: task.
 	
 	request should be isExecuted
-	
 ]
 
 { #category : #tests }

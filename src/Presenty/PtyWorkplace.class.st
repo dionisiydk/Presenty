@@ -3,7 +3,8 @@ Class {
 	#superclass : #Object,
 	#instVars : [
 		'activeTasks',
-		'workers'
+		'workers',
+		'defaultTaskExecutionPriority'
 	],
 	#category : #'Presenty-NewCore'
 }
@@ -18,10 +19,20 @@ PtyWorkplace >> activeTasks: anObject [
 	activeTasks := anObject
 ]
 
+{ #category : #accessing }
+PtyWorkplace >> defaultTaskExecutionPriority [
+	^ defaultTaskExecutionPriority
+]
+
+{ #category : #accessing }
+PtyWorkplace >> defaultTaskExecutionPriority: anObject [
+	defaultTaskExecutionPriority := anObject
+]
+
 { #category : #'task execution' }
 PtyWorkplace >> findPreferredTaskImplementing: requestedTask [
 	"Here it should be call to workspace settings"
-	^requestedTask copy
+	^requestedTask
 ]
 
 { #category : #'task execution' }
@@ -44,7 +55,8 @@ PtyWorkplace >> initialize [
 	super initialize.
 	
 	activeTasks := OrderedCollection new.
-	workers := OrderedCollection new
+	workers := OrderedCollection new.
+	defaultTaskExecutionPriority := Processor userBackgroundPriority
 ]
 
 { #category : #'task execution' }

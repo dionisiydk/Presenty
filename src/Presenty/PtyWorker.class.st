@@ -47,6 +47,10 @@ PtyWorker >> isActive [
 	^process == Processor activeProcess
 ]
 
+{ #category : #'execution API' }
+PtyWorker >> notifyUserAbout: anError [
+]
+
 { #category : #accessing }
 PtyWorker >> process [
 	^ process
@@ -62,12 +66,12 @@ PtyWorker >> runInitialTask: aTask [
 
 	[	
 		[aTask body] 
-			on: Error do: [:err | workplace notifyUserAbout: err]
+			on: Error do: [:err | self notifyUserAbout: err]
 
 	] on: PtyUserRequest do: [:request | 
-			request executeBy: workplace].
+			request executeBy: self].
 	
-	workplace waitUserAction
+	self waitUserAction
 ]
 
 { #category : #controlling }
@@ -81,6 +85,10 @@ PtyWorker >> startWithTask: aTask [
 { #category : #controlling }
 PtyWorker >> stopTask [
 	process ifNotNil: [process terminate]
+]
+
+{ #category : #'execution API' }
+PtyWorker >> waitUserAction [
 ]
 
 { #category : #accessing }

@@ -11,6 +11,7 @@ Class {
 PtyRealInteractionScenariosTest >> setUp [
 	super setUp.
 	
+	workplace defaultTaskExecutionPriority: Processor activePriority + 1.
 	user := PtyUser of: workplace.
 ]
 

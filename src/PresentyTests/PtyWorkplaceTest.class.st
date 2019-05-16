@@ -59,6 +59,12 @@ PtyWorkplaceTest >> testHasNoActiveTasksByDefault [
 ]
 
 { #category : #tests }
+PtyWorkplaceTest >> testHaveDefaultTaskExecutionPriority [
+
+	workplace defaultTaskExecutionPriority should not be: nil
+]
+
+{ #category : #tests }
 PtyWorkplaceTest >> testPlanningTaskExecutionShouldPrepareRequestedTask [
 
 	| requestedTask |
