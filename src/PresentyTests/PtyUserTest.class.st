@@ -113,7 +113,7 @@ PtyUserTest >> testTaskExecution [
 	
 	result := user executeTask: #task.
 	
-	result should beReturnedFrom: [plannedTask execute]
+	result should beReturnedFrom: [plannedTask requestExecution]
 ]
 
 { #category : #'as yet unclassified' }

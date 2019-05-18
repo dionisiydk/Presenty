@@ -169,11 +169,6 @@ PtyTask >> defaultPrototypeContextName [
 	^self class name
 ]
 
-{ #category : #execution }
-PtyTask >> execute [ 
-	^executionStrategy execute: self using: worker
-]
-
 { #category : #accessing }
 PtyTask >> executionPriority [
 	^ executionPriority ifNil: [ worker defaultTaskExecutionPriority ]
@@ -421,6 +416,11 @@ PtyTask >> readSampleProperitiesFrom: someRequestedTask [
 	super readSampleProperitiesFrom: someRequestedTask.
 	
 	name := someRequestedTask name
+]
+
+{ #category : #execution }
+PtyTask >> requestExecution [ 
+	^executionStrategy execute: self using: worker
 ]
 
 { #category : #testing }

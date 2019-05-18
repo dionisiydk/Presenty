@@ -84,7 +84,7 @@ PtyTaskTestCase >> testExecution [
 	task worker: #worker.
 	task executionStrategy: executionStrategy.
 
-	result := task execute.
+	result := task requestExecution.
 
 	result should beReturnedFrom: [ executionStrategy execute: task using: #worker ]
 ]

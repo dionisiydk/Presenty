@@ -31,7 +31,7 @@ PtyUser >> executeTask: requestedTask [
 	
 	| plannedTask |
 	plannedTask := workplace planExecutionOf: requestedTask by: self.
-	^plannedTask execute
+	^plannedTask requestExecution
 ]
 
 { #category : #requests }
