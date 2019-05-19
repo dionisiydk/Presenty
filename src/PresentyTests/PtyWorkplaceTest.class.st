@@ -89,7 +89,7 @@ PtyWorkplaceTest >> testPlanningTaskExecutionShouldReturnPreferredTask [
 ]
 
 { #category : #tests }
-PtyWorkplaceTest >> testRegisterActiveTask [
+PtyWorkplaceTest >> testRegisteringActiveTask [
 
 	| worker task |
 	worker := PtyWorker atWorkplace: workplace.
@@ -124,4 +124,16 @@ PtyWorkplaceTest >> testRegisteringSameWorkerTwice [
 	
 	workplace workers should haveSize: 1.
 	workplace workers should include: worker
+]
+
+{ #category : #tests }
+PtyWorkplaceTest >> testRemovingTask [
+
+	| task |
+	task := [] asTask.
+	workplace registerActiveTask: task.
+	
+	workplace removeTask: task.
+	
+	workplace activeTasks should not include: task
 ]

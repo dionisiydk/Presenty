@@ -10,7 +10,7 @@ PtyDeferredTaskExecutionTest >> createStrategy [
 ]
 
 { #category : #tests }
-PtyDeferredTaskExecutionTest >> testExecutingTask [ 
+PtyDeferredTaskExecutionTest >> testRequestingTaskExecution [ 
 
 	executionStrategy requestExecutionOf: task using: worker.
 	

@@ -31,19 +31,19 @@ PtyWorker >> defaultTaskExecutionPriority [
 	^ workplace defaultTaskExecutionPriority
 ]
 
-{ #category : #'execution API' }
+{ #category : #'task execution' }
 PtyWorker >> deferTask: aTask [
 	
 	workplace registerActiveTask: aTask
 ]
 
-{ #category : #'execution API' }
+{ #category : #'task execution' }
 PtyWorker >> executeTask: aTask [
 
 	activeTask := aTask.
 	workplace registerActiveTask: aTask.
 	
-	self isActive ifTrue: [ ^activeTask body].
+	self isActive ifTrue: [ ^activeTask startExecution].
 	
 	self startWithTask: aTask
 ]
@@ -53,7 +53,7 @@ PtyWorker >> isActive [
 	^process == Processor activeProcess
 ]
 
-{ #category : #'execution API' }
+{ #category : #'task execution' }
 PtyWorker >> notifyUserAbout: anError [
 ]
 
@@ -67,11 +67,17 @@ PtyWorker >> process: anObject [
 	process := anObject
 ]
 
+{ #category : #'task execution' }
+PtyWorker >> removeTask: aTask [
+	
+	workplace removeTask: aTask
+]
+
 { #category : #controlling }
 PtyWorker >> runInitialTask: aTask [
 
 	[	
-		[aTask body] 
+		[aTask startExecution] 
 			on: Error do: [:err | self notifyUserAbout: err]
 
 	] on: PtyUserRequest do: [:request | 
@@ -93,7 +99,7 @@ PtyWorker >> stopTask [
 	process ifNotNil: [process terminate]
 ]
 
-{ #category : #'execution API' }
+{ #category : #'task execution' }
 PtyWorker >> waitUserAction [
 ]
 

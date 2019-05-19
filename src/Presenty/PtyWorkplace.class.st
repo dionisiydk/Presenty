@@ -85,6 +85,12 @@ PtyWorkplace >> registerWorker: aWorker [
 	workers add: aWorker
 ]
 
+{ #category : #controlling }
+PtyWorkplace >> removeTask: aTask [
+
+	activeTasks remove: aTask
+]
+
 { #category : #accessing }
 PtyWorkplace >> workers [
 	^ workers

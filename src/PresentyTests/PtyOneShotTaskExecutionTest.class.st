@@ -10,7 +10,15 @@ PtyOneShotTaskExecutionTest >> createStrategy [
 ]
 
 { #category : #tests }
-PtyOneShotTaskExecutionTest >> testExecutingTask [ 
+PtyOneShotTaskExecutionTest >> testCompletingTaskExecution [ 
+
+	executionStrategy completeExecutionOf: task using: worker.
+	
+	worker should receive removeTask: task
+]
+
+{ #category : #tests }
+PtyOneShotTaskExecutionTest >> testRequestingTaskExecution [ 
 
 	| result |
 	result := executionStrategy requestExecutionOf: task using: worker.

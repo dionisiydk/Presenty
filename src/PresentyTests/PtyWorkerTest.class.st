@@ -38,7 +38,7 @@ PtyWorkerTest >> testInitialTaskExecution [
 
 	worker runInitialTask: task.
 	
-	task should receive body
+	task should receive startExecution 
 ]
 
 { #category : #tests }
@@ -46,7 +46,7 @@ PtyWorkerTest >> testInitialTaskExecutionShouldExpectUserRequest [
 
 	| request |
 	request := PtyUserRequestStub new.
-	task stub body willRaise: request.
+	task stub startExecution willRaise: request.
 		
 	worker runInitialTask: task.
 	
@@ -59,7 +59,7 @@ PtyWorkerTest >> testInitialTaskFailedExecution [
 	| error |
 	worker stub.
 	error := Error new.
-	task stub body willRaise: error.
+	task stub startExecution willRaise: error.
 		
 	worker runInitialTask: task.
 	
@@ -72,7 +72,7 @@ PtyWorkerTest >> testInitialTaskFailedExecutionNotificationShouldExpectNewUserRe
 
 	| request |
 	worker stub.
-	task stub body willRaise: Error new.
+	task stub startExecution willRaise: Error new.
 	request := PtyUserRequestStub new.
 	(worker stub notifyUserAbout: Any) willRaise: request.
 		
@@ -106,11 +106,19 @@ PtyWorkerTest >> testIsNotActiveWhenItIsNotStartedYet [
 ]
 
 { #category : #tests }
+PtyWorkerTest >> testRemovingTask [
+
+	worker removeTask: task.
+	
+	workplace should receive removeTask: task.
+]
+
+{ #category : #tests }
 PtyWorkerTest >> testStartWithTaskInBackgroundProcess [
 		
 	worker startWithTask: task.
 	
-	task should receive body inAnotherProcess
+	task should receive startExecution inAnotherProcess
 ]
 
 { #category : #tests }
@@ -118,7 +126,7 @@ PtyWorkerTest >> testStartWithTaskUsingTaskExecutionPriority [
 
 	worker startWithTask: task.
 	
-	task should receive body
+	task should receive startExecution
 		inProcessWhich priority should equal: task executionPriority
 ]
 
@@ -158,7 +166,7 @@ PtyWorkerTest >> testTaskExecutionWhenWorkerIsAlreadyActive [
 	
 	result := worker executeTask: task.
 	
-	result should beReturnedFrom: [ task body].
+	result should beReturnedFrom: [ task startExecution].
 	worker activeTask should be: task
 ]
 
