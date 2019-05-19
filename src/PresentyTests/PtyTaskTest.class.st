@@ -83,6 +83,16 @@ PtyTaskTest >> testCreationFromBlockWithName [
 ]
 
 { #category : #tests }
+PtyTaskTest >> testDefaultExecutionPriorityIsReturnedFromWorker [
+
+	| worker |
+	worker := Mock new.
+	task worker: worker.
+	
+	task executionPriority should beReturnedFrom: [ worker defaultTaskExecutionPriority ]
+]
+
+{ #category : #tests }
 PtyTaskTest >> testExecution [
 
 	| executionStrategy result |

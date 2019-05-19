@@ -204,16 +204,6 @@ PtyTaskTests >> testCreationContextForActivation [
 ]
 
 { #category : #tests }
-PtyTaskTests >> testDefaultExecutionPriorityIsReturnedFromWorker [
-
-	| worker |
-	worker := Mock new.
-	task worker: worker.
-	
-	task executionPriority should beReturnedFrom: [ worker defaultTaskExecutionPriority ]
-]
-
-{ #category : #tests }
 PtyTaskTests >> testGettingParent [
 	
 	[
