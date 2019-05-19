@@ -198,12 +198,12 @@ PtyRealInteractionScenariosTest >> testRequestUserForImmediateTask [
 	done should be: true.
 	workplace activeTasks should equal: { task. requestedTask }.
 	
-	requestedResult := #newResult1.
-	workplace resumeExecutionOf: requestedResult.
-	result should be: requestedResult.
+	requestedTask returnResult: #newResult2.
+	result should be: #newResult2.
 	
-	workplace resumeExecutionOf: task with: #newResult2.
-	result should be: #newResult2
+	requestedResult := #newResult1.
+	requestedTask repeatExecution.
+	result should be: requestedResult.
 ]
 
 { #category : #tests }
