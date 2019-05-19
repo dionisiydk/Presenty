@@ -142,12 +142,6 @@ PtyTaskTests >> testChildrenShouldRestoreParentAreaWhenParentContextShouldRestor
 ]
 
 { #category : #tests }
-PtyTaskTests >> testConvertingToTask [
-	
-	task asTask should be: task
-]
-
-{ #category : #tests }
 PtyTaskTests >> testConvertingToUserAction [
 
 	| actual |
@@ -259,12 +253,6 @@ PtyTaskTests >> testGettingPrototypeContextNameWhenNoConcreteNameSpecified [
 PtyTaskTests >> testHasAnnouncerByDefault [
 	
 	task announcer should beInstanceOf: Announcer
-]
-
-{ #category : #tests }
-PtyTaskTests >> testIsOneShotByDefault [
-
-	task executionStrategy should beInstanceOf: PtyOneShotTaskExecution 
 ]
 
 { #category : #tests }

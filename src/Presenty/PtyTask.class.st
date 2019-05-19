@@ -420,7 +420,7 @@ PtyTask >> readSampleProperitiesFrom: someRequestedTask [
 
 { #category : #execution }
 PtyTask >> requestExecution [ 
-	^executionStrategy execute: self using: worker
+	^executionStrategy requestExecutionOf: self using: worker
 ]
 
 { #category : #testing }
@@ -431,6 +431,16 @@ PtyTask >> shouldRestoreParentArea [
 { #category : #testing }
 PtyTask >> shouldSeparateForkTasks [
 	^false
+]
+
+{ #category : #execution }
+PtyTask >> startExecution [ 
+	
+	| result |
+	executionStrategy prepareExecutionOf: self using: worker.
+	result := self body.
+	executionStrategy completeExecutionOf: self using: worker.
+	^result
 ]
 
 { #category : #accessing }

@@ -5,7 +5,7 @@ Class {
 }
 
 { #category : #'task execution' }
-PtyImmediateTaskExecution >> execute: aTask using: aWorker [
+PtyImmediateTaskExecution >> requestExecutionOf: aTask using: aWorker [
 
 	^aWorker executeTask: aTask
 ]

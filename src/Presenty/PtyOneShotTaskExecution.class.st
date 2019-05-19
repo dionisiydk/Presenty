@@ -5,7 +5,7 @@ Class {
 }
 
 { #category : #'task execution' }
-PtyOneShotTaskExecution >> execute: aTask using: aWorker [
+PtyOneShotTaskExecution >> requestExecutionOf: aTask using: aWorker [
 
 	^aWorker executeTask: aTask
 ]

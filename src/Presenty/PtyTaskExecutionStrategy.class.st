@@ -5,7 +5,17 @@ Class {
 }
 
 { #category : #'task execution' }
-PtyTaskExecutionStrategy >> execute: aTask using: aWorker [
+PtyTaskExecutionStrategy >> completeExecutionOf: aTask using: aWorker [
+
+]
+
+{ #category : #'task execution' }
+PtyTaskExecutionStrategy >> prepareExecutionOf: aTask using: aWorker [
+
+]
+
+{ #category : #'task execution' }
+PtyTaskExecutionStrategy >> requestExecutionOf: aTask using: aWorker [
 
 	self subclassResponsibility 
 ]

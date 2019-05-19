@@ -13,7 +13,7 @@ PtyImmediateTaskExecutionTest >> createStrategy [
 PtyImmediateTaskExecutionTest >> testExecutingTask [ 
 
 	| result |
-	result := executionStrategy execute: task using: worker.
+	result := executionStrategy requestExecutionOf: task using: worker.
 	
 	result should beReturnedFrom: [worker executeTask: task]
 ]

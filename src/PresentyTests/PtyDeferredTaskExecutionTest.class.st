@@ -12,7 +12,7 @@ PtyDeferredTaskExecutionTest >> createStrategy [
 { #category : #tests }
 PtyDeferredTaskExecutionTest >> testExecutingTask [ 
 
-	executionStrategy execute: task using: worker.
+	executionStrategy requestExecutionOf: task using: worker.
 	
 	worker should receive deferTask: task
 ]
