@@ -16,47 +16,6 @@ PtyRealInteractionScenariosTest >> setUp [
 ]
 
 { #category : #tests }
-PtyRealInteractionScenariosTest >> testAddDeferredTask [ 
-
-	| task result |
-	task := [ result := #done ] asTask.
-	task beDeferred.
-	
-	user executeTask: task.
-	
-	workplace activeTasks should equal: { task }.
-	result should be: nil
-]
-
-{ #category : #tests }
-PtyRealInteractionScenariosTest >> testAddImmediateTask [ 
-
-	| task result |
-	task := [ result := #done ] asTask.
-	task beImmediate.
-	
-	user executeTask: task.
-	
-	workplace activeTasks should equal: { task }.
-	result should be: #done
-]
-
-{ #category : #tests }
-PtyRealInteractionScenariosTest >> testAddOneShotTask [ 
-
-	| task result |
-	task := [
-		workplace activeTasks should include: task.
-		result := #done ] asTask.
-	task beOneShot.
-	
-	user executeTask: task.
-	
-	workplace activeTasks should be isEmpty.
-	result should be: #done
-]
-
-{ #category : #tests }
 PtyRealInteractionScenariosTest >> testExecutionDeferredTaskFromWorkplace [ 
 
 	| task result |
@@ -182,28 +141,6 @@ PtyRealInteractionScenariosTest >> testRequestUserForDeferredTask [
 	
 	workplace resumeExecutionOf: task with: #newResult.
 	result should be: #newResult
-]
-
-{ #category : #tests }
-PtyRealInteractionScenariosTest >> testRequestUserForImmediateTask [ 
-	| task result requestedTask done requestedResult |
-	requestedResult := #requestedResult.
-	requestedTask := [ requestedResult ] asTask.
-	requestedTask beImmediate.
-	task := [ result := user executeTask: requestedTask. done := true ] asTask.
-	task beImmediate.
-	
-	user executeTask: task.
-	result should be: requestedResult.
-	done should be: true.
-	workplace activeTasks should equal: { task. requestedTask }.
-	
-	requestedTask returnResult: #newResult2.
-	result should be: #newResult2.
-	
-	requestedResult := #newResult1.
-	requestedTask repeatExecution.
-	result should be: requestedResult.
 ]
 
 { #category : #tests }
