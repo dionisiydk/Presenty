@@ -10,7 +10,8 @@ Class {
 		'executionStrategy',
 		'worker',
 		'executionPriority',
-		'parentTask'
+		'parentTask',
+		'continuation'
 	],
 	#category : #'Presenty-Core'
 }
@@ -423,6 +424,12 @@ PtyTask >> requestExecution [
 	^executionStrategy requestExecutionOf: self using: worker
 ]
 
+{ #category : #execution }
+PtyTask >> returnResult: anObject [
+
+	continuation value: anObject
+]
+
 { #category : #testing }
 PtyTask >> shouldRestoreParentArea [ 
 	^true
@@ -436,9 +443,10 @@ PtyTask >> shouldSeparateForkTasks [
 { #category : #execution }
 PtyTask >> startExecution [ 
 	
-	| result |
+	| result currentRun |
+	currentRun := Continuation currentDo: [ :cc | continuation := cc.	#firstRun ].
 	executionStrategy prepareExecutionOf: self using: worker.
-	result := self body.
+	result := currentRun == #firstRun ifTrue: [ self body] ifFalse: [currentRun].
 	executionStrategy completeExecutionOf: self using: worker.
 	^result
 ]
