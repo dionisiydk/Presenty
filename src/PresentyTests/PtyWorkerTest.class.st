@@ -19,6 +19,18 @@ PtyWorkerTest >> setUp [
 ]
 
 { #category : #tests }
+PtyWorkerTest >> testContinueWithTask [
+	
+	| continuation result |
+	continuation := Mock new.
+	task stub currentExecutionContinuation willReturn: continuation.	
+		
+	result := worker continueWithTask: task.
+	
+	result should beReturnedFrom: [continuation resumeExecution].
+]
+
+{ #category : #tests }
 PtyWorkerTest >> testDefaultExecutionPriorityIsReturnedFromWorkspace [
 		
 	worker defaultTaskExecutionPriority should beReturnedFrom: [ workplace defaultTaskExecutionPriority ]

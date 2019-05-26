@@ -83,6 +83,28 @@ PtyTaskTest >> testCreationFromBlockWithName [
 ]
 
 { #category : #tests }
+PtyTaskTest >> testCurrentExecutionContinuation [
+
+	| continuation |
+	continuation := task currentExecutionContinuation.
+
+	continuation should beInstanceOf: PtyStartNewTaskContinuation.
+	continuation task should be: task.
+]
+
+{ #category : #tests }
+PtyTaskTest >> testCurrentExecutionContinuationShouldKeepActualContinuationInTask [
+
+	| result |
+	result := task currentExecutionContinuation.
+
+	result class = PtyStartNewTaskContinuation ifTrue: [ 
+		task continuation value: #resultFromContinuation].
+	
+	result should be: #resultFromContinuation
+]
+
+{ #category : #tests }
 PtyTaskTest >> testDefaultExecutionPriorityIsReturnedFromWorker [
 
 	| worker |

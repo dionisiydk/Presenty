@@ -26,6 +26,15 @@ PtyWorker >> activeTask: anObject [
 	activeTask := anObject
 ]
 
+{ #category : #controlling }
+PtyWorker >> continueWithTask: aTask [
+	
+	| continuation |
+	continuation := aTask currentExecutionContinuation.
+	
+	^continuation resumeExecution
+]
+
 { #category : #accessing }
 PtyWorker >> defaultTaskExecutionPriority [
 	^ workplace defaultTaskExecutionPriority
