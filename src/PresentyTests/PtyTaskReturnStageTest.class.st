@@ -19,3 +19,11 @@ PtyTaskReturnStageTest >> testContinueExecution [
 	
 	result should be: #taskResult
 ]
+
+{ #category : #tests }
+PtyTaskReturnStageTest >> testContinueExecutionShouldRestoreWorkplaceState [
+
+	executionStage continueExecution.	
+	
+	task should receive restoreWorkplaceState
+]

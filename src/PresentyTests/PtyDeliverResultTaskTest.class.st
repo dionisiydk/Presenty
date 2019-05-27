@@ -11,7 +11,7 @@ PtyDeliverResultTaskTest >> testExecution [
 	completeTask := Mock new.
 	deliverTask := PtyDeliverResultTask result: #taskResult from: completeTask.
 	
-	deliverTask body.
+	deliverTask startExecution.
 	
 	completeTask should receive completeExecutionWith: #taskResult
 ]

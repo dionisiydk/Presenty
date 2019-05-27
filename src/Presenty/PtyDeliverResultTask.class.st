@@ -49,3 +49,9 @@ PtyDeliverResultTask >> result [
 PtyDeliverResultTask >> result: anObject [
 	result := anObject
 ]
+
+{ #category : #execution }
+PtyDeliverResultTask >> startExecution [ 
+
+	self body
+]
