@@ -310,11 +310,6 @@ PtyTask >> isSimilarTo: aTask [
 	^name = aTask name
 ]
 
-{ #category : #testing }
-PtyTask >> isStarted [
-	self shouldBeImplemented.
-]
-
 { #category : #accessing }
 PtyTask >> name [
 	^ name
