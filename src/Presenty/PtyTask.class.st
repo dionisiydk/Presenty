@@ -121,6 +121,12 @@ PtyTask >> canBePrototypeInContextOf: aTask [
 	^(aTask isCreatedByCurrentRequestFrom: self) not
 ]
 
+{ #category : #execution }
+PtyTask >> completeExecutionWith: resultObject [ 
+	
+	continuation value: (PtyTaskReturnStage of: self withResult: resultObject)
+]
+
 { #category : #accessing }
 PtyTask >> context [
 	^context
@@ -134,6 +140,11 @@ PtyTask >> context: aTaskContext [
 { #category : #accessing }
 PtyTask >> continuation [
 	^ continuation
+]
+
+{ #category : #accessing }
+PtyTask >> continuation: anObject [
+	continuation := anObject
 ]
 
 { #category : #accessing }
@@ -299,6 +310,11 @@ PtyTask >> isSimilarTo: aTask [
 	^name = aTask name
 ]
 
+{ #category : #testing }
+PtyTask >> isStarted [
+	self shouldBeImplemented.
+]
+
 { #category : #accessing }
 PtyTask >> name [
 	^ name
@@ -440,7 +456,9 @@ PtyTask >> requestExecution [
 { #category : #execution }
 PtyTask >> returnResult: anObject [
 
-	continuation value: anObject
+	continuation ifNil: [ ^self error: 'No continuation for return!' ].
+	
+	worker deliverResult: anObject of: self
 ]
 
 { #category : #testing }

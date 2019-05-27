@@ -19,6 +19,11 @@ PtyTaskReturnStage >> continueExecution [
 ]
 
 { #category : #accessing }
+PtyTaskReturnStage >> result [
+	^result
+]
+
+{ #category : #accessing }
 PtyTaskReturnStage >> result: anObject [
 	result := anObject
 ]

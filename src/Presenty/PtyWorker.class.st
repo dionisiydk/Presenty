@@ -47,6 +47,14 @@ PtyWorker >> deferTask: aTask [
 ]
 
 { #category : #'task execution' }
+PtyWorker >> deliverResult: anObject of: aTask [
+
+	self isActive ifTrue: [ ^aTask completeExecutionWith: anObject ].
+	
+	self startWithTask: (PtyDeliverResultTask result: anObject from: aTask)
+]
+
+{ #category : #'task execution' }
 PtyWorker >> executeTask: aTask [
 
 	activeTask := aTask.

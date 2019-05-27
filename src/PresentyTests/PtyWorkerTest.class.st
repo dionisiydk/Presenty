@@ -46,6 +46,29 @@ PtyWorkerTest >> testDeferringTaskShouldJustRegisterItInWorkplace [
 ]
 
 { #category : #tests }
+PtyWorkerTest >> testDeliveringTaskResultWhenWorkerIsAlreadyActive [
+
+	worker stub isActive willReturn: true.
+
+	worker deliverResult: #taskResult of: task.
+	
+	task should receive completeExecutionWith: #taskResult
+]
+
+{ #category : #tests }
+PtyWorkerTest >> testDeliveringTaskResultWhenWorkerIsNotActiveYet [
+
+	worker stub isActive willReturn: false.
+	(worker stub startWithTask: Arg task) willReturnYourself. 
+	
+	worker deliverResult: #taskResult of: task.
+	
+	Arg task should beInstanceOf: PtyDeliverResultTask.
+	Arg task completeTask should be: task.
+	Arg task result should be: #taskResult
+]
+
+{ #category : #tests }
 PtyWorkerTest >> testInitialTaskExecution [
 
 	worker runInitialTask: task.

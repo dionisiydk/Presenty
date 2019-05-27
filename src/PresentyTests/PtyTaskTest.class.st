@@ -58,6 +58,21 @@ PtyTaskTest >> testBecomeRequestedForUser [
 ]
 
 { #category : #tests }
+PtyTaskTest >> testCompleteExecution [
+
+	| continuation |
+	continuation := Mock new.
+	task continuation: continuation.
+	continuation stub value: Arg executionStage.
+	
+	task completeExecutionWith: #taskResult.
+
+	Arg executionStage should beInstanceOf: PtyTaskReturnStage.
+	Arg executionStage task should be: task.
+	Arg executionStage result should be: #taskResult.
+]
+
+{ #category : #tests }
 PtyTaskTest >> testConvertingToTask [
 	
 	task asTask should be: task
@@ -183,11 +198,24 @@ PtyTaskTest >> testRequestExecution [
 { #category : #tests }
 PtyTaskTest >> testReturningResult [
 
-	| executionStrategy result |
-	self error: 'test'.
-	result := task currentExecutionStage. "Prepare continuation".
-	
+	| worker |
+	worker := Mock new.
+	task worker: worker.
+	task continuation: #continuation.
+		
 	task returnResult: #taskResult.
 
-	result should beReturnedFrom: [ executionStrategy requestExecutionOf: task using: #worker ]
+	worker should receive deliverResult: #taskResult of: task
+]
+
+{ #category : #tests }
+PtyTaskTest >> testReturningResultWhenTaskWasNotStarted [
+
+	| worker error |
+	worker := Mock new.
+	task worker: worker.
+	task continuation: nil.
+		
+	error := [task returnResult: #taskResult] should fail.
+	error where description should includeSubstring: 'No continuation'
 ]
