@@ -65,16 +65,14 @@ PtyImmediateTaskAcceptanceTest >> testRetryingExecutionFromOutsideOfTask [
 PtyImmediateTaskAcceptanceTest >> testReturningResultFromAnotherTask [ 
 
 	| task result resultSenderWasComplete |
-	result := Array new: 1.
 	task := [ #result ] asTask.
 	task beImmediate.	
-	user executeTask: [ | value | value := user executeTask: task. value logCr. result at: 1 put: value.] asTask.
-result first should be: #result.
-	user executeTask: [ self halt. task returnResult: #newResult. resultSenderWasComplete := true] asTask.
-	self halt.
-	resultSenderWasComplete should not be: true.
-	result first should be: #newResult.
+	user executeTask: [ result := user executeTask: task] asTask.
+
+	user executeTask: [ task returnResult: #newResult. resultSenderWasComplete := true] asTask.
 	
+	result should be: #newResult.
+	resultSenderWasComplete should not be: true
 	
 ]
 
