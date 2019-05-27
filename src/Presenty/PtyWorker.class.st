@@ -64,6 +64,8 @@ PtyWorker >> isActive [
 
 { #category : #'task execution' }
 PtyWorker >> notifyUserAbout: anError [
+
+	^anError pass
 ]
 
 { #category : #accessing }

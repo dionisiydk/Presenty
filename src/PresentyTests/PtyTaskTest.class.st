@@ -179,3 +179,15 @@ PtyTaskTest >> testRequestExecution [
 
 	result should beReturnedFrom: [ executionStrategy requestExecutionOf: task using: #worker ]
 ]
+
+{ #category : #tests }
+PtyTaskTest >> testReturningResult [
+
+	| executionStrategy result |
+	self error: 'test'.
+	result := task currentExecutionStage. "Prepare continuation".
+	
+	task returnResult: #taskResult.
+
+	result should beReturnedFrom: [ executionStrategy requestExecutionOf: task using: #worker ]
+]

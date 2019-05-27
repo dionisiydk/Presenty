@@ -73,10 +73,8 @@ PtyWorkerTest >> testInitialTaskFailedExecution [
 	error := Error new.
 	task stub startExecution willRaise: error.
 		
-	worker runInitialTask: task.
-	
+	[worker runInitialTask: task] should raise: error.
 	worker should receive notifyUserAbout: error
-	
 ]
 
 { #category : #tests }
@@ -115,6 +113,18 @@ PtyWorkerTest >> testIsNotActiveWhenItIsNotStartedYet [
 	worker process: nil.
 	
 	worker should not be isActive
+]
+
+{ #category : #tests }
+PtyWorkerTest >> testNotifyingUserAboutError [
+	
+	| error |
+	error := Error new messageText: 'test error'.
+
+	[ 
+		[error signal] on: Error do: [ :exc | 
+			worker notifyUserAbout: error]
+	] should raise: error
 ]
 
 { #category : #tests }
