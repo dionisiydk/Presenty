@@ -29,10 +29,10 @@ PtyWorker >> activeTask: anObject [
 { #category : #controlling }
 PtyWorker >> continueWithTask: aTask [
 	
-	| continuation |
-	continuation := aTask currentExecutionContinuation.
+	| executionStage |
+	executionStage := aTask currentExecutionStage.
 	
-	^continuation resumeExecution
+	^executionStage continueExecution
 ]
 
 { #category : #accessing }
@@ -52,7 +52,7 @@ PtyWorker >> executeTask: aTask [
 	activeTask := aTask.
 	workplace registerActiveTask: aTask.
 	
-	self isActive ifTrue: [ ^activeTask startExecution].
+	self isActive ifTrue: [ ^self continueWithTask: aTask].
 	
 	self startWithTask: aTask
 ]

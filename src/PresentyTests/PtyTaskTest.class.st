@@ -83,22 +83,22 @@ PtyTaskTest >> testCreationFromBlockWithName [
 ]
 
 { #category : #tests }
-PtyTaskTest >> testCurrentExecutionContinuation [
+PtyTaskTest >> testCurrentExecutionStage [
 
 	| continuation |
-	continuation := task currentExecutionContinuation.
+	continuation := task currentExecutionStage.
 
-	continuation should beInstanceOf: PtyStartNewTaskContinuation.
+	continuation should beInstanceOf: PtyTaskStartStage.
 	continuation task should be: task.
 ]
 
 { #category : #tests }
-PtyTaskTest >> testCurrentExecutionContinuationShouldKeepActualContinuationInTask [
+PtyTaskTest >> testCurrentExecutionStageShouldKeepActualContinuationInTask [
 
 	| result |
-	result := task currentExecutionContinuation.
+	result := task currentExecutionStage.
 
-	result class = PtyStartNewTaskContinuation ifTrue: [ 
+	result class = PtyTaskStartStage ifTrue: [ 
 		task continuation value: #resultFromContinuation].
 	
 	result should be: #resultFromContinuation
@@ -148,6 +148,7 @@ PtyTaskTest >> testExecutionShouldReturnResultOfBody [
 
 	| result |
 	task := [ #done ] asTask.
+	task executionStrategy: Mock new.
 	
 	result := task startExecution.
 

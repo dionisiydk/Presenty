@@ -21,13 +21,13 @@ PtyWorkerTest >> setUp [
 { #category : #tests }
 PtyWorkerTest >> testContinueWithTask [
 	
-	| continuation result |
-	continuation := Mock new.
-	task stub currentExecutionContinuation willReturn: continuation.	
+	| executionStage result |
+	executionStage := Mock new.
+	task stub currentExecutionStage willReturn: executionStage.	
 		
 	result := worker continueWithTask: task.
 	
-	result should beReturnedFrom: [continuation resumeExecution].
+	result should beReturnedFrom: [executionStage continueExecution].
 ]
 
 { #category : #tests }
@@ -178,7 +178,7 @@ PtyWorkerTest >> testTaskExecutionWhenWorkerIsAlreadyActive [
 	
 	result := worker executeTask: task.
 	
-	result should beReturnedFrom: [ task startExecution].
+	result should beReturnedFrom: [ worker continueWithTask: task].
 	worker activeTask should be: task
 ]
 

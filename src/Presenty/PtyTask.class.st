@@ -132,6 +132,11 @@ PtyTask >> context: aTaskContext [
 ]
 
 { #category : #accessing }
+PtyTask >> continuation [
+	^ continuation
+]
+
+{ #category : #accessing }
 PtyTask >> copyAsNewInstance [
 	^self veryDeepCopy 
 ]
@@ -149,6 +154,14 @@ PtyTask >> createContextFor: anActivationStrategy [
 	newContext := PtyTaskContext of: self.
 	newContext activation: anActivationStrategy.
 	^newContext
+]
+
+{ #category : #controlling }
+PtyTask >> currentExecutionStage [
+
+	^Continuation currentDo: [ :cc | 
+		continuation := cc.	
+		PtyTaskStartStage of: self ].
 ]
 
 { #category : #accessing }
@@ -443,10 +456,9 @@ PtyTask >> shouldSeparateForkTasks [
 { #category : #execution }
 PtyTask >> startExecution [ 
 	
-	| result currentRun |
-	currentRun := Continuation currentDo: [ :cc | continuation := cc.	#firstRun ].
+	| result |
 	executionStrategy prepareExecutionOf: self using: worker.
-	result := currentRun == #firstRun ifTrue: [ self body] ifFalse: [currentRun].
+	result := self body.
 	executionStrategy completeExecutionOf: self using: worker.
 	^result
 ]
