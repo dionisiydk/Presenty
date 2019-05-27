@@ -36,6 +36,11 @@ PtyDeliverResultTask >> completeTask: anObject [
 ]
 
 { #category : #accessing }
+PtyDeliverResultTask >> defaultExecutionPriority [ 
+	^completeTask executionPriority
+]
+
+{ #category : #accessing }
 PtyDeliverResultTask >> result [
 	^ result
 ]

@@ -184,6 +184,11 @@ PtyTask >> defaultActivationStrategy [
 		yourself 
 ]
 
+{ #category : #accessing }
+PtyTask >> defaultExecutionPriority [
+	^ worker defaultTaskExecutionPriority
+]
+
 { #category : #'initialize-release' }
 PtyTask >> defaultExecutionStrategy [
 	^PtyOneShotTaskExecution new
@@ -196,7 +201,7 @@ PtyTask >> defaultPrototypeContextName [
 
 { #category : #accessing }
 PtyTask >> executionPriority [
-	^ executionPriority ifNil: [ worker defaultTaskExecutionPriority ]
+	^ executionPriority ifNil: [ self defaultExecutionPriority ]
 ]
 
 { #category : #accessing }

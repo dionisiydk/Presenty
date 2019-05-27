@@ -15,3 +15,13 @@ PtyDeliverResultTaskTest >> testExecution [
 	
 	completeTask should receive completeExecutionWith: #taskResult
 ]
+
+{ #category : #tests }
+PtyDeliverResultTaskTest >> testHasSamePriorityAsCompleteTask [
+
+	| task completeTask |
+	completeTask := Mock new.
+	task := PtyDeliverResultTask result: #taskResult from: completeTask.
+	
+	task executionPriority should beReturnedFrom: [ completeTask executionPriority ]
+]
