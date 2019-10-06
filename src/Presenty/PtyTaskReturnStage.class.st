@@ -15,6 +15,9 @@ PtyTaskReturnStage class >> of: aTask withResult: anObject [
 
 { #category : #controlling }
 PtyTaskReturnStage >> continueExecution [
+	
+	task restoreWorkplaceState.
+	
 	^result
 ]
 
