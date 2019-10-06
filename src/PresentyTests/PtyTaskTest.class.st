@@ -204,9 +204,9 @@ PtyTaskTest >> testRestoreWorkplaceState [
 	task worker: #worker.
 	task executionStrategy: executionStrategy.
 
-	result := task requestExecution.
+	task restoreWorkplaceState.
 
-	result should beReturnedFrom: [ executionStrategy requestExecutionOf: task using: #worker ]
+	
 ]
 
 { #category : #tests }

@@ -47,6 +47,12 @@ PtyWorkplaceTest >> testFindWorkerRequestingNewTaskWhenNoWorkersExist [
 ]
 
 { #category : #tests }
+PtyWorkplaceTest >> testHasCurrentWorkSessionByDefault [
+
+	workplace currentWorkSession should beInstanceOf: PtyWorkSession
+]
+
+{ #category : #tests }
 PtyWorkplaceTest >> testHasEmptyWorkersByDefault [
 
 	workplace workers should be isEmpty
@@ -89,7 +95,7 @@ PtyWorkplaceTest >> testPlanningTaskExecutionShouldReturnPreferredTask [
 ]
 
 { #category : #tests }
-PtyWorkplaceTest >> testRegisteringActiveTask [
+PtyWorkplaceTest >> testRegisteringActiveTaskShouldRegisterItsWorker [
 
 	| worker task |
 	worker := PtyWorker atWorkplace: workplace.
@@ -98,8 +104,20 @@ PtyWorkplaceTest >> testRegisteringActiveTask [
 	
 	workplace registerActiveTask: task.
 	
-	workplace workers should include: worker.
-	workplace activeTasks should include: task
+	workplace workers should include: worker
+]
+
+{ #category : #tests }
+PtyWorkplaceTest >> testRegisteringActiveTaskShouldSetsUpNewWorkSession [
+
+	| task previousSession |
+	previousSession := workplace currentWorkSession.
+	previousSession stub.
+	task := [] asTask.
+		
+	workplace registerActiveTask: task.
+	
+	workplace currentWorkSession should beReturnedFrom: [previousSession createNewFor: task]
 ]
 
 { #category : #tests }

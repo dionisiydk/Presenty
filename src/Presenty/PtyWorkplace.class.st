@@ -2,8 +2,8 @@ Class {
 	#name : #PtyWorkplace,
 	#superclass : #Object,
 	#instVars : [
-		'activeTasks',
 		'workers',
+		'currentWorkSession',
 		'defaultTaskExecutionPriority'
 	],
 	#category : #'Presenty-NewCore'
@@ -11,12 +11,17 @@ Class {
 
 { #category : #accessing }
 PtyWorkplace >> activeTasks [
-	^ activeTasks
+	^ currentWorkSession activeTasks
 ]
 
 { #category : #accessing }
-PtyWorkplace >> activeTasks: anObject [
-	activeTasks := anObject
+PtyWorkplace >> currentWorkSession [
+	^ currentWorkSession
+]
+
+{ #category : #accessing }
+PtyWorkplace >> currentWorkSession: anObject [
+	currentWorkSession := anObject
 ]
 
 { #category : #accessing }
@@ -54,9 +59,9 @@ PtyWorkplace >> findWorkerRequestingNewTask [
 PtyWorkplace >> initialize [
 	super initialize.
 	
-	activeTasks := OrderedCollection new.
 	workers := OrderedCollection new.
-	defaultTaskExecutionPriority := Processor userBackgroundPriority
+	defaultTaskExecutionPriority := Processor userBackgroundPriority.
+	currentWorkSession := PtyWorkSession new
 ]
 
 { #category : #'task execution' }
@@ -74,7 +79,7 @@ PtyWorkplace >> planExecutionOf: aTask by: aUser [
 PtyWorkplace >> registerActiveTask: aTask [
 
 	self registerWorker: aTask worker.	
-	activeTasks add: aTask
+	currentWorkSession := currentWorkSession createNewFor: aTask
 ]
 
 { #category : #controlling }
@@ -88,7 +93,7 @@ PtyWorkplace >> registerWorker: aWorker [
 { #category : #controlling }
 PtyWorkplace >> removeTask: aTask [
 
-	activeTasks remove: aTask
+	currentWorkSession removeTask: aTask
 ]
 
 { #category : #accessing }

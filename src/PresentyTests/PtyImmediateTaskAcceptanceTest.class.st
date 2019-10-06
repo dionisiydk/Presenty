@@ -77,6 +77,23 @@ PtyImmediateTaskAcceptanceTest >> testReturningResultFromAnotherTask [
 ]
 
 { #category : #tests }
+PtyImmediateTaskAcceptanceTest >> testReturningResultFromNotActiveTask [ 
+
+	| task result callerTask |
+	task := [ #result ] asTask.
+	task beImmediate.
+	callerTask := [ result := user executeTask: task] asTask.
+	callerTask beImmediate.
+	user executeTask: callerTask.
+	workplace activeTasks removeAll.
+	 
+	task returnResult: #newResult.
+	result should be: #newResult.
+	workplace activeTasks should include: task.
+	workplace activeTasks should include: callerTask
+]
+
+{ #category : #tests }
 PtyImmediateTaskAcceptanceTest >> testReturningResultFromOutsideOfTask [ 
 
 	| task result |
