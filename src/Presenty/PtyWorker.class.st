@@ -43,7 +43,8 @@ PtyWorker >> defaultTaskExecutionPriority [
 { #category : #'task execution' }
 PtyWorker >> deferTask: aTask [
 	
-	workplace registerActiveTask: aTask
+	workplace registerActiveTask: aTask.
+	^PtyTaskExecutionFutureResult of: aTask
 ]
 
 { #category : #'task execution' }
@@ -62,7 +63,8 @@ PtyWorker >> executeTask: aTask [
 	
 	self isActive ifTrue: [ ^self continueWithTask: aTask].
 	
-	self startWithTask: aTask
+	self startWithTask: aTask.
+	^PtyTaskExecutionFutureResult of: aTask
 ]
 
 { #category : #testing }

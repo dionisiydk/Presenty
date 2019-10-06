@@ -46,6 +46,16 @@ PtyWorkerTest >> testDeferringTaskShouldJustRegisterItInWorkplace [
 ]
 
 { #category : #tests }
+PtyWorkerTest >> testDeferringTaskShouldReturnFutureResult [
+
+	| result |
+	result := worker deferTask: task.
+	
+	result should beInstanceOf: PtyTaskExecutionFutureResult.
+	result task should be: task
+]
+
+{ #category : #tests }
 PtyWorkerTest >> testDeliveringTaskResultWhenWorkerIsAlreadyActive [
 
 	worker stub isActive willReturn: true.
@@ -218,10 +228,14 @@ PtyWorkerTest >> testTaskExecutionWhenWorkerIsAlreadyActive [
 { #category : #tests }
 PtyWorkerTest >> testTaskExecutionWhenWorkerIsNotActiveYet [
 
+	| result |
 	worker stub isActive willReturn: false.
 
-	worker executeTask: task.
+	result := worker executeTask: task.
 	
+	result should beInstanceOf: PtyTaskExecutionFutureResult.
+	result task should be: task.
 	worker should receive startWithTask: task. 
-	worker activeTask should be: task
+	worker activeTask should be: task.
+	
 ]

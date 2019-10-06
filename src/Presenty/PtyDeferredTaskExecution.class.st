@@ -7,5 +7,5 @@ Class {
 { #category : #'task execution' }
 PtyDeferredTaskExecution >> requestExecutionOf: aTask using: aWorker [
 
-	aWorker deferTask: aTask
+	^aWorker deferTask: aTask
 ]
