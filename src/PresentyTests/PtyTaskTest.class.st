@@ -68,8 +68,8 @@ PtyTaskTest >> testCompleteExecution [
 	task completeExecutionWith: #taskResult.
 
 	Arg executionStage should beInstanceOf: PtyTaskReturnStage.
-	Arg executionStage task should be: task.
-	Arg executionStage result should be: #taskResult.
+	Arg executionStage where task should be: task.
+	Arg executionStage where result should be: #taskResult.
 ]
 
 { #category : #tests }
@@ -186,6 +186,20 @@ PtyTaskTest >> testIsOneShotByDefault [
 PtyTaskTest >> testRequestExecution [
 
 	| executionStrategy result |
+	executionStrategy := Mock new.
+	task worker: #worker.
+	task executionStrategy: executionStrategy.
+
+	result := task requestExecution.
+
+	result should beReturnedFrom: [ executionStrategy requestExecutionOf: task using: #worker ]
+]
+
+{ #category : #tests }
+PtyTaskTest >> testRestoreWorkplaceState [
+
+	| executionStrategy result |
+	self error: 'todo'.
 	executionStrategy := Mock new.
 	task worker: #worker.
 	task executionStrategy: executionStrategy.

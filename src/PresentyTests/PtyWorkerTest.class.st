@@ -64,8 +64,8 @@ PtyWorkerTest >> testDeliveringTaskResultWhenWorkerIsNotActiveYet [
 	worker deliverResult: #taskResult of: task.
 	
 	Arg task should beInstanceOf: PtyDeliverResultTask.
-	Arg task completeTask should be: task.
-	Arg task result should be: #taskResult
+	Arg task where completeTask should be: task.
+	Arg task where result should be: #taskResult
 ]
 
 { #category : #tests }
