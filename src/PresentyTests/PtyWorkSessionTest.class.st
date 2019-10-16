@@ -29,9 +29,9 @@ PtyWorkSessionTest >> testCreationChildSessionForNewTask [
 ]
 
 { #category : #tests }
-PtyWorkSessionTest >> testHasEmptyCurrentTasksByDefault [
+PtyWorkSessionTest >> testHasEmptyWorkflowsByDefault [
 
-	session currentTasks should be isEmpty
+	session workflows should be isEmpty
 ]
 
 { #category : #tests }
