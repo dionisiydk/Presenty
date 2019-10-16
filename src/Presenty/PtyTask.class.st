@@ -107,7 +107,7 @@ PtyTask >> beRequestedFor: anUser from: aWorker [
 
 	user := anUser.
 	worker := aWorker.
-	parentTask := aWorker activeTask
+	parentTask := aWorker currentTask
 ]
 
 { #category : #execution }

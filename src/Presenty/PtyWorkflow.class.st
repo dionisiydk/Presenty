@@ -2,8 +2,9 @@ Class {
 	#name : #PtyWorkflow,
 	#superclass : #Object,
 	#instVars : [
-		'currentTasks',
-		'parentWorkflow'
+		'workSession',
+		'parentWorkflow',
+		'currentTasks'
 	],
 	#category : #'Presenty-NewCore'
 }
@@ -58,4 +59,14 @@ PtyWorkflow >> registerNewTask: aTask [
 { #category : #controlling }
 PtyWorkflow >> removeTask: aTask [ 
 	currentTasks remove: aTask
+]
+
+{ #category : #accessing }
+PtyWorkflow >> workSession [
+	^ workSession
+]
+
+{ #category : #accessing }
+PtyWorkflow >> workSession: anObject [
+	workSession := anObject
 ]

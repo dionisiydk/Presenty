@@ -54,7 +54,7 @@ PtyTaskTest >> testBecomeRequestedForUser [
 
 	task user should be: #user.
 	task worker should be: worker.
-	task parentTask should beReturnedFrom: [ worker activeTask ] 
+	task parentTask should beReturnedFrom: [ worker currentTask ] 
 ]
 
 { #category : #tests }

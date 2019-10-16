@@ -222,7 +222,7 @@ PtyWorkerTest >> testTaskExecutionWhenWorkerIsAlreadyActive [
 	result := worker executeTask: task.
 	
 	result should beReturnedFrom: [ worker continueWithTask: task].
-	worker activeTask should be: task
+	worker currentTask should be: task
 ]
 
 { #category : #tests }
@@ -236,6 +236,6 @@ PtyWorkerTest >> testTaskExecutionWhenWorkerIsNotActiveYet [
 	result should beInstanceOf: PtyTaskExecutionFutureResult.
 	result task should be: task.
 	worker should receive startWithTask: task. 
-	worker activeTask should be: task.
+	worker currentTask should be: task.
 	
 ]

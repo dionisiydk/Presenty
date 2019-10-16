@@ -4,7 +4,7 @@ Class {
 	#instVars : [
 		'workplace',
 		'process',
-		'activeTask'
+		'currentTask'
 	],
 	#category : #'Presenty-NewCore'
 }
@@ -16,16 +16,6 @@ PtyWorker class >> atWorkplace: aWorkplace [
 		workplace: aWorkplace
 ]
 
-{ #category : #accessing }
-PtyWorker >> activeTask [
-	^ activeTask
-]
-
-{ #category : #accessing }
-PtyWorker >> activeTask: anObject [
-	activeTask := anObject
-]
-
 { #category : #controlling }
 PtyWorker >> continueWithTask: aTask [
 	
@@ -33,6 +23,16 @@ PtyWorker >> continueWithTask: aTask [
 	executionStage := aTask currentExecutionStage.
 	
 	^executionStage continueExecution
+]
+
+{ #category : #accessing }
+PtyWorker >> currentTask [
+	^ currentTask
+]
+
+{ #category : #accessing }
+PtyWorker >> currentTask: anObject [
+	currentTask := anObject
 ]
 
 { #category : #accessing }
@@ -58,7 +58,7 @@ PtyWorker >> deliverResult: anObject of: aTask [
 { #category : #'task execution' }
 PtyWorker >> executeTask: aTask [
 
-	activeTask := aTask.
+	currentTask := aTask.
 	workplace registerNewTask: aTask.
 	
 	self isActive ifTrue: [ ^self continueWithTask: aTask].
