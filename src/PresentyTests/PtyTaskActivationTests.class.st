@@ -26,9 +26,9 @@ PtyTaskActivationTests >> testEmbeddedChildTaskCall [
 	
 	[guide requestUserFor: ownerTask] should raise: PtyUserRequest.
 	
-	guide activeTasks should haveSize: 2.
-	guide activeTasks first task should be: ownerTask.
-	guide activeTasks last task should be: childTask.
+	guide currentTasks should haveSize: 2.
+	guide currentTasks first task should be: ownerTask.
+	guide currentTasks last task should be: childTask.
 ]
 
 { #category : #tests }
@@ -41,8 +41,8 @@ PtyTaskActivationTests >> testReturnFromEmbeddedTask [
 	result := guide requestUserFor: task.
 	
 	result should be: #result.
-	guide activeTasks should haveSize: 1.
-	guide activeTasks first task should be: task
+	guide currentTasks should haveSize: 1.
+	guide currentTasks first task should be: task
 ]
 
 { #category : #tests }
@@ -55,7 +55,7 @@ PtyTaskActivationTests >> testReturnFromSeparatedTask [
 	result := guide requestUserFor: task.
 	
 	result should be: #result.
-	guide activeTasks should be isEmpty
+	guide currentTasks should be isEmpty
 ]
 
 { #category : #tests }
@@ -68,8 +68,8 @@ PtyTaskActivationTests >> testSeparatedChildTaskCall [
 	
 	[guide requestUserFor: ownerTask] should raise: PtyUserRequest.
 	
-	guide activeTasks should haveSize: 1.
-	guide activeTasks last task should be: childTask.
+	guide currentTasks should haveSize: 1.
+	guide currentTasks last task should be: childTask.
 ]
 
 { #category : #tests }
@@ -80,6 +80,6 @@ PtyTaskActivationTests >> testSingleTaskCall [
 	
 	[guide requestUserFor: task] should raise: PtyUserRequest.
 	
-	guide activeTasks should haveSize: 1.
-	guide activeTasks first task should be: task
+	guide currentTasks should haveSize: 1.
+	guide currentTasks first task should be: task
 ]

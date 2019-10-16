@@ -14,7 +14,7 @@ PtyImmediateTaskAcceptanceTest >> testExecutingAsChildTask [
 	user executeTask: [ result := user executeTask: task] asTask.
 
 	result should be: #result.
-	workplace activeTasks should include: task
+	workplace currentTasks should include: task
 ]
 
 { #category : #tests }
@@ -26,7 +26,7 @@ PtyImmediateTaskAcceptanceTest >> testExecutingAsFirstTask [
 	
 	user executeTask: task.
 	
-	workplace activeTasks should equal: { task }.
+	workplace currentTasks should equal: { task }.
 	result should be: #done
 ]
 
@@ -77,7 +77,7 @@ PtyImmediateTaskAcceptanceTest >> testReturningResultFromAnotherTask [
 ]
 
 { #category : #tests }
-PtyImmediateTaskAcceptanceTest >> testReturningResultFromNotActiveTask [ 
+PtyImmediateTaskAcceptanceTest >> testReturningResultFromNotCurrentTask [ 
 
 	| task result callerTask |
 	task := [ #result ] asTask.
@@ -85,12 +85,12 @@ PtyImmediateTaskAcceptanceTest >> testReturningResultFromNotActiveTask [
 	callerTask := [ result := user executeTask: task] asTask.
 	callerTask beImmediate.
 	user executeTask: callerTask.
-	workplace activeTasks removeAll.
+	workplace currentTasks removeAll.
 	 
 	task returnResult: #newResult.
 	result should be: #newResult.
-	workplace activeTasks should include: task.
-	workplace activeTasks should include: callerTask
+	workplace currentTasks should include: task.
+	workplace currentTasks should include: callerTask
 ]
 
 { #category : #tests }

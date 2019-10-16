@@ -159,7 +159,7 @@ PtyTaskActivationStrategy >> shareParentAreaWithCurrentRequests [
 	].
 	
 	connectedTasks do: [:each | 
-		(guide activeTasks select: [:eachTarget | eachTarget isCreatedInContextOf: each task])
+		(guide currentTasks select: [:eachTarget | eachTarget isCreatedInContextOf: each task])
 			do: [:eachTarget |	eachTarget activation parentViewArea: parentViewArea]]
 ]
 

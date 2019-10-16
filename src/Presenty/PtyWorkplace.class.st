@@ -10,8 +10,8 @@ Class {
 }
 
 { #category : #accessing }
-PtyWorkplace >> activeTasks [
-	^ currentWorkSession activeTasks
+PtyWorkplace >> currentTasks [
+	^ currentWorkSession currentTasks
 ]
 
 { #category : #accessing }
@@ -76,7 +76,7 @@ PtyWorkplace >> planExecutionOf: aTask by: aUser [
 ]
 
 { #category : #controlling }
-PtyWorkplace >> registerActiveTask: aTask [
+PtyWorkplace >> registerNewTask: aTask [
 
 	self registerWorker: aTask worker.	
 	currentWorkSession := currentWorkSession createNewFor: aTask

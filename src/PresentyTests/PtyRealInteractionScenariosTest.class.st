@@ -41,12 +41,12 @@ PtyRealInteractionScenariosTest >> testForkTask [
 	user executeTask: task.
 	result should be: nil.
 	executions should be: 1.
-	workplace activeTasks should equal: { task. forkedTask. requestedTask }.
+	workplace currentTasks should equal: { task. forkedTask. requestedTask }.
 	
 	workplace resumeExecutionOf: requestedTask.
 	result should be: #requestedResult.
 	executions should be: 1.
-	workplace activeTasks should equal: { task. forkedTask. requestedTask }.
+	workplace currentTasks should equal: { task. forkedTask. requestedTask }.
 ]
 
 { #category : #tests }
@@ -63,11 +63,11 @@ PtyRealInteractionScenariosTest >> testForkTaskWithModalRequestFromAnotherForked
 	
 	user executeTask: task.
 	result should be: nil.
-	workplace activeTasks should equal: { task. forkedTask2. requestedTask }.
+	workplace currentTasks should equal: { task. forkedTask2. requestedTask }.
 	
 	workplace resumeExecutionOf: requestedTask.
 	result should be: #requestedResult.
-	workplace activeTasks should equal: { task. forkedTask2. forkedTask }.
+	workplace currentTasks should equal: { task. forkedTask2. forkedTask }.
 ]
 
 { #category : #tests }
@@ -84,12 +84,12 @@ PtyRealInteractionScenariosTest >> testForkTaskWithModalUserRequest [
 	user executeTask: task.
 	result should be: nil.
 	executions should be: 1.
-	workplace activeTasks should equal: { task. requestedTask }.
+	workplace currentTasks should equal: { task. requestedTask }.
 	
 	workplace resumeExecutionOf: requestedTask.
 	result should be: #requestedResult.
 	executions should be: 1.
-	workplace activeTasks should equal: { task. forkedTask }.
+	workplace currentTasks should equal: { task. forkedTask }.
 ]
 
 { #category : #tests }
@@ -111,15 +111,15 @@ PtyRealInteractionScenariosTest >> testForkTwoTasksWithModalRequests [
 	done should be: true.
 	result should be: nil.
 	result2 should be: nil.
-	workplace activeTasks should equal: { task. requestedTask. requestedTask2 }.
+	workplace currentTasks should equal: { task. requestedTask. requestedTask2 }.
 	
 	workplace resumeExecutionOf: requestedTask.
 	result should be: #requestedResult.
-	workplace activeTasks should equal: { task. forkedTask. requestedTask2 }.
+	workplace currentTasks should equal: { task. forkedTask. requestedTask2 }.
 	
 	workplace resumeExecutionOf: requestedTask2.
 	result2 should be: #requestedResult2.
-	workplace activeTasks should equal: { task. forkedTask. forkedTask2 }.
+	workplace currentTasks should equal: { task. forkedTask. forkedTask2 }.
 ]
 
 { #category : #tests }
@@ -133,7 +133,7 @@ PtyRealInteractionScenariosTest >> testRequestUserForDeferredTask [
 	user executeTask: task.
 	result should be: nil.
 	done should not be: true.
-	workplace activeTasks should equal: { task. requestedTask }.
+	workplace currentTasks should equal: { task. requestedTask }.
 	
 	workplace resumeExecutionOf: requestedTask.
 	result should be: #requestedResult.
@@ -154,12 +154,12 @@ PtyRealInteractionScenariosTest >> testRequestUserForModalTask [
 	user executeTask: task.
 	result should be: nil.
 	done should not be: true.
-	workplace activeTasks should equal: { requestedTask }.
+	workplace currentTasks should equal: { requestedTask }.
 	
 	workplace resumeExecutionOf: requestedTask.
 	result should be: #requestedResult.
 	done should be: true.
-	workplace activeTasks should equal: { task }.
+	workplace currentTasks should equal: { task }.
 ]
 
 { #category : #tests }
@@ -176,12 +176,12 @@ PtyRealInteractionScenariosTest >> testRequestUserForModalTaskFromAnotherImmedia
 	user executeTask: task.
 	result should be: nil.
 	executions should be: 0.
-	workplace activeTasks should equal: { requestedTask }.
+	workplace currentTasks should equal: { requestedTask }.
 	
 	workplace resumeExecutionOf: requestedTask.
 	result should be: #requestedResult.
 	executions should be: 1.
-	workplace activeTasks should equal: { task. childTask }.
+	workplace currentTasks should equal: { task. childTask }.
 ]
 
 { #category : #tests }
@@ -196,12 +196,12 @@ PtyRealInteractionScenariosTest >> testRequestUserForOneShotTask [
 	user executeTask: task.
 	result should be: requestedResult.
 	done should be: true.
-	workplace activeTasks should equal: { task }.
+	workplace currentTasks should equal: { task }.
 	
 	requestedResult := #newResult1.
 	[workplace resumeExecutionOf: requestedTask] should fail.
 	result should be: #requestedResult.
-	workplace activeTasks should equal: { task }.
+	workplace currentTasks should equal: { task }.
 	
 	workplace resumeExecutionOf: task with: #newResult2.
 	result should be: #newResult2

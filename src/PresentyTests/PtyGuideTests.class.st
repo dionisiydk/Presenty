@@ -36,7 +36,7 @@ PtyGuideTests >> testActivationTaskContext [
 		actual should be: #result.
 		guide viewArea should be: #parentViewArea.
 		guide context should be: #returnContext.
-		guide activeTasks last should be: taskContext
+		guide currentTasks last should be: taskContext
 	] runWithMocks
 ]
 
@@ -270,8 +270,8 @@ PtyGuideTests >> testExecutionTaskShouldResetCurrentTasks [
 		
 		[guide executeTask: task]
 			should strictly satisfy: 
-		[taskController stopTask when: [guide activeTasks] is: (Has emptyItems) not.
-		(taskController runTask: task) when: [guide activeTasks] is: Has emptyItems]	
+		[taskController stopTask when: [guide currentTasks] is: (Has emptyItems) not.
+		(taskController runTask: task) when: [guide currentTasks] is: Has emptyItems]	
 
 	] runWithMocks
 ]
@@ -318,7 +318,7 @@ PtyGuideTests >> testGettingCurrentTasksLikeSomeTaskContext [
 { #category : #tests }
 PtyGuideTests >> testHasEmptyCurrentTasksByDefault [
 	
-	guide activeTasks should be isEmpty
+	guide currentTasks should be isEmpty
 ]
 
 { #category : #tests }
@@ -455,7 +455,7 @@ PtyGuideTests >> testRetryingLastTask [
 			should strictly satisfy: 
 		[taskNavigator lastTask willReturn: taskContext.
 		(taskContext resumeFor: (Instance of: PtyRunTaskRequest))
-			when: [guide activeTasks] is: (Containing item: taskContext)].	
+			when: [guide currentTasks] is: (Containing item: taskContext)].	
 
 	] runWithMocks
 ]

@@ -34,11 +34,6 @@ PtyGuide >> activateContext: aTaskContext [
 ]
 
 { #category : #accessing }
-PtyGuide >> activeTasks [
-	^ activeTasks
-]
-
-{ #category : #accessing }
 PtyGuide >> activeTasks: anObject [
 	activeTasks := anObject
 ]
@@ -149,6 +144,11 @@ PtyGuide >> context: aTaskContext [
 PtyGuide >> createTaskLike: aTask [
 
 	^uiSettings appropriateTaskLike: aTask inContextOf: context 
+]
+
+{ #category : #accessing }
+PtyGuide >> currentTasks [
+	^ activeTasks
 ]
 
 { #category : #'task execution' }

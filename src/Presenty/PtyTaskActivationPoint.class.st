@@ -16,11 +16,6 @@ PtyTaskActivationPoint class >> createdFrom: aTaskContext [
 ]
 
 { #category : #accessing }
-PtyTaskActivationPoint >> activeTasks [
-	^ activeTasks
-]
-
-{ #category : #accessing }
 PtyTaskActivationPoint >> activeTasks: anObject [
 	activeTasks := anObject
 ]
@@ -33,4 +28,9 @@ PtyTaskActivationPoint >> callerContext [
 { #category : #accessing }
 PtyTaskActivationPoint >> callerContext: anObject [
 	callerContext := anObject
+]
+
+{ #category : #accessing }
+PtyTaskActivationPoint >> currentTasks [
+	^ activeTasks
 ]

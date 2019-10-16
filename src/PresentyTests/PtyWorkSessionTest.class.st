@@ -18,36 +18,36 @@ PtyWorkSessionTest >> setUp [
 PtyWorkSessionTest >> testCreationChildSessionForNewTask [ 
 
 	| newSession |
-	session registerActiveTask: #existingTask.
+	session registerNewTask: #existingTask.
 	
 	newSession := session createNewFor: #newTask.
 	
 	newSession parentSession should be: session.
-	newSession activeTasks should include: #newTask.
-	newSession activeTasks should include: #existingTask.
-	newSession activeTasks should not be: session activeTasks
+	newSession currentTasks should include: #newTask.
+	newSession currentTasks should include: #existingTask.
+	newSession currentTasks should not be: session currentTasks
 ]
 
 { #category : #tests }
-PtyWorkSessionTest >> testHasEmptyActiveTasksByDefault [
+PtyWorkSessionTest >> testHasEmptyCurrentTasksByDefault [
 
-	session activeTasks should be isEmpty
+	session currentTasks should be isEmpty
 ]
 
 { #category : #tests }
-PtyWorkSessionTest >> testRegisteringActiveTask [ 
+PtyWorkSessionTest >> testRegisteringNewTask [ 
 
-	session registerActiveTask: #task.
+	session registerNewTask: #task.
 	
-	session activeTasks should include: #task
+	session currentTasks should include: #task
 ]
 
 { #category : #tests }
 PtyWorkSessionTest >> testRemoveTask [ 
 
-	session registerActiveTask: #task.
+	session registerNewTask: #task.
 	
 	session removeTask: #task.
 	
-	session activeTasks should not include: #task
+	session currentTasks should not include: #task
 ]

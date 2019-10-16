@@ -43,7 +43,7 @@ PtyWorker >> defaultTaskExecutionPriority [
 { #category : #'task execution' }
 PtyWorker >> deferTask: aTask [
 	
-	workplace registerActiveTask: aTask.
+	workplace registerNewTask: aTask.
 	^PtyTaskExecutionFutureResult of: aTask
 ]
 
@@ -59,7 +59,7 @@ PtyWorker >> deliverResult: anObject of: aTask [
 PtyWorker >> executeTask: aTask [
 
 	activeTask := aTask.
-	workplace registerActiveTask: aTask.
+	workplace registerNewTask: aTask.
 	
 	self isActive ifTrue: [ ^self continueWithTask: aTask].
 	

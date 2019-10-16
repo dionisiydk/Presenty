@@ -9,7 +9,7 @@ PtyReturnToPreviousTask >> execute [
 
 	| guide currentTasks |
 	guide := presenter guide.
-	currentTasks := guide activeTasks copy.
+	currentTasks := guide currentTasks copy.
 	
 	guide executeTask: [
 		guide activeTasks: currentTasks.

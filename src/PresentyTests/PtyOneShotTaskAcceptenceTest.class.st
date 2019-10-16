@@ -9,13 +9,13 @@ PtyOneShotTaskAcceptenceTest >> testExecutingAsChildTask [
 
 	| task result |
 	task := [
-		workplace activeTasks should include: task.
+		workplace currentTasks should include: task.
 		result := #done ] asTask.
 	task beOneShot.
 	
 	user executeTask: [result := user executeTask: task] asTask.
 	
-	workplace activeTasks should not include: task.
+	workplace currentTasks should not include: task.
 	result should be: #done
 ]
 
@@ -24,12 +24,12 @@ PtyOneShotTaskAcceptenceTest >> testExecutingAsFirstTask [
 
 	| task result |
 	task := [
-		workplace activeTasks should include: task.
+		workplace currentTasks should include: task.
 		result := #done ] asTask.
 	task beOneShot.
 	
 	user executeTask: task.
 	
-	workplace activeTasks should be isEmpty.
+	workplace currentTasks should be isEmpty.
 	result should be: #done
 ]

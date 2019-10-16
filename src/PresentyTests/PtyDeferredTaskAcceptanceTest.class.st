@@ -14,7 +14,7 @@ PtyDeferredTaskAcceptanceTest >> testExecutingAsChildTask [
 	user executeTask: [ result := user executeTask: task] asTask.
 
 	result should be: #nil.
-	workplace activeTasks should include: task
+	workplace currentTasks should include: task
 ]
 
 { #category : #tests }
@@ -26,6 +26,6 @@ PtyDeferredTaskAcceptanceTest >> testExecutingAsFirstTask [
 	
 	user executeTask: task.
 	
-	workplace activeTasks should equal: { task }.
+	workplace currentTasks should equal: { task }.
 	result should be: nil
 ]

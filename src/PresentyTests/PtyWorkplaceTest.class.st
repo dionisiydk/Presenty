@@ -59,9 +59,9 @@ PtyWorkplaceTest >> testHasEmptyWorkersByDefault [
 ]
 
 { #category : #tests }
-PtyWorkplaceTest >> testHasNoActiveTasksByDefault [
+PtyWorkplaceTest >> testHasNoCurrentTasksByDefault [
 
-	workplace activeTasks should be isEmpty
+	workplace currentTasks should be isEmpty
 ]
 
 { #category : #tests }
@@ -95,27 +95,27 @@ PtyWorkplaceTest >> testPlanningTaskExecutionShouldReturnPreferredTask [
 ]
 
 { #category : #tests }
-PtyWorkplaceTest >> testRegisteringActiveTaskShouldRegisterItsWorker [
+PtyWorkplaceTest >> testRegisteringNewTaskShouldRegisterItsWorker [
 
 	| worker task |
 	worker := PtyWorker atWorkplace: workplace.
 	task := [] asTask.
 	task worker: worker.
 	
-	workplace registerActiveTask: task.
+	workplace registerNewTask: task.
 	
 	workplace workers should include: worker
 ]
 
 { #category : #tests }
-PtyWorkplaceTest >> testRegisteringActiveTaskShouldSetsUpNewWorkSession [
+PtyWorkplaceTest >> testRegisteringNewTaskShouldSetsUpNewWorkSession [
 
 	| task previousSession |
 	previousSession := workplace currentWorkSession.
 	previousSession stub.
 	task := [] asTask.
 		
-	workplace registerActiveTask: task.
+	workplace registerNewTask: task.
 	
 	workplace currentWorkSession should beReturnedFrom: [previousSession createNewFor: task]
 ]
@@ -149,9 +149,9 @@ PtyWorkplaceTest >> testRemovingTask [
 
 	| task |
 	task := [] asTask.
-	workplace registerActiveTask: task.
+	workplace registerNewTask: task.
 	
 	workplace removeTask: task.
 	
-	workplace activeTasks should not include: task
+	workplace currentTasks should not include: task
 ]

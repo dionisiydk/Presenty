@@ -453,6 +453,10 @@ PtyTask >> requestExecution [
 	^executionStrategy requestExecutionOf: self using: worker
 ]
 
+{ #category : #controlling }
+PtyTask >> restoreWorkplaceState [
+]
+
 { #category : #execution }
 PtyTask >> returnResult: anObject [
 

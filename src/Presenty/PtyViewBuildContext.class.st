@@ -83,7 +83,7 @@ PtyViewBuildContext >> populateTaskSettingsMenu: aMenu [
 
 	requestsMenu := MenuMorph new defaultTarget: self.
 	
-	self guide activeTasks do: [:eachTask | 
+	self guide currentTasks do: [:eachTask | 
 		taskMenu := MenuMorph new defaultTarget: self.
 		self populateTaskSettingsMenu: taskMenu for: eachTask task.
 		requestsMenu add: eachTask task printString subMenu: taskMenu.		

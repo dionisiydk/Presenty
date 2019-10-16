@@ -9,11 +9,6 @@ Class {
 }
 
 { #category : #accessing }
-PtyWorkSession >> activeTasks [
-	^ activeTasks
-]
-
-{ #category : #accessing }
 PtyWorkSession >> activeTasks: anObject [
 	activeTasks := anObject
 ]
@@ -22,8 +17,13 @@ PtyWorkSession >> activeTasks: anObject [
 PtyWorkSession >> createNewFor: aTask [ 
 	^self copy 
 		parentSession: self;
-		registerActiveTask: aTask;
+		registerNewTask: aTask;
 		yourself
+]
+
+{ #category : #accessing }
+PtyWorkSession >> currentTasks [
+	^ activeTasks
 ]
 
 { #category : #initialization }
@@ -51,7 +51,7 @@ PtyWorkSession >> postCopy [
 ]
 
 { #category : #controlling }
-PtyWorkSession >> registerActiveTask: aTask [
+PtyWorkSession >> registerNewTask: aTask [
 	activeTasks add: aTask
 ]
 

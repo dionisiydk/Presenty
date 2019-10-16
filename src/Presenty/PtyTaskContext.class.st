@@ -23,14 +23,14 @@ PtyTaskContext class >> of: aTask [
 PtyTaskContext >> activateBy: aGuide [ 
 	
 	| activationRequest result |
-	activationPoint activeTasks: aGuide activeTasks copy.
+	activationPoint activeTasks: aGuide currentTasks copy.
 	aGuide addActiveTask: self.
 	
 	activationRequest := self prepareActivationRequest.	
 	
 	result := activationRequest executeBy: aGuide inContext: self.
 		
-	aGuide activeTasks: activationPoint activeTasks.
+	aGuide activeTasks: activationPoint currentTasks.
 	
 	^result
 ]

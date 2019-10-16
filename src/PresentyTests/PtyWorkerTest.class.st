@@ -41,7 +41,7 @@ PtyWorkerTest >> testDeferringTaskShouldJustRegisterItInWorkplace [
 
 	worker deferTask: task.
 	
-	workplace should receive registerActiveTask: task.
+	workplace should receive registerNewTask: task.
 	task should not receive body
 ]
 
@@ -210,7 +210,7 @@ PtyWorkerTest >> testTaskExecutionShouldRegisterTaskAtWorkplace [
 	
 	worker executeTask: task.
 	
-	workplace should receive registerActiveTask: task
+	workplace should receive registerNewTask: task
 ]
 
 { #category : #tests }
