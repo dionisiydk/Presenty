@@ -33,11 +33,6 @@ PtyGuide >> activateContext: aTaskContext [
 	^result
 ]
 
-{ #category : #accessing }
-PtyGuide >> activeTasks: anObject [
-	activeTasks := anObject
-]
-
 { #category : #'changing view area' }
 PtyGuide >> add: aPresenter toViewAreaOn: panelName [ 
 
@@ -149,6 +144,11 @@ PtyGuide >> createTaskLike: aTask [
 { #category : #accessing }
 PtyGuide >> currentTasks [
 	^ activeTasks
+]
+
+{ #category : #accessing }
+PtyGuide >> currentTasks: anObject [
+	activeTasks := anObject
 ]
 
 { #category : #'task execution' }

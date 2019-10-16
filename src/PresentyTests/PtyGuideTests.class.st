@@ -228,7 +228,7 @@ PtyGuideTests >> testChangingLanguage [
 { #category : #tests }
 PtyGuideTests >> testCheckingCurrentRequestContainsTask [
 
-	guide activeTasks: {PtyTaskContext of: #firstTask. PtyTaskContext of: #secondTask}.
+	guide currentTasks: {PtyTaskContext of: #firstTask. PtyTaskContext of: #secondTask}.
 	
 	(guide isCurrentRequestIncludesTask: #firstTask) should be: true.
 	
@@ -239,7 +239,7 @@ PtyGuideTests >> testCheckingCurrentRequestContainsTask [
 { #category : #tests }
 PtyGuideTests >> testCheckingCurrentRequestContainsTaskContext [
 
-	guide activeTasks: #(#firstTaskContext. #secondTaskContext).
+	guide currentTasks: #(#firstTaskContext. #secondTaskContext).
 	
 	(guide isCurrentRequestIncludes: #firstTaskContext) should be: true.
 	
@@ -266,7 +266,7 @@ PtyGuideTests >> testExecutionTaskShouldResetCurrentTasks [
 	
 	[:taskController :task | 
 		guide taskController: taskController.
-		guide activeTasks: #(1 2 3 ) asOrderedCollection.
+		guide currentTasks: #(1 2 3 ) asOrderedCollection.
 		
 		[guide executeTask: task]
 			should strictly satisfy: 
@@ -294,7 +294,7 @@ PtyGuideTests >> testGettingCurrentTasksLikeSomeTaskContext [
 
 	| actual |
 	[:someTaskContext :similarTaskContext :differentTaskContex :parentTaskContext |
-		guide activeTasks: {similarTaskContext. differentTaskContex. parentTaskContext}.
+		guide currentTasks: {similarTaskContext. differentTaskContex. parentTaskContext}.
 		[actual := guide currentTasksLike: someTaskContext]
 			should lenient satisfy: 
 		[someTaskContext taskClass willReturn: #givenTaskClass; useArbitrarily.

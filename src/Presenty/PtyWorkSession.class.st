@@ -2,16 +2,11 @@ Class {
 	#name : #PtyWorkSession,
 	#superclass : #Object,
 	#instVars : [
-		'activeTasks',
-		'parentSession'
+		'parentSession',
+		'currentTasks'
 	],
 	#category : #'Presenty-NewCore'
 }
-
-{ #category : #accessing }
-PtyWorkSession >> activeTasks: anObject [
-	activeTasks := anObject
-]
 
 { #category : #controlling }
 PtyWorkSession >> createNewFor: aTask [ 
@@ -23,14 +18,19 @@ PtyWorkSession >> createNewFor: aTask [
 
 { #category : #accessing }
 PtyWorkSession >> currentTasks [
-	^ activeTasks
+	^ currentTasks
+]
+
+{ #category : #accessing }
+PtyWorkSession >> currentTasks: anObject [
+	currentTasks := anObject
 ]
 
 { #category : #initialization }
 PtyWorkSession >> initialize [
 	super initialize.
 	
-	activeTasks := OrderedCollection new.
+	currentTasks := OrderedCollection new.
 ]
 
 { #category : #accessing }
@@ -47,15 +47,15 @@ PtyWorkSession >> parentSession: anObject [
 PtyWorkSession >> postCopy [
 	super postCopy.
 	
-	activeTasks := activeTasks copy
+	currentTasks := currentTasks copy
 ]
 
 { #category : #controlling }
 PtyWorkSession >> registerNewTask: aTask [
-	activeTasks add: aTask
+	currentTasks add: aTask
 ]
 
 { #category : #controlling }
 PtyWorkSession >> removeTask: aTask [ 
-	activeTasks remove: aTask
+	currentTasks remove: aTask
 ]

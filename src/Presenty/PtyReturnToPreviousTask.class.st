@@ -12,6 +12,6 @@ PtyReturnToPreviousTask >> execute [
 	currentTasks := guide currentTasks copy.
 	
 	guide executeTask: [
-		guide activeTasks: currentTasks.
+		guide currentTasks: currentTasks.
 		guide user goToBack] asTask 
 ]
