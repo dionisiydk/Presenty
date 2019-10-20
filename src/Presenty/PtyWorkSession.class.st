@@ -29,6 +29,21 @@ PtyWorkSession >> captureInitialWorkflowFor: aTask [
 	^currentWorkflow spawnForNewTask
 ]
 
+{ #category : #accessing }
+PtyWorkSession >> currentTasks [
+	^workflows flatCollect: [ :each | each currentTasks ]
+]
+
+{ #category : #accessing }
+PtyWorkSession >> findActiveWorkflowSpawned: aWorkflow [
+	
+	| targetWorkflow |
+	targetWorkflow := aWorkflow parentWorkflow.
+	(workflows includes: targetWorkflow) ifFalse: [ 
+		^self error: 'Active workflow not found'].
+	 ^targetWorkflow
+]
+
 { #category : #initialization }
 PtyWorkSession >> initialize [ 
 	super initialize.
@@ -44,6 +59,24 @@ PtyWorkSession >> parentSession [
 { #category : #accessing }
 PtyWorkSession >> parentSession: anObject [
 	parentSession := anObject
+]
+
+{ #category : #controlling }
+PtyWorkSession >> registerNewTask: aTask [
+	
+	| targetWorkflow |
+	targetWorkflow := self findActiveWorkflowSpawned: aTask initialWorkflow.
+	 
+	targetWorkflow registerNewTask: aTask
+]
+
+{ #category : #controlling }
+PtyWorkSession >> removeTask: aTask [
+	
+	| targetWorkflow |
+	targetWorkflow := self findActiveWorkflowSpawned: aTask initialWorkflow.
+	 
+	targetWorkflow removeTask: aTask
 ]
 
 { #category : #accessing }
