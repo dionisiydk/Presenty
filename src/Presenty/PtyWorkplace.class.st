@@ -9,6 +9,12 @@ Class {
 	#category : #'Presenty-NewCore'
 }
 
+{ #category : #'task execution' }
+PtyWorkplace >> captureInitialWorkflowFor: aTask [
+
+	^currentWorkSession captureInitialWorkflowFor: aTask
+]
+
 { #category : #accessing }
 PtyWorkplace >> currentTasks [
 	^ currentWorkSession currentTasks

@@ -19,6 +19,15 @@ PtyWorkerTest >> setUp [
 ]
 
 { #category : #tests }
+PtyWorkerTest >> testCapturingInitialWorkflowForTask [
+
+	| workflow |
+	workflow := worker captureInitialWorkflowFor: #task.
+	
+	workflow should beReturnedFrom: [workplace captureInitialWorkflowFor: #task]
+]
+
+{ #category : #tests }
 PtyWorkerTest >> testContinueWithTask [
 	
 	| executionStage result |

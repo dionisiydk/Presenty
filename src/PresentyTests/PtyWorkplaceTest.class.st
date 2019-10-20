@@ -8,6 +8,18 @@ Class {
 }
 
 { #category : #tests }
+PtyWorkplaceTest >> testCapturingInitialWorkflowForTask [
+
+	| workflow workSession |
+	workSession := Mock new.
+	workplace currentWorkSession: workSession.
+	
+	workflow := workplace captureInitialWorkflowFor: #task.
+	
+	workflow should beReturnedFrom: [workSession captureInitialWorkflowFor: #task]
+]
+
+{ #category : #tests }
 PtyWorkplaceTest >> testFindWorkerRequestingNewTaskWhenActiveWorkerExists [
 
 	| foundWorker activeWorker |

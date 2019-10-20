@@ -11,6 +11,7 @@ Class {
 		'worker',
 		'executionPriority',
 		'parentTask',
+		'initialWorkflow',
 		'continuation'
 	],
 	#category : #'Presenty-Core'
@@ -107,7 +108,8 @@ PtyTask >> beRequestedFor: anUser from: aWorker [
 
 	user := anUser.
 	worker := aWorker.
-	parentTask := aWorker currentTask
+	parentTask := aWorker currentTask.
+	initialWorkflow := worker captureInitialWorkflowFor: self.
 ]
 
 { #category : #execution }
@@ -259,6 +261,16 @@ PtyTask >> hasPrototype [
 	^prototype notNil 
 ]
 
+{ #category : #accessing }
+PtyTask >> initialWorkflow [
+	^ initialWorkflow
+]
+
+{ #category : #accessing }
+PtyTask >> initialWorkflow: anObject [
+	initialWorkflow := anObject
+]
+
 { #category : #'initialize-release' }
 PtyTask >> initialize [ 
 	super initialize.
@@ -299,6 +311,11 @@ PtyTask >> isCreatedByCurrentRequestFrom: aTask [
 	
 	^parentTask isCreatedByCurrentRequestFrom: aTask
 	
+]
+
+{ #category : #testing }
+PtyTask >> isInitialTask [
+	^parentTask isNil
 ]
 
 { #category : #testing }
@@ -455,6 +472,8 @@ PtyTask >> requestExecution [
 
 { #category : #controlling }
 PtyTask >> restoreWorkplaceState [
+
+	self error: 'todo'
 ]
 
 { #category : #execution }

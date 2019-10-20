@@ -16,6 +16,12 @@ PtyWorker class >> atWorkplace: aWorkplace [
 		workplace: aWorkplace
 ]
 
+{ #category : #'task execution' }
+PtyWorker >> captureInitialWorkflowFor: aTask [
+
+	^workplace captureInitialWorkflowFor: aTask
+]
+
 { #category : #controlling }
 PtyWorker >> continueWithTask: aTask [
 	

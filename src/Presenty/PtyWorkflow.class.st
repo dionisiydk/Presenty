@@ -9,12 +9,10 @@ Class {
 	#category : #'Presenty-NewCore'
 }
 
-{ #category : #controlling }
-PtyWorkflow >> createNewFor: aTask [ 
-	^self copy 
-		parentWorkflow: self;
-		registerNewTask: aTask;
-		yourself
+{ #category : #evaluating }
+PtyWorkflow class >> in: aWorkSession [
+	^self new 
+		workSession: aWorkSession
 ]
 
 { #category : #accessing }
@@ -25,6 +23,11 @@ PtyWorkflow >> currentTasks [
 { #category : #accessing }
 PtyWorkflow >> currentTasks: anObject [
 	currentTasks := anObject
+]
+
+{ #category : #testing }
+PtyWorkflow >> includesTask: aTask [
+	^currentTasks includes: aTask
 ]
 
 { #category : #initialization }
@@ -59,6 +62,13 @@ PtyWorkflow >> registerNewTask: aTask [
 { #category : #controlling }
 PtyWorkflow >> removeTask: aTask [ 
 	currentTasks remove: aTask
+]
+
+{ #category : #controlling }
+PtyWorkflow >> spawnForNewTask [
+	^self copy 
+		parentWorkflow: self;
+		yourself
 ]
 
 { #category : #accessing }

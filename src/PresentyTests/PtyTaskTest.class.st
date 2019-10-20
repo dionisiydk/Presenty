@@ -54,7 +54,8 @@ PtyTaskTest >> testBecomeRequestedForUser [
 
 	task user should be: #user.
 	task worker should be: worker.
-	task parentTask should beReturnedFrom: [ worker currentTask ] 
+	task parentTask should beReturnedFrom: [ worker currentTask ].
+	task initialWorkflow should beReturnedFrom: [ worker captureInitialWorkflowFor: task].
 ]
 
 { #category : #tests }
@@ -174,6 +175,18 @@ PtyTaskTest >> testExecutionShouldReturnResultOfBody [
 PtyTaskTest >> testHasDefaultExecutionStrategy [
 
 	task executionStrategy class should equal: task defaultExecutionStrategy class
+]
+
+{ #category : #tests }
+PtyTaskTest >> testIsInitialTask [
+
+	task := PtyTask new.
+	
+	task should be isInitialTask.
+	
+	task parentTask: #parent.
+	
+	task should not be isInitialTask.
 ]
 
 { #category : #tests }
