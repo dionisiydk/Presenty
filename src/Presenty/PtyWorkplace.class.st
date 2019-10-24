@@ -102,6 +102,13 @@ PtyWorkplace >> removeTask: aTask [
 	currentWorkSession removeTask: aTask
 ]
 
+{ #category : #controlling }
+PtyWorkplace >> startWorkSessionBy: aWorker [
+
+	self registerWorker: aWorker.
+	currentWorkSession := currentWorkSession spawnWithNewTask: aWorker currentTask
+]
+
 { #category : #accessing }
 PtyWorkplace >> workers [
 	^ workers

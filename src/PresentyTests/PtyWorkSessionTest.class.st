@@ -61,20 +61,6 @@ PtyWorkSessionTest >> testCapturingInitialWorkflowForTaskWithUnknownParentTask [
 ]
 
 { #category : #tests }
-PtyWorkSessionTest >> testCreationChildSessionForNewTask [ 
-
-	| newSession |
-	session registerNewTask: #existingTask.
-	
-	newSession := session createNewFor: #newTask.
-	
-	newSession parentSession should be: session.
-	newSession currentTasks should include: #newTask.
-	newSession currentTasks should include: #existingTask.
-	newSession currentTasks should not be: session currentTasks
-]
-
-{ #category : #tests }
 PtyWorkSessionTest >> testCurrentTasks [
 
 	| workflow1 workflow2 allTasks |
@@ -179,4 +165,20 @@ PtyWorkSessionTest >> testRemoveTask [
 	session removeTask: task.
 	
 	workflow currentTasks should not include: task
+]
+
+{ #category : #tests }
+PtyWorkSessionTest >> testSpawnNewSessionWithNewTask [ 
+
+	| newSession workflow newTask |
+	workflow := session addNewWorkflow.
+	newTask := PtyTask new.
+	newTask initialWorkflow: workflow spawnForNewTask.
+	
+	newSession := session spawnWithNewTask: newTask.
+	
+	newSession parentSession should be: session.
+	newSession workflows should equal: session workflows.
+	newSession workflows should not be: session workflows.
+	workflow currentTasks should include: newTask
 ]

@@ -62,6 +62,13 @@ PtyWorkSession >> parentSession: anObject [
 ]
 
 { #category : #controlling }
+PtyWorkSession >> postCopy [
+	super postCopy.
+	
+	workflows := workflows copy
+]
+
+{ #category : #controlling }
 PtyWorkSession >> registerNewTask: aTask [
 	
 	| targetWorkflow |
@@ -77,6 +84,18 @@ PtyWorkSession >> removeTask: aTask [
 	targetWorkflow := self findActiveWorkflowSpawned: aTask initialWorkflow.
 	 
 	targetWorkflow removeTask: aTask
+]
+
+{ #category : #controlling }
+PtyWorkSession >> spawnWithNewTask: aTask [
+
+	| newSession |
+	newSession := self copy.
+	newSession parentSession: self.
+	newSession registerNewTask: aTask.
+	^newSession
+
+	
 ]
 
 { #category : #accessing }

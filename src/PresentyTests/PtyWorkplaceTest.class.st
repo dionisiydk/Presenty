@@ -159,11 +159,25 @@ PtyWorkplaceTest >> testRegisteringSameWorkerTwice [
 { #category : #tests }
 PtyWorkplaceTest >> testRemovingTask [
 
-	| task |
-	task := [] asTask.
-	workplace registerNewTask: task.
+	| workSession |
+	workSession := Mock new.
+	workplace currentWorkSession: workSession.
 	
-	workplace removeTask: task.
+	workplace removeTask: #task.
 	
-	workplace currentTasks should not include: task
+	workSession should receive removeTask: #task
+]
+
+{ #category : #tests }
+PtyWorkplaceTest >> testStartingWorkSession [
+	| worker oldSession |
+	worker := PtyWorker atWorkplace: workplace.
+	worker currentTask: #task.
+	oldSession := Mock new.
+	workplace currentWorkSession: oldSession.
+	
+	workplace startWorkSessionBy: worker.
+	
+	workplace currentWorkSession should beReturnedFrom: [ oldSession spawnWithNewTask: #task ].
+	workplace workers should include: worker
 ]

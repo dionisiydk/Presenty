@@ -186,6 +186,15 @@ PtyWorkerTest >> testStartWithTaskInBackgroundProcess [
 ]
 
 { #category : #tests }
+PtyWorkerTest >> testStartWithTaskShouldStartNewWorkSessionForIt [
+
+	worker startWithTask: task.
+	
+	[workplace startWorkSessionBy: worker.
+	task startExecution] should beDoneInOrder
+]
+
+{ #category : #tests }
 PtyWorkerTest >> testStartWithTaskUsingTaskExecutionPriority [
 
 	worker startWithTask: task.
@@ -212,14 +221,6 @@ PtyWorkerTest >> testStoppingTaskWhenNoProcess [
 	worker process: nil.
 	
 	worker stopTask
-]
-
-{ #category : #tests }
-PtyWorkerTest >> testTaskExecutionShouldRegisterTaskAtWorkplace [
-	
-	worker executeTask: task.
-	
-	workplace should receive registerNewTask: task
 ]
 
 { #category : #tests }

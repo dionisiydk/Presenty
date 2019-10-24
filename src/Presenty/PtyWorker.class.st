@@ -65,7 +65,6 @@ PtyWorker >> deliverResult: anObject of: aTask [
 PtyWorker >> executeTask: aTask [
 
 	currentTask := aTask.
-	workplace registerNewTask: aTask.
 	
 	self isActive ifTrue: [ ^self continueWithTask: aTask].
 	
@@ -115,6 +114,8 @@ PtyWorker >> runInitialTask: aTask [
 
 { #category : #controlling }
 PtyWorker >> startWithTask: aTask [
+	workplace startWorkSessionBy: self.
+	
 	process := [ self runInitialTask: aTask ] newProcess.
 	process name: 'Worker process of ', aTask printString.
 	process priority: aTask executionPriority.
