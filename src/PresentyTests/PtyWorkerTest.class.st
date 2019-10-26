@@ -28,7 +28,27 @@ PtyWorkerTest >> testCapturingInitialWorkflowForTask [
 ]
 
 { #category : #tests }
-PtyWorkerTest >> testContinueWithTask [
+PtyWorkerTest >> testContinueWithTaskShouldRegisterItInWorkplaceBeforeExecution [
+		
+	worker continueWithTask: task.
+	
+	[workplace registerNewTask: task.
+	task currentExecutionStage] should beDoneInOrder.
+	
+]
+
+{ #category : #tests }
+PtyWorkerTest >> testContinueWithTaskShouldResetCurrentTaskAtTheEnd [
+		
+	worker currentTask: task.
+		
+	worker continueWithTask: task.
+	
+	worker currentTask should beReturnedFrom: [ task parentTask ]
+]
+
+{ #category : #tests }
+PtyWorkerTest >> testContinueWithTaskShouldRunExecutionStage [
 	
 	| executionStage result |
 	executionStage := Mock new.
@@ -36,7 +56,7 @@ PtyWorkerTest >> testContinueWithTask [
 		
 	result := worker continueWithTask: task.
 	
-	result should beReturnedFrom: [executionStage continueExecution].
+	result should beReturnedFrom: [executionStage continueExecution]
 ]
 
 { #category : #tests }
@@ -224,6 +244,15 @@ PtyWorkerTest >> testStoppingTaskWhenNoProcess [
 ]
 
 { #category : #tests }
+PtyWorkerTest >> testTaskExecutionShouldFirstSetCurrentTask [
+
+	worker stub isActive 
+		when: [worker currentTask] is: task.
+	
+	worker executeTask: task
+]
+
+{ #category : #tests }
 PtyWorkerTest >> testTaskExecutionWhenWorkerIsAlreadyActive [
 
 	| result |
@@ -231,8 +260,7 @@ PtyWorkerTest >> testTaskExecutionWhenWorkerIsAlreadyActive [
 	
 	result := worker executeTask: task.
 	
-	result should beReturnedFrom: [ worker continueWithTask: task].
-	worker currentTask should be: task
+	result should beReturnedFrom: [ worker continueWithTask: task]
 ]
 
 { #category : #tests }
@@ -245,7 +273,6 @@ PtyWorkerTest >> testTaskExecutionWhenWorkerIsNotActiveYet [
 	
 	result should beInstanceOf: PtyTaskExecutionFutureResult.
 	result task should be: task.
-	worker should receive startWithTask: task. 
-	worker currentTask should be: task.
+	worker should receive startWithTask: task
 	
 ]

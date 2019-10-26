@@ -84,8 +84,7 @@ PtyWorkplace >> planExecutionOf: aTask by: aUser [
 { #category : #controlling }
 PtyWorkplace >> registerNewTask: aTask [
 
-	self registerWorker: aTask worker.	
-	currentWorkSession := currentWorkSession createNewFor: aTask
+	currentWorkSession registerNewTask: aTask
 ]
 
 { #category : #controlling }

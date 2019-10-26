@@ -1,9 +1,6 @@
 Class {
 	#name : #PtyWorkplaceTest,
 	#superclass : #PtyWorkplaceTestCase,
-	#instVars : [
-		'workplaceSettings'
-	],
 	#category : #'PresentyTests-NewCore'
 }
 
@@ -107,29 +104,15 @@ PtyWorkplaceTest >> testPlanningTaskExecutionShouldReturnPreferredTask [
 ]
 
 { #category : #tests }
-PtyWorkplaceTest >> testRegisteringNewTaskShouldRegisterItsWorker [
+PtyWorkplaceTest >> testRegisteringNewTask [
 
-	| worker task |
-	worker := PtyWorker atWorkplace: workplace.
-	task := [] asTask.
-	task worker: worker.
-	
-	workplace registerNewTask: task.
-	
-	workplace workers should include: worker
-]
-
-{ #category : #tests }
-PtyWorkplaceTest >> testRegisteringNewTaskShouldSetsUpNewWorkSession [
-
-	| task previousSession |
-	previousSession := workplace currentWorkSession.
-	previousSession stub.
-	task := [] asTask.
+	| workSession |
+	workSession := Mock new.
+	workplace currentWorkSession: workSession.
 		
-	workplace registerNewTask: task.
+	workplace registerNewTask: #task.
 	
-	workplace currentWorkSession should beReturnedFrom: [previousSession createNewFor: task]
+	workSession should receive registerNewTask: #task
 ]
 
 { #category : #tests }

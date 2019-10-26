@@ -25,10 +25,14 @@ PtyWorker >> captureInitialWorkflowFor: aTask [
 { #category : #controlling }
 PtyWorker >> continueWithTask: aTask [
 	
-	| executionStage |
-	executionStage := aTask currentExecutionStage.
+	| executionStage result |
+	workplace registerNewTask: aTask.
 	
-	^executionStage continueExecution
+	executionStage := aTask currentExecutionStage.	
+	result := executionStage continueExecution.
+	
+	currentTask := aTask parentTask.
+	^result
 ]
 
 { #category : #accessing }
