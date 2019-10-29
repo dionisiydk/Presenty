@@ -10,9 +10,9 @@ Class {
 }
 
 { #category : #'task execution' }
-PtyWorkplace >> captureInitialWorkflowFor: aTask [
+PtyWorkplace >> addNewWorkflow [
 
-	^currentWorkSession captureInitialWorkflowFor: aTask
+	^currentWorkSession addNewWorkflow
 ]
 
 { #category : #accessing }

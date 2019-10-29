@@ -19,15 +19,6 @@ PtyWorkerTest >> setUp [
 ]
 
 { #category : #tests }
-PtyWorkerTest >> testCapturingInitialWorkflowForTask [
-
-	| workflow |
-	workflow := worker captureInitialWorkflowFor: #task.
-	
-	workflow should beReturnedFrom: [workplace captureInitialWorkflowFor: #task]
-]
-
-{ #category : #tests }
 PtyWorkerTest >> testContinueWithTaskShouldRegisterItInWorkplaceBeforeExecution [
 		
 	worker continueWithTask: task.
@@ -175,6 +166,15 @@ PtyWorkerTest >> testIsNotActiveWhenItIsNotStartedYet [
 	worker process: nil.
 	
 	worker should not be isActive
+]
+
+{ #category : #tests }
+PtyWorkerTest >> testNewWorkflowAddition [
+
+	| workflow |
+	workflow := worker addNewWorkflow.
+	
+	workflow should beReturnedFrom: [workplace addNewWorkflow]
 ]
 
 { #category : #tests }

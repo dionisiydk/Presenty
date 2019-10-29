@@ -5,18 +5,6 @@ Class {
 }
 
 { #category : #tests }
-PtyWorkplaceTest >> testCapturingInitialWorkflowForTask [
-
-	| workflow workSession |
-	workSession := Mock new.
-	workplace currentWorkSession: workSession.
-	
-	workflow := workplace captureInitialWorkflowFor: #task.
-	
-	workflow should beReturnedFrom: [workSession captureInitialWorkflowFor: #task]
-]
-
-{ #category : #tests }
 PtyWorkplaceTest >> testFindWorkerRequestingNewTaskWhenActiveWorkerExists [
 
 	| foundWorker activeWorker |
@@ -77,6 +65,18 @@ PtyWorkplaceTest >> testHasNoCurrentTasksByDefault [
 PtyWorkplaceTest >> testHaveDefaultTaskExecutionPriority [
 
 	workplace defaultTaskExecutionPriority should not be: nil
+]
+
+{ #category : #tests }
+PtyWorkplaceTest >> testNewWorkflowAddition [
+
+	| workflow workSession |
+	workSession := Mock new.
+	workplace currentWorkSession: workSession.
+	
+	workflow := workplace addNewWorkflow.
+	
+	workflow should beReturnedFrom: [workSession addNewWorkflow]
 ]
 
 { #category : #tests }

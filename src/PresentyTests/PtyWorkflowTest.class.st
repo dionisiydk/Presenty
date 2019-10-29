@@ -15,6 +15,22 @@ PtyWorkflowTest >> setUp [
 ]
 
 { #category : #tests }
+PtyWorkflowTest >> testCaptureStateForNewTask [ 
+
+	| newWorkflow |
+	workflow registerNewTask: #existingTask.
+	workflow workSession: #session.
+	workflow parentWorkflow: #parentWorkflow.
+	
+	newWorkflow := workflow captureStateForNewTask.
+	
+	newWorkflow parentWorkflow should be: #parentWorkflow.
+	newWorkflow workSession should be: #session.
+	newWorkflow currentTasks should include: #existingTask.
+	newWorkflow currentTasks should not be: workflow currentTasks
+]
+
+{ #category : #tests }
 PtyWorkflowTest >> testHasEmptyCurrentTasksByDefault [
 
 	workflow currentTasks should be isEmpty
@@ -46,19 +62,4 @@ PtyWorkflowTest >> testRemoveTask [
 	workflow removeTask: #task.
 	
 	workflow currentTasks should not include: #task
-]
-
-{ #category : #tests }
-PtyWorkflowTest >> testSpawningWorkflowForNewTask [ 
-
-	| newWorkflow |
-	workflow registerNewTask: #existingTask.
-	workflow workSession: #session.
-	
-	newWorkflow := workflow spawnForNewTask.
-	
-	newWorkflow parentWorkflow should be: workflow.
-	newWorkflow workSession should be: #session.
-	newWorkflow currentTasks should include: #existingTask.
-	newWorkflow currentTasks should not be: workflow currentTasks
 ]

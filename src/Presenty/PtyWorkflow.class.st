@@ -15,6 +15,11 @@ PtyWorkflow class >> in: aWorkSession [
 		workSession: aWorkSession
 ]
 
+{ #category : #controlling }
+PtyWorkflow >> captureStateForNewTask [
+	^self copy
+]
+
 { #category : #accessing }
 PtyWorkflow >> currentTasks [
 	^ currentTasks
@@ -62,13 +67,6 @@ PtyWorkflow >> registerNewTask: aTask [
 { #category : #controlling }
 PtyWorkflow >> removeTask: aTask [ 
 	currentTasks remove: aTask
-]
-
-{ #category : #controlling }
-PtyWorkflow >> spawnForNewTask [
-	^self copy 
-		parentWorkflow: self;
-		yourself
 ]
 
 { #category : #accessing }

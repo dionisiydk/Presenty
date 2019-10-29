@@ -19,16 +19,6 @@ PtyWorkSession >> addWorkflow: aWorkflow [
 	^workflows add: aWorkflow
 ]
 
-{ #category : #controlling }
-PtyWorkSession >> captureInitialWorkflowFor: aTask [
-	
-	| currentWorkflow |
-	currentWorkflow := aTask isInitialTask 
-		ifTrue: [ self addNewWorkflow]		
-		ifFalse: [ self workflowWith: aTask parentTask].
-	^currentWorkflow spawnForNewTask
-]
-
 { #category : #accessing }
 PtyWorkSession >> currentTasks [
 	^workflows flatCollect: [ :each | each currentTasks ]

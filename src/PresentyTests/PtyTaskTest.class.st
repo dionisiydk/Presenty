@@ -55,7 +55,18 @@ PtyTaskTest >> testBecomeRequestedForUser [
 	task user should be: #user.
 	task worker should be: worker.
 	task parentTask should beReturnedFrom: [ worker currentTask ].
-	task initialWorkflow should beReturnedFrom: [ worker captureInitialWorkflowFor: task].
+	task workflow should beReturnedFrom: [ task parentTask workflow].
+]
+
+{ #category : #tests }
+PtyTaskTest >> testBecomeRequestedForUserWhenItIsInitialTask [
+
+	| worker |
+	worker := Mock new.
+	worker stub currentTask willReturn: nil.
+	task beRequestedFor: #user from: worker.
+
+	task workflow should beReturnedFrom: [ worker addNewWorkflow].
 ]
 
 { #category : #tests }
@@ -131,19 +142,6 @@ PtyTaskTest >> testDefaultExecutionPriorityIsReturnedFromWorker [
 ]
 
 { #category : #tests }
-PtyTaskTest >> testExecution [
-
-	| executionStrategy result |
-	executionStrategy := Mock new.
-	task worker: #worker.
-	task executionStrategy: executionStrategy.
-
-	result := task requestExecution.
-
-	result should beReturnedFrom: [ executionStrategy requestExecutionOf: task using: #worker ]
-]
-
-{ #category : #tests }
 PtyTaskTest >> testExecutionAllowsStrategyToPrepareAndCompleteExecution [
 	
 	| executionStrategy |
@@ -200,12 +198,25 @@ PtyTaskTest >> testRequestExecution [
 
 	| executionStrategy result |
 	executionStrategy := Mock new.
-	task worker: #worker.
-	task executionStrategy: executionStrategy.
+	task worker: #worker; workflow: Mock new; executionStrategy: executionStrategy.
 
 	result := task requestExecution.
 
 	result should beReturnedFrom: [ executionStrategy requestExecutionOf: task using: #worker ]
+]
+
+{ #category : #tests }
+PtyTaskTest >> testRequestExecutionShouldCaptureInitialWorkflow [
+	| executionStrategy workflow |
+	executionStrategy := Mock new.
+	workflow := Mock new.
+	task workflow: workflow; executionStrategy: executionStrategy.
+
+	task requestExecution.
+
+	task initialWorkflow should beReturnedFrom: [ workflow captureStateForNewTask ].
+	[ workflow captureStateForNewTask.
+	executionStrategy requestExecutionOf: Any using: Any ] should beDoneInOrder
 ]
 
 { #category : #tests }

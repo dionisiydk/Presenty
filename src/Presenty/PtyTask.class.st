@@ -12,6 +12,7 @@ Class {
 		'executionPriority',
 		'parentTask',
 		'initialWorkflow',
+		'workflow',
 		'continuation'
 	],
 	#category : #'Presenty-Core'
@@ -109,7 +110,9 @@ PtyTask >> beRequestedFor: anUser from: aWorker [
 	user := anUser.
 	worker := aWorker.
 	parentTask := aWorker currentTask.
-	initialWorkflow := worker captureInitialWorkflowFor: self.
+	workflow := self isInitialTask 
+		ifTrue: [ worker addNewWorkflow]
+		ifFalse: [ parentTask workflow ]
 ]
 
 { #category : #execution }
@@ -467,6 +470,8 @@ PtyTask >> readSampleProperitiesFrom: someRequestedTask [
 
 { #category : #execution }
 PtyTask >> requestExecution [ 
+	initialWorkflow := workflow captureStateForNewTask.
+	
 	^executionStrategy requestExecutionOf: self using: worker
 ]
 
@@ -529,4 +534,14 @@ PtyTask >> worker [
 { #category : #accessing }
 PtyTask >> worker: anObject [
 	worker := anObject
+]
+
+{ #category : #accessing }
+PtyTask >> workflow [
+	^ workflow
+]
+
+{ #category : #accessing }
+PtyTask >> workflow: anObject [
+	workflow := anObject
 ]
