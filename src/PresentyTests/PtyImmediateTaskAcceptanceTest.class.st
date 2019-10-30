@@ -69,7 +69,7 @@ PtyImmediateTaskAcceptanceTest >> testReturningResultFromAnotherTask [
 	task beImmediate.	
 	user executeTask: [ result := user executeTask: task] asTask.
 
-	user executeTask: [ task returnResult: #newResult. resultSenderWasComplete := true] asTask.
+	user executeTask: [ task deliverResult: #newResult. resultSenderWasComplete := true] asTask.
 	
 	result should be: #newResult.
 	resultSenderWasComplete should not be: true
@@ -87,7 +87,7 @@ PtyImmediateTaskAcceptanceTest >> testReturningResultFromNotCurrentTask [
 	user executeTask: callerTask.
 	workplace currentTasks removeAll.
 	 
-	task returnResult: #newResult.
+	task deliverResult: #newResult.
 	result should be: #newResult.
 	workplace currentTasks should include: task.
 	workplace currentTasks should include: callerTask
@@ -101,7 +101,7 @@ PtyImmediateTaskAcceptanceTest >> testReturningResultFromOutsideOfTask [
 	task beImmediate.
 	user executeTask: [ result := user executeTask: task] asTask.
 
-	task returnResult: #newResult.
+	task deliverResult: #newResult.
 	
 	result should be: #newResult
 ]

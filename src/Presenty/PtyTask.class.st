@@ -212,6 +212,14 @@ PtyTask >> deferExecution [
 	^PtyTaskExecutionFutureResult of: self
 ]
 
+{ #category : #execution }
+PtyTask >> deliverResult: anObject [
+
+	continuation ifNil: [ ^self error: 'No continuation for return!' ].
+	
+	worker deliverResult: anObject of: self
+]
+
 { #category : #accessing }
 PtyTask >> executionPriority [
 	^ executionPriority ifNil: [ self defaultExecutionPriority ]
@@ -499,14 +507,6 @@ PtyTask >> requestExecution [
 PtyTask >> restoreWorkplaceState [
 
 	self error: 'todo'
-]
-
-{ #category : #execution }
-PtyTask >> returnResult: anObject [
-
-	continuation ifNil: [ ^self error: 'No continuation for return!' ].
-	
-	worker deliverResult: anObject of: self
 ]
 
 { #category : #testing }

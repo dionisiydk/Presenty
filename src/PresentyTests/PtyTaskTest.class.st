@@ -166,6 +166,31 @@ PtyTaskTest >> testDeferExecutionShouldReturnFutureResult [
 ]
 
 { #category : #tests }
+PtyTaskTest >> testDeliveringResult [
+
+	| worker |
+	worker := Mock new.
+	task worker: worker.
+	task continuation: #continuation.
+		
+	task deliverResult: #taskResult.
+
+	worker should receive deliverResult: #taskResult of: task
+]
+
+{ #category : #tests }
+PtyTaskTest >> testDeliveringResultWhenTaskWasNotStarted [
+
+	| worker error |
+	worker := Mock new.
+	task worker: worker.
+	task continuation: nil.
+		
+	error := [task deliverResult: #taskResult] should fail.
+	error where description should includeSubstring: 'No continuation'
+]
+
+{ #category : #tests }
 PtyTaskTest >> testExecutionShouldPassThrough3Steps [
 	
 	task workflow: Mock new.
@@ -278,29 +303,4 @@ PtyTaskTest >> testRestoreWorkplaceState [
 	task restoreWorkplaceState.
 
 	
-]
-
-{ #category : #tests }
-PtyTaskTest >> testReturningResult [
-
-	| worker |
-	worker := Mock new.
-	task worker: worker.
-	task continuation: #continuation.
-		
-	task returnResult: #taskResult.
-
-	worker should receive deliverResult: #taskResult of: task
-]
-
-{ #category : #tests }
-PtyTaskTest >> testReturningResultWhenTaskWasNotStarted [
-
-	| worker error |
-	worker := Mock new.
-	task worker: worker.
-	task continuation: nil.
-		
-	error := [task returnResult: #taskResult] should fail.
-	error where description should includeSubstring: 'No continuation'
 ]
