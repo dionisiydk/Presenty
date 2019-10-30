@@ -21,9 +21,9 @@ PtyTaskReturnStageTest >> testContinueExecution [
 ]
 
 { #category : #tests }
-PtyTaskReturnStageTest >> testContinueExecutionShouldRestoreWorkplaceState [
+PtyTaskReturnStageTest >> testContinueExecutionShouldRestoreWorkflow [
 
 	executionStage continueExecution.	
 	
-	task should receive restoreWorkplaceState
+	[task restoreWorkplaceState] should beDoneInOrder 
 ]

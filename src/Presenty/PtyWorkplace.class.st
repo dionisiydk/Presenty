@@ -82,23 +82,11 @@ PtyWorkplace >> planExecutionOf: aTask by: aUser [
 ]
 
 { #category : #controlling }
-PtyWorkplace >> registerNewTask: aTask [
-
-	currentWorkSession registerNewTask: aTask
-]
-
-{ #category : #controlling }
 PtyWorkplace >> registerWorker: aWorker [ 
 
 	(workers includes: aWorker) ifTrue: [ ^self ].
 	
 	workers add: aWorker
-]
-
-{ #category : #controlling }
-PtyWorkplace >> removeTask: aTask [
-
-	currentWorkSession removeTask: aTask
 ]
 
 { #category : #controlling }

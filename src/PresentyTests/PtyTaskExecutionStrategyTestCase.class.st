@@ -4,7 +4,8 @@ Class {
 	#instVars : [
 		'executionStrategy',
 		'worker',
-		'task'
+		'task',
+		'workflow'
 	],
 	#category : #'PresentyTests-NewCore'
 }
@@ -24,5 +25,14 @@ PtyTaskExecutionStrategyTestCase >> setUp [
 	super setUp.
 	task := Mock new.
 	worker := Mock new.
+	workflow := Mock new.
 	executionStrategy := self createStrategy
+]
+
+{ #category : #tests }
+PtyTaskExecutionStrategyTestCase >> testShouldRegisterTaskItselfInExecutionWorkflow [
+	
+	executionStrategy prepareWorkflow: workflow forExecutionOf: #task.
+	
+	workflow should receive registerNewTask: #task
 ]

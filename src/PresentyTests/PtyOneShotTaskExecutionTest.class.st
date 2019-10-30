@@ -10,18 +10,18 @@ PtyOneShotTaskExecutionTest >> createStrategy [
 ]
 
 { #category : #tests }
-PtyOneShotTaskExecutionTest >> testCompletingTaskExecution [ 
-
-	executionStrategy completeExecutionOf: task using: worker.
-	
-	worker should receive removeTask: task
-]
-
-{ #category : #tests }
 PtyOneShotTaskExecutionTest >> testRequestingTaskExecution [ 
 
 	| result |
 	result := executionStrategy requestExecutionOf: task using: worker.
 	
 	result should beReturnedFrom: [worker executeTask: task]
+]
+
+{ #category : #tests }
+PtyOneShotTaskExecutionTest >> testShouldRemoveFromWorkflowTheTaskWhichReturnsResult [ 
+
+	executionStrategy prepareWorkflow: workflow forReturnFrom: task.
+	
+	workflow should receive removeTask: task
 ]

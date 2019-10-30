@@ -26,11 +26,10 @@ PtyWorker >> addNewWorkflow [
 PtyWorker >> continueWithTask: aTask [
 	
 	| executionStage result |
-	workplace registerNewTask: aTask.
-	
 	executionStage := aTask currentExecutionStage.	
-	result := executionStage continueExecution.
 	
+	result := executionStage continueExecution.
+
 	currentTask := aTask parentTask.
 	^result
 ]
@@ -48,13 +47,6 @@ PtyWorker >> currentTask: anObject [
 { #category : #accessing }
 PtyWorker >> defaultTaskExecutionPriority [
 	^ workplace defaultTaskExecutionPriority
-]
-
-{ #category : #'task execution' }
-PtyWorker >> deferTask: aTask [
-	
-	workplace registerNewTask: aTask.
-	^PtyTaskExecutionFutureResult of: aTask
 ]
 
 { #category : #'task execution' }
@@ -97,17 +89,11 @@ PtyWorker >> process: anObject [
 	process := anObject
 ]
 
-{ #category : #'task execution' }
-PtyWorker >> removeTask: aTask [
-	
-	workplace removeTask: aTask
-]
-
 { #category : #controlling }
 PtyWorker >> runInitialTask: aTask [
 
 	[	
-		[aTask startExecution] 
+		[self continueWithTask: aTask] 
 			on: Error do: [:err | self notifyUserAbout: err]
 
 	] on: PtyUserRequest do: [:request | 

@@ -204,6 +204,14 @@ PtyTask >> defaultPrototypeContextName [
 	^self class name
 ]
 
+{ #category : #execution }
+PtyTask >> deferExecution [ 
+
+	workflow registerNewTask: self.
+	
+	^PtyTaskExecutionFutureResult of: self
+]
+
 { #category : #accessing }
 PtyTask >> executionPriority [
 	^ executionPriority ifNil: [ self defaultExecutionPriority ]
@@ -413,6 +421,18 @@ PtyTask >> prepareActivationBy: aGuide [
 	^newActivation.
 ]
 
+{ #category : #controlling }
+PtyTask >> prepareExecutionWorkflow [
+
+	executionStrategy prepareWorkflow: workflow forExecutionOf: self
+]
+
+{ #category : #controlling }
+PtyTask >> prepareReturnWorkflow [
+
+	executionStrategy prepareWorkflow: workflow forReturnFrom: self
+]
+
 { #category : #printing }
 PtyTask >> printDetailsOn: aStream [
 
@@ -503,9 +523,9 @@ PtyTask >> shouldSeparateForkTasks [
 PtyTask >> startExecution [ 
 	
 	| result |
-	executionStrategy prepareExecutionOf: self using: worker.
+	self prepareExecutionWorkflow.
 	result := self body.
-	executionStrategy completeExecutionOf: self using: worker.
+	self prepareReturnWorkflow.
 	^result
 ]
 

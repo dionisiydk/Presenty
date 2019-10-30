@@ -142,19 +142,40 @@ PtyTaskTest >> testDefaultExecutionPriorityIsReturnedFromWorker [
 ]
 
 { #category : #tests }
-PtyTaskTest >> testExecutionAllowsStrategyToPrepareAndCompleteExecution [
+PtyTaskTest >> testDeferExecutionShouldJustRegisterItInWorkplace [
+
+	| workflow |
+	workflow := Mock new.
+	task workflow: workflow.
 	
-	| executionStrategy |
-	executionStrategy := Mock new.
-	task executionStrategy: executionStrategy.
-	task worker: #worker.	
+	task deferExecution.
+	
+	workflow should receive registerNewTask: task
+]
+
+{ #category : #tests }
+PtyTaskTest >> testDeferExecutionShouldReturnFutureResult [
+
+	| result |
+	task workflow: Mock new.
+	
+	result := task deferExecution.
+	
+	result should beInstanceOf: PtyTaskExecutionFutureResult.
+	result task should be: task
+]
+
+{ #category : #tests }
+PtyTaskTest >> testExecutionShouldPassThrough3Steps [
+	
+	task workflow: Mock new.
 	task stub.
 	
 	task startExecution.
 
-	[executionStrategy prepareExecutionOf: task using: #worker.
+	[task prepareExecutionWorkflow.
 	task body.
-	executionStrategy completeExecutionOf: task using: #worker] should beDoneInOrder 
+	task prepareReturnWorkflow] should beDoneInOrder 
 ]
 
 { #category : #tests }
@@ -191,6 +212,32 @@ PtyTaskTest >> testIsInitialTask [
 PtyTaskTest >> testIsOneShotByDefault [
 
 	task executionStrategy should beInstanceOf: PtyOneShotTaskExecution 
+]
+
+{ #category : #tests }
+PtyTaskTest >> testPrepareExecutionWorkflow [
+	
+	| executionStrategy |
+	executionStrategy := Mock new.
+	task executionStrategy: executionStrategy.
+	task workflow: #workflow.
+		
+	task prepareExecutionWorkflow.
+
+	executionStrategy should receive prepareWorkflow: #workflow forExecutionOf: task
+]
+
+{ #category : #tests }
+PtyTaskTest >> testPrepareReturnWorkflow [
+	
+	| executionStrategy |
+	executionStrategy := Mock new.
+	task executionStrategy: executionStrategy.
+	task workflow: #workflow.
+		
+	task prepareReturnWorkflow.
+
+	executionStrategy should receive prepareWorkflow: #workflow forReturnFrom: task
 ]
 
 { #category : #tests }

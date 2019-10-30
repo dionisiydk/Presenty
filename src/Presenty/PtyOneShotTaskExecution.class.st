@@ -5,10 +5,10 @@ Class {
 }
 
 { #category : #'task execution' }
-PtyOneShotTaskExecution >> completeExecutionOf: aTask using: aWorker [
-	super completeExecutionOf: aTask using: aWorker.
+PtyOneShotTaskExecution >> prepareWorkflow: aWorkflow forReturnFrom: aTask [
+	super prepareWorkflow: aTask forReturnFrom: aTask.
 	
-	aWorker removeTask: aTask
+	aWorkflow removeTask: aTask
 ]
 
 { #category : #'task execution' }

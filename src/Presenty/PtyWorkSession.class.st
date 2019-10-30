@@ -59,24 +59,6 @@ PtyWorkSession >> postCopy [
 ]
 
 { #category : #controlling }
-PtyWorkSession >> registerNewTask: aTask [
-	
-	| targetWorkflow |
-	targetWorkflow := self findActiveWorkflowSpawned: aTask initialWorkflow.
-	 
-	targetWorkflow registerNewTask: aTask
-]
-
-{ #category : #controlling }
-PtyWorkSession >> removeTask: aTask [
-	
-	| targetWorkflow |
-	targetWorkflow := self findActiveWorkflowSpawned: aTask initialWorkflow.
-	 
-	targetWorkflow removeTask: aTask
-]
-
-{ #category : #controlling }
 PtyWorkSession >> spawnWithNewTask: aTask [
 
 	| newSession |

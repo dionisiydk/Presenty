@@ -19,16 +19,6 @@ PtyWorkerTest >> setUp [
 ]
 
 { #category : #tests }
-PtyWorkerTest >> testContinueWithTaskShouldRegisterItInWorkplaceBeforeExecution [
-		
-	worker continueWithTask: task.
-	
-	[workplace registerNewTask: task.
-	task currentExecutionStage] should beDoneInOrder.
-	
-]
-
-{ #category : #tests }
 PtyWorkerTest >> testContinueWithTaskShouldResetCurrentTaskAtTheEnd [
 		
 	worker currentTask: task.
@@ -57,25 +47,6 @@ PtyWorkerTest >> testDefaultExecutionPriorityIsReturnedFromWorkspace [
 ]
 
 { #category : #tests }
-PtyWorkerTest >> testDeferringTaskShouldJustRegisterItInWorkplace [
-
-	worker deferTask: task.
-	
-	workplace should receive registerNewTask: task.
-	task should not receive body
-]
-
-{ #category : #tests }
-PtyWorkerTest >> testDeferringTaskShouldReturnFutureResult [
-
-	| result |
-	result := worker deferTask: task.
-	
-	result should beInstanceOf: PtyTaskExecutionFutureResult.
-	result task should be: task
-]
-
-{ #category : #tests }
 PtyWorkerTest >> testDeliveringTaskResultWhenWorkerIsAlreadyActive [
 
 	worker stub isActive willReturn: true.
@@ -100,10 +71,11 @@ PtyWorkerTest >> testDeliveringTaskResultWhenWorkerIsNotActiveYet [
 
 { #category : #tests }
 PtyWorkerTest >> testInitialTaskExecution [
-
+	worker stub.
+	
 	worker runInitialTask: task.
 	
-	task should receive startExecution 
+	worker should receive continueWithTask: task
 ]
 
 { #category : #tests }
@@ -111,7 +83,7 @@ PtyWorkerTest >> testInitialTaskExecutionShouldExpectUserRequest [
 
 	| request |
 	request := PtyUserRequestStub new.
-	task stub startExecution willRaise: request.
+	(worker stub continueWithTask: task) willRaise: request.
 		
 	worker runInitialTask: task.
 	
@@ -122,9 +94,8 @@ PtyWorkerTest >> testInitialTaskExecutionShouldExpectUserRequest [
 PtyWorkerTest >> testInitialTaskFailedExecution [
 
 	| error |
-	worker stub.
 	error := Error new.
-	task stub startExecution willRaise: error.
+	(worker stub continueWithTask: task) willRaise: error.
 		
 	[worker runInitialTask: task] should raise: error.
 	worker should receive notifyUserAbout: error
@@ -134,8 +105,7 @@ PtyWorkerTest >> testInitialTaskFailedExecution [
 PtyWorkerTest >> testInitialTaskFailedExecutionNotificationShouldExpectNewUserRequests [
 
 	| request |
-	worker stub.
-	task stub startExecution willRaise: Error new.
+	(worker stub continueWithTask: task) willRaise: Error new.
 	request := PtyUserRequestStub new.
 	(worker stub notifyUserAbout: Any) willRaise: request.
 		

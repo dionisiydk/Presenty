@@ -104,18 +104,6 @@ PtyWorkplaceTest >> testPlanningTaskExecutionShouldReturnPreferredTask [
 ]
 
 { #category : #tests }
-PtyWorkplaceTest >> testRegisteringNewTask [
-
-	| workSession |
-	workSession := Mock new.
-	workplace currentWorkSession: workSession.
-		
-	workplace registerNewTask: #task.
-	
-	workSession should receive registerNewTask: #task
-]
-
-{ #category : #tests }
 PtyWorkplaceTest >> testRegisteringNewWorker [
 
 	| worker |

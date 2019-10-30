@@ -5,12 +5,13 @@ Class {
 }
 
 { #category : #'task execution' }
-PtyTaskExecutionStrategy >> completeExecutionOf: aTask using: aWorker [
+PtyTaskExecutionStrategy >> prepareWorkflow: aWorkflow forExecutionOf: aTask [
 
+	aWorkflow registerNewTask: aTask
 ]
 
 { #category : #'task execution' }
-PtyTaskExecutionStrategy >> prepareExecutionOf: aTask using: aWorker [
+PtyTaskExecutionStrategy >> prepareWorkflow: aWorkflow forReturnFrom: aTask [
 
 ]
 
