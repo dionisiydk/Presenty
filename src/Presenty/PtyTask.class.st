@@ -126,12 +126,6 @@ PtyTask >> canBePrototypeInContextOf: aTask [
 	^(aTask isCreatedByCurrentRequestFrom: self) not
 ]
 
-{ #category : #execution }
-PtyTask >> completeExecutionWith: resultObject [ 
-	
-	continuation value: (PtyTaskReturnStage of: self withResult: resultObject)
-]
-
 { #category : #accessing }
 PtyTask >> context [
 	^context
@@ -349,6 +343,18 @@ PtyTask >> isSimilarTo: aTask [
 	self class == aTask class ifFalse: [^false].
 	
 	^name = aTask name
+]
+
+{ #category : #controlling }
+PtyTask >> jumpToExecutionStage: aTaskExecutionStage [ 
+	
+	continuation value: aTaskExecutionStage 
+]
+
+{ #category : #controlling }
+PtyTask >> jumpToResultDeliveryStageWith: resultObject [ 
+	
+	self jumpToExecutionStage: (PtyTaskResultDeliveryStage of: self withResult: resultObject)
 ]
 
 { #category : #accessing }

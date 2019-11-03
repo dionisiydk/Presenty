@@ -1,16 +1,16 @@
 Class {
-	#name : #PtyTaskReturnStageTest,
+	#name : #PtyTaskResultDeliveryStageTest,
 	#superclass : #PtyTaskExecutionStageTestCase,
 	#category : #'PresentyTests-NewCore'
 }
 
 { #category : #running }
-PtyTaskReturnStageTest >> createExecutionStage [
-	^PtyTaskReturnStage of: task withResult: #taskResult
+PtyTaskResultDeliveryStageTest >> createExecutionStage [
+	^PtyTaskResultDeliveryStage of: task withResult: #taskResult
 ]
 
 { #category : #tests }
-PtyTaskReturnStageTest >> testContinueExecution [
+PtyTaskResultDeliveryStageTest >> testContinueExecution [
 
 	| result |
 	executionStage result: #taskResult.
@@ -21,7 +21,7 @@ PtyTaskReturnStageTest >> testContinueExecution [
 ]
 
 { #category : #tests }
-PtyTaskReturnStageTest >> testContinueExecutionShouldRestoreWorkflow [
+PtyTaskResultDeliveryStageTest >> testContinueExecutionShouldRestoreWorkflow [
 
 	executionStage continueExecution.	
 	

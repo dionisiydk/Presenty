@@ -70,21 +70,6 @@ PtyTaskTest >> testBecomeRequestedForUserWhenItIsInitialTask [
 ]
 
 { #category : #tests }
-PtyTaskTest >> testCompleteExecution [
-
-	| continuation |
-	continuation := Mock new.
-	task continuation: continuation.
-	continuation stub value: Arg executionStage.
-	
-	task completeExecutionWith: #taskResult.
-
-	Arg executionStage should beInstanceOf: PtyTaskReturnStage.
-	Arg executionStage where task should be: task.
-	Arg executionStage where result should be: #taskResult.
-]
-
-{ #category : #tests }
 PtyTaskTest >> testConvertingToTask [
 	
 	task asTask should be: task
@@ -237,6 +222,33 @@ PtyTaskTest >> testIsInitialTask [
 PtyTaskTest >> testIsOneShotByDefault [
 
 	task executionStrategy should beInstanceOf: PtyOneShotTaskExecution 
+]
+
+{ #category : #tests }
+PtyTaskTest >> testJumpToExecutionStage [
+
+	| continuation |
+	continuation := Mock new.
+	task continuation: continuation.
+	
+	task jumpToExecutionStage: #executionStage.
+
+	continuation should receiver value: #executionStage
+]
+
+{ #category : #tests }
+PtyTaskTest >> testJumpToResultDeliveryStage [
+
+	| continuation |
+	continuation := Mock new.
+	task continuation: continuation.
+	continuation stub value: Arg executionStage.
+	
+	task jumpToResultDeliveryStageWith: #taskResult.
+
+	Arg executionStage should beInstanceOf: PtyTaskResultDeliveryStage.
+	Arg executionStage where task should be: task.
+	Arg executionStage where result should be: #taskResult.
 ]
 
 { #category : #tests }

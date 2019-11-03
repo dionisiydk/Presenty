@@ -18,10 +18,8 @@ PtyDeliverResultTask class >> result: taskResult from: completeTask [
 
 { #category : #execution }
 PtyDeliverResultTask >> body [
-	"Normally this method will never return because following call will resume continuation"
-	completeTask completeExecutionWith: result
-	
-
+	"This method never return because internal call will resume continuation"
+	completeTask jumpToResultDeliveryStageWith: result
 
 ]
 

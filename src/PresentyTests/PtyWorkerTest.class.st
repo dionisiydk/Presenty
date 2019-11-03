@@ -53,7 +53,7 @@ PtyWorkerTest >> testDeliveringTaskResultWhenWorkerIsAlreadyActive [
 
 	worker deliverResult: #taskResult of: task.
 	
-	task should receive completeExecutionWith: #taskResult
+	task should receive jumpToResultDeliveryStageWith: #taskResult
 ]
 
 { #category : #tests }

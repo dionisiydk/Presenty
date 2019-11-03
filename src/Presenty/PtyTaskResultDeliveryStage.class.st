@@ -1,5 +1,5 @@
 Class {
-	#name : #PtyTaskReturnStage,
+	#name : #PtyTaskResultDeliveryStage,
 	#superclass : #PtyTaskExecutionStage,
 	#instVars : [
 		'result'
@@ -8,13 +8,13 @@ Class {
 }
 
 { #category : #accessing }
-PtyTaskReturnStage class >> of: aTask withResult: anObject [
+PtyTaskResultDeliveryStage class >> of: aTask withResult: anObject [
 	^(self of: aTask)
 		result: anObject
 ]
 
 { #category : #controlling }
-PtyTaskReturnStage >> continueExecution [
+PtyTaskResultDeliveryStage >> continueExecution [
 	
 	task restoreWorkplaceState.
 	
@@ -22,11 +22,11 @@ PtyTaskReturnStage >> continueExecution [
 ]
 
 { #category : #accessing }
-PtyTaskReturnStage >> result [
+PtyTaskResultDeliveryStage >> result [
 	^result
 ]
 
 { #category : #accessing }
-PtyTaskReturnStage >> result: anObject [
+PtyTaskResultDeliveryStage >> result: anObject [
 	result := anObject
 ]

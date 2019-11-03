@@ -52,7 +52,7 @@ PtyWorker >> defaultTaskExecutionPriority [
 { #category : #'task execution' }
 PtyWorker >> deliverResult: anObject of: aTask [
 
-	self isActive ifTrue: [ ^aTask completeExecutionWith: anObject ].
+	self isActive ifTrue: [ ^aTask jumpToResultDeliveryStageWith: anObject ].
 	
 	self startWithTask: (PtyDeliverResultTask result: anObject from: aTask)
 ]

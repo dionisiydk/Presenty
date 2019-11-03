@@ -13,7 +13,7 @@ PtyDeliverResultTaskTest >> testExecution [
 	
 	deliverTask startExecution.
 	
-	completeTask should receive completeExecutionWith: #taskResult
+	completeTask should receive jumpToResultDeliveryStageWith: #taskResult
 ]
 
 { #category : #tests }
