@@ -61,6 +61,93 @@ PtyWorkSessionTest >> testNewWorkflowAddition [
 ]
 
 { #category : #tests }
+PtyWorkSessionTest >> testRevertingStateShouldAddMissingWorkflowsRegisteredInGivenSession [
+	| anotherSession missingWorkflow |
+	missingWorkflow := PtyWorkflow in: session.
+	anotherSession := PtyWorkSession new.
+	anotherSession addWorkflow: missingWorkflow.
+		
+	session revertStateTo: anotherSession startingAt: #initialWorkflow.
+	
+	session workflows should include: missingWorkflow
+]
+
+{ #category : #tests }
+PtyWorkSessionTest >> testRevertingStateShouldKeepDeepChildSpawnedFromRegisteredWorkflowsInGivenSession [
+	| anotherSession existingWorkflow spawnedDeepChild |
+	existingWorkflow := PtyWorkflow in: session.
+	session addWorkflow: existingWorkflow.
+	spawnedDeepChild := existingWorkflow spawnNew spawnNew.
+	anotherSession := PtyWorkSession new.
+	anotherSession addWorkflow: existingWorkflow.
+		
+	session revertStateTo: anotherSession startingAt: #initialWorkflow.
+	
+	session workflows should include: existingWorkflow.
+	session workflows should include: spawnedDeepChild
+]
+
+{ #category : #tests }
+PtyWorkSessionTest >> testRevertingStateShouldKeepWorkflowsRegisteredInGivenSession [
+	| anotherSession existingWorkflow1 existingWorkflow2 |
+	existingWorkflow1 := PtyWorkflow new.
+	existingWorkflow2 := PtyWorkflow new.
+	session addWorkflow: existingWorkflow1; addWorkflow: existingWorkflow2.
+	anotherSession := PtyWorkSession new.
+	anotherSession addWorkflow: existingWorkflow1; addWorkflow: existingWorkflow2.
+		
+	session revertStateTo: anotherSession startingAt: #initialWorkflow.
+	
+	session workflows should include: existingWorkflow1.
+	session workflows should include: existingWorkflow2.
+]
+
+{ #category : #tests }
+PtyWorkSessionTest >> testRevertingStateShouldKeepWorkflowsSpawnedFromRegisteredWorkflowsInGivenSession [
+	| anotherSession existingWorkflow spawnedWorkflow1 spawnedWorkflow2 |
+	existingWorkflow := PtyWorkflow in: session.
+	session addWorkflow: existingWorkflow.
+	spawnedWorkflow1 := existingWorkflow spawnNew.
+	spawnedWorkflow2 := existingWorkflow spawnNew.	
+	anotherSession := PtyWorkSession new.
+	anotherSession addWorkflow: existingWorkflow.
+		
+	session revertStateTo: anotherSession startingAt: #initialWorkflow.
+	
+	session workflows should include: existingWorkflow.
+	session workflows should include: spawnedWorkflow1.
+	session workflows should include: spawnedWorkflow2.
+]
+
+{ #category : #tests }
+PtyWorkSessionTest >> testRevertingStateShouldRemoveExistingChildrenOfGivenInitialWorkflow [
+	| anotherSession initialWorkflow spawnedFromInitialWorkflow1 spawnedFromInitialWorkflow2 |
+	initialWorkflow := PtyWorkflow in: session.
+	session addWorkflow: initialWorkflow.
+	spawnedFromInitialWorkflow1 := initialWorkflow spawnNew.
+	spawnedFromInitialWorkflow2 := initialWorkflow spawnNew..
+	anotherSession := PtyWorkSession new.
+		
+	session revertStateTo: anotherSession startingAt: initialWorkflow.
+	
+	session workflows should not include: spawnedFromInitialWorkflow1.
+	session workflows should not include: spawnedFromInitialWorkflow2.
+]
+
+{ #category : #tests }
+PtyWorkSessionTest >> testRevertingStateShouldRemoveExistingDeepChildOfGivenInitialWorkflow [
+	| anotherSession initialWorkflow spawnedDeepChild |
+	initialWorkflow := PtyWorkflow in: session.
+	session addWorkflow: initialWorkflow.
+	spawnedDeepChild  := initialWorkflow spawnNew spawnNew.
+	anotherSession := PtyWorkSession new.
+		
+	session revertStateTo: anotherSession startingAt: initialWorkflow.
+	
+	session workflows should not include: spawnedDeepChild
+]
+
+{ #category : #tests }
 PtyWorkSessionTest >> testSpawnNewSession [ 
 
 	| newSession workflow |

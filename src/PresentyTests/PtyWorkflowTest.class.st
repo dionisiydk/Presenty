@@ -2,7 +2,8 @@ Class {
 	#name : #PtyWorkflowTest,
 	#superclass : #TestCase,
 	#instVars : [
-		'workflow'
+		'workflow',
+		'workSession'
 	],
 	#category : #'PresentyTests-NewCore'
 }
@@ -11,23 +12,21 @@ Class {
 PtyWorkflowTest >> setUp [
 	super setUp.
 	
-	workflow := PtyWorkflow new
+	workSession := Mock new.
+	workflow := PtyWorkflow in: workSession
 ]
 
 { #category : #tests }
 PtyWorkflowTest >> testCaptureStateForNewTask [ 
 
-	| newWorkflow |
+	| capturedWorkflow |
 	workflow registerNewTask: #existingTask.
-	workflow workSession: #session.
-	workflow parentWorkflow: #parentWorkflow.
 	
-	newWorkflow := workflow captureStateForNewTask.
+	capturedWorkflow := workflow captureStateForNewTask.
 	
-	newWorkflow parentWorkflow should be: #parentWorkflow.
-	newWorkflow workSession should be: #session.
-	newWorkflow currentTasks should include: #existingTask.
-	newWorkflow currentTasks should not be: workflow currentTasks
+	capturedWorkflow workSession should be: workSession.
+	capturedWorkflow currentTasks should include: #existingTask.
+	capturedWorkflow currentTasks should not be: workflow currentTasks
 ]
 
 { #category : #tests }
@@ -65,12 +64,40 @@ PtyWorkflowTest >> testRemoveTask [
 ]
 
 { #category : #tests }
-PtyWorkflowTest >> testRevertState [ 
+PtyWorkflowTest >> testRevertingStateShouldAlsoRevertStateOfWorkSession [
 
 	| anotherWorkflow |
+	anotherWorkflow := PtyWorkflow in: #anotherSession.
+		
+	workflow revertStateTo: anotherWorkflow.
+	
+	workSession should receive revertStateTo: #anotherSession startingAt: workflow
+]
+
+{ #category : #tests }
+PtyWorkflowTest >> testRevertingStateShouldResetCurrentTasks [ 
+	| anotherWorkflow |
 	anotherWorkflow := PtyWorkflow new.
+	anotherWorkflow registerNewTask: #newTask.
+	workflow registerNewTask: #existingTask.
 	
 	workflow revertStateTo: anotherWorkflow.
 	
-	workflow currentTasks should equal: anotherWorkflow currentTasks
+	workflow currentTasks should equal: #(newTask).
+	workflow currentTasks should not be: anotherWorkflow currentTasks.
+]
+
+{ #category : #tests }
+PtyWorkflowTest >> testSpawnNewWorkflow [ 
+
+	| newWorkflow |
+	workflow registerNewTask: #existingTask.
+	
+	newWorkflow := workflow spawnNew.
+	
+	newWorkflow workSession should be: workSession.
+	workSession should receive addWorkflow: newWorkflow.
+	newWorkflow parentWorkflow should be: workflow.
+	newWorkflow currentTasks should be isEmpty.
+	newWorkflow currentTasks should not be: workflow currentTasks
 ]

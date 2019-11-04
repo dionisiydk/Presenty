@@ -49,6 +49,12 @@ PtyWorkSession >> postCopy [
 ]
 
 { #category : #controlling }
+PtyWorkSession >> revertStateTo: aWorkSession startingAt: aWorkflow [
+
+	workflows := aWorkSession workflows.
+]
+
+{ #category : #controlling }
 PtyWorkSession >> spawnNew [
 
 	| newSession |

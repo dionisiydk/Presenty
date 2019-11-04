@@ -69,6 +69,22 @@ PtyWorkflow >> removeTask: aTask [
 	currentTasks remove: aTask
 ]
 
+{ #category : #controlling }
+PtyWorkflow >> revertStateTo: aWorkflow [
+
+	currentTasks := aWorkflow currentTasks copy.
+	workSession revertStateTo: aWorkflow workSession startingAt: self.
+]
+
+{ #category : #controlling }
+PtyWorkflow >> spawnNew [
+	| newWorkflow |
+	newWorkflow := self class in: workSession.
+	newWorkflow parentWorkflow: self.
+	workSession addWorkflow: newWorkflow.
+	^newWorkflow
+]
+
 { #category : #accessing }
 PtyWorkflow >> workSession [
 	^ workSession
