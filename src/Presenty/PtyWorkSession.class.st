@@ -24,16 +24,6 @@ PtyWorkSession >> currentTasks [
 	^workflows flatCollect: [ :each | each currentTasks ]
 ]
 
-{ #category : #accessing }
-PtyWorkSession >> findActiveWorkflowSpawned: aWorkflow [
-	
-	| targetWorkflow |
-	targetWorkflow := aWorkflow parentWorkflow.
-	(workflows includes: targetWorkflow) ifFalse: [ 
-		^self error: 'Active workflow not found'].
-	 ^targetWorkflow
-]
-
 { #category : #initialization }
 PtyWorkSession >> initialize [ 
 	super initialize.
@@ -59,12 +49,11 @@ PtyWorkSession >> postCopy [
 ]
 
 { #category : #controlling }
-PtyWorkSession >> spawnWithNewTask: aTask [
+PtyWorkSession >> spawnNew [
 
 	| newSession |
 	newSession := self copy.
 	newSession parentSession: self.
-	newSession registerNewTask: aTask.
 	^newSession
 
 	

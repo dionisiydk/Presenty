@@ -510,9 +510,9 @@ PtyTask >> requestExecution [
 ]
 
 { #category : #controlling }
-PtyTask >> restoreWorkplaceState [
+PtyTask >> restoreInitialWorkflow [
 
-	self error: 'todo'
+	workflow revertStateTo: initialWorkflow 
 ]
 
 { #category : #testing }

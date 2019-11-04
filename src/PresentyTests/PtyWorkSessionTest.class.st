@@ -30,27 +30,6 @@ PtyWorkSessionTest >> testCurrentTasks [
 ]
 
 { #category : #tests }
-PtyWorkSessionTest >> testFindingActiveWorkflowWhenItNotExist [
-
-	[session findActiveWorkflowSpawned: PtyWorkflow new captureStateForNewTask] should fail
-]
-
-{ #category : #tests }
-PtyWorkSessionTest >> testFindingActiveWorkflowWhichJustSpawnedGivenOne [
-
-	| someWorkflow targetWorkflow found |
-	someWorkflow := PtyWorkflow new.
-	someWorkflow registerNewTask: #someOtherTask.
-	targetWorkflow := PtyWorkflow new.
-	targetWorkflow registerNewTask: #task.
-	session addWorkflow: someWorkflow; addWorkflow: targetWorkflow.
-	
-	found := session findActiveWorkflowSpawned: targetWorkflow captureStateForNewTask.
-	
-	found should be: targetWorkflow
-]
-
-{ #category : #tests }
 PtyWorkSessionTest >> testFindingWorkflowWithGivenTask [
 
 	| someWorkflow targetWorkflow found |
@@ -82,57 +61,15 @@ PtyWorkSessionTest >> testNewWorkflowAddition [
 ]
 
 { #category : #tests }
-PtyWorkSessionTest >> testRegisteringNewTask [ 
+PtyWorkSessionTest >> testSpawnNewSession [ 
 
-	| workflow task |
+	| newSession workflow |
 	workflow := session addNewWorkflow.
-	task := PtyTask new.
-	task initialWorkflow: workflow captureStateForNewTask.
+	workflow registerNewTask: PtyTask new.
 	
-	session registerNewTask: task.
-	
-	workflow currentTasks should include: task
-]
-
-{ #category : #tests }
-PtyWorkSessionTest >> testRegisteringNewTaskWithUnknownWorkflow [
-
-	| task unknownWorkflow |
-	unknownWorkflow := PtyWorkflow new.
-	task := PtyTask new.
-	task initialWorkflow: unknownWorkflow captureStateForNewTask.
-	
-	[session registerNewTask: task] should fail.
-
-	unknownWorkflow currentTasks should be isEmpty
-]
-
-{ #category : #tests }
-PtyWorkSessionTest >> testRemoveTask [ 
-
-	| workflow task |
-	workflow := session addNewWorkflow.
-	task := PtyTask new.
-	task initialWorkflow: workflow captureStateForNewTask.
-	workflow registerNewTask: task.
-	
-	session removeTask: task.
-	
-	workflow currentTasks should not include: task
-]
-
-{ #category : #tests }
-PtyWorkSessionTest >> testSpawnNewSessionWithNewTask [ 
-
-	| newSession workflow newTask |
-	workflow := session addNewWorkflow.
-	newTask := PtyTask new.
-	newTask initialWorkflow: workflow captureStateForNewTask.
-	
-	newSession := session spawnWithNewTask: newTask.
+	newSession := session spawnNew.
 	
 	newSession parentSession should be: session.
 	newSession workflows should equal: session workflows.
-	newSession workflows should not be: session workflows.
-	workflow currentTasks should include: newTask
+	newSession workflows should not be: session workflows
 ]

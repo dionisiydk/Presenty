@@ -143,12 +143,11 @@ PtyWorkplaceTest >> testRemovingTask [
 PtyWorkplaceTest >> testStartingWorkSession [
 	| worker oldSession |
 	worker := PtyWorker atWorkplace: workplace.
-	worker currentTask: #task.
 	oldSession := Mock new.
 	workplace currentWorkSession: oldSession.
 	
 	workplace startWorkSessionBy: worker.
 	
-	workplace currentWorkSession should beReturnedFrom: [ oldSession spawnWithNewTask: #task ].
+	workplace currentWorkSession should beReturnedFrom: [ oldSession spawnNew ].
 	workplace workers should include: worker
 ]

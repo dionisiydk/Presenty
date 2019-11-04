@@ -21,9 +21,11 @@ PtyTaskResultDeliveryStageTest >> testContinueExecution [
 ]
 
 { #category : #tests }
-PtyTaskResultDeliveryStageTest >> testContinueExecutionShouldRestoreWorkflow [
+PtyTaskResultDeliveryStageTest >> testContinueExecutionShouldPassThrough3Steps [
 
 	executionStage continueExecution.	
 	
-	[task restoreWorkplaceState] should beDoneInOrder 
+	[task restoreInitialWorkflow.
+	task prepareExecutionWorkflow.
+	task prepareReturnWorkflow] should beDoneInOrder 
 ]

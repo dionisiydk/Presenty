@@ -63,3 +63,14 @@ PtyWorkflowTest >> testRemoveTask [
 	
 	workflow currentTasks should not include: #task
 ]
+
+{ #category : #tests }
+PtyWorkflowTest >> testRevertState [ 
+
+	| anotherWorkflow |
+	anotherWorkflow := PtyWorkflow new.
+	
+	workflow revertStateTo: anotherWorkflow.
+	
+	workflow currentTasks should equal: anotherWorkflow currentTasks
+]

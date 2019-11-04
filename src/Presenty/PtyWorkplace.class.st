@@ -93,7 +93,7 @@ PtyWorkplace >> registerWorker: aWorker [
 PtyWorkplace >> startWorkSessionBy: aWorker [
 
 	self registerWorker: aWorker.
-	currentWorkSession := currentWorkSession spawnWithNewTask: aWorker currentTask
+	currentWorkSession := currentWorkSession spawnNew
 ]
 
 { #category : #accessing }

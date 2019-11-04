@@ -304,15 +304,16 @@ PtyTaskTest >> testRequestExecutionShouldCaptureInitialWorkflow [
 ]
 
 { #category : #tests }
-PtyTaskTest >> testRestoreWorkplaceState [
+PtyTaskTest >> testRestoreInitialWorkflow [
 
-	| executionStrategy result |
-	self error: 'todo'.
-	executionStrategy := Mock new.
-	task worker: #worker.
-	task executionStrategy: executionStrategy.
+	| workflow |
+	workflow := Mock new.
+	task workflow: workflow.
+	task initialWorkflow: #initialWorkflow.
 
-	task restoreWorkplaceState.
+	task restoreInitialWorkflow.
+	
+	workflow should receive revertStateTo: #initialWorkflow
 
 	
 ]
