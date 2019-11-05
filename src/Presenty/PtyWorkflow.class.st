@@ -4,7 +4,8 @@ Class {
 	#instVars : [
 		'workSession',
 		'parentWorkflow',
-		'currentTasks'
+		'currentTasks',
+		'forkedWorkflows'
 	],
 	#category : #'Presenty-NewCore'
 }
@@ -30,6 +31,16 @@ PtyWorkflow >> currentTasks: anObject [
 	currentTasks := anObject
 ]
 
+{ #category : #accessing }
+PtyWorkflow >> forkedWorkflows [
+	^ forkedWorkflows
+]
+
+{ #category : #accessing }
+PtyWorkflow >> forkedWorkflows: anObject [
+	forkedWorkflows := anObject
+]
+
 { #category : #testing }
 PtyWorkflow >> includesTask: aTask [
 	^currentTasks includes: aTask
@@ -40,6 +51,7 @@ PtyWorkflow >> initialize [
 	super initialize.
 	
 	currentTasks := OrderedCollection new.
+	forkedWorkflows := OrderedCollection new
 ]
 
 { #category : #accessing }
@@ -56,7 +68,8 @@ PtyWorkflow >> parentWorkflow: anObject [
 PtyWorkflow >> postCopy [
 	super postCopy.
 	
-	currentTasks := currentTasks copy
+	currentTasks := currentTasks copy.
+	forkedWorkflows := forkedWorkflows copy
 ]
 
 { #category : #controlling }
@@ -81,6 +94,7 @@ PtyWorkflow >> spawnNew [
 	| newWorkflow |
 	newWorkflow := self class in: workSession.
 	newWorkflow parentWorkflow: self.
+	forkedWorkflows add: newWorkflow.
 	workSession addWorkflow: newWorkflow.
 	^newWorkflow
 ]

@@ -30,9 +30,27 @@ PtyWorkflowTest >> testCaptureStateForNewTask [
 ]
 
 { #category : #tests }
+PtyWorkflowTest >> testCaptureStateForNewTaskShouldCopyForkedWorkflowsList [
+
+	| capturedWorkflow forkedWorkflow |
+	forkedWorkflow := workflow spawnNew.
+	
+	capturedWorkflow := workflow captureStateForNewTask.
+	
+	capturedWorkflow forkedWorkflows should include: forkedWorkflow.
+	capturedWorkflow forkedWorkflows should not be: workflow forkedWorkflows
+]
+
+{ #category : #tests }
 PtyWorkflowTest >> testHasEmptyCurrentTasksByDefault [
 
 	workflow currentTasks should be isEmpty
+]
+
+{ #category : #tests }
+PtyWorkflowTest >> testHasEmptyForkedWorkflowsByDefault [
+
+	workflow forkedWorkflows should be isEmpty
 ]
 
 { #category : #tests }
@@ -98,6 +116,7 @@ PtyWorkflowTest >> testSpawnNewWorkflow [
 	newWorkflow workSession should be: workSession.
 	workSession should receive addWorkflow: newWorkflow.
 	newWorkflow parentWorkflow should be: workflow.
+	workflow forkedWorkflows should include: newWorkflow.
 	newWorkflow currentTasks should be isEmpty.
 	newWorkflow currentTasks should not be: workflow currentTasks
 ]
