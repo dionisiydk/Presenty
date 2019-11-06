@@ -121,6 +121,19 @@ PtyWorkflowTest >> testRevertingStateShouldResetCurrentTasks [
 ]
 
 { #category : #tests }
+PtyWorkflowTest >> testRevertingStateShouldResetForkedWorkflows [ 
+	| anotherWorkflow spawnedWorkflow |
+	anotherWorkflow := PtyWorkflow in: workSession.
+	spawnedWorkflow := anotherWorkflow spawnNew.
+	workflow spawnNew.
+	
+	workflow revertStateTo: anotherWorkflow.
+	
+	workflow forkedWorkflows should equal: {spawnedWorkflow}.
+	workflow forkedWorkflows should not be: anotherWorkflow forkedWorkflows
+]
+
+{ #category : #tests }
 PtyWorkflowTest >> testSpawnNewWorkflow [ 
 
 	| newWorkflow |

@@ -56,7 +56,9 @@ PtyWorkSession >> revertStateTo: aWorkSession startingAt: initialWorkflow [
 	aWorkSession workflows do: [ :requiredWorkflow | | requiredChildren |
 		requiredChildren := self workflowsSpawnedFrom: requiredWorkflow.
 		newWorkflows add: requiredWorkflow.
-		newWorkflows addAll: requiredChildren].
+		newWorkflows addAll: requiredChildren.
+		workflows remove: requiredWorkflow ifAbsent: [].
+		workflows removeAllFoundIn: requiredChildren].
 		
 	workflows := newWorkflows.
 ]

@@ -169,8 +169,9 @@ PtyWorkSessionTest >> testRevertingStateShouldRemoveNewChildrenOfGivenCapturedIn
 	newChildWorkflow := initialWorkflow spawnNew.
 	anotherSession := PtyWorkSession new.
 	anotherSession addWorkflow: initialWorkflow.
+	capturedStateOfInitialWorkflow workSession: anotherSession.
 	
-	session revertStateTo: anotherSession startingAt: capturedStateOfInitialWorkflow.
+	initialWorkflow revertStateTo: capturedStateOfInitialWorkflow.
 	
 	session workflows should include: capturedChildWorkflow.
 	session workflows should not include: newChildWorkflow
@@ -185,8 +186,9 @@ PtyWorkSessionTest >> testRevertingStateShouldRemoveNewDeepChildOfGivenCapturedI
 	newDeepChildWorkflow := initialWorkflow spawnNew spawnNew.
 	anotherSession := PtyWorkSession new.
 	anotherSession addWorkflow: initialWorkflow.
-		
-	session revertStateTo: anotherSession startingAt: capturedStateOfInitialWorkflow.
+	capturedStateOfInitialWorkflow workSession: anotherSession.
+	
+	initialWorkflow revertStateTo: capturedStateOfInitialWorkflow.
 	
 	session workflows should include: capturedDeepChildWorkflow.
 	session workflows should not include: newDeepChildWorkflow

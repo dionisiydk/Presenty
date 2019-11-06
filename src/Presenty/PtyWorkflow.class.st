@@ -93,6 +93,7 @@ PtyWorkflow >> removeTask: aTask [
 PtyWorkflow >> revertStateTo: aWorkflow [
 
 	currentTasks := aWorkflow currentTasks copy.
+	forkedWorkflows := aWorkflow forkedWorkflows copy.
 	workSession revertStateTo: aWorkflow workSession startingAt: self.
 ]
 
