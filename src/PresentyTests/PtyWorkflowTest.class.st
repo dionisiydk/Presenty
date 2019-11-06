@@ -64,6 +64,21 @@ PtyWorkflowTest >> testIncludesTask [
 ]
 
 { #category : #tests }
+PtyWorkflowTest >> testIsSpawnedFromAnotherWorkflow [
+
+	| anotherWorkflow grandparent |
+	anotherWorkflow := PtyWorkflow new.
+	workflow should not be isSpawnedFrom: anotherWorkflow.
+	
+	workflow parentWorkflow: anotherWorkflow.
+	workflow should be isSpawnedFrom: anotherWorkflow.
+	
+	grandparent := PtyWorkflow new.
+	anotherWorkflow parentWorkflow: grandparent.
+	workflow should be isSpawnedFrom: grandparent.
+]
+
+{ #category : #tests }
 PtyWorkflowTest >> testRegisteringNewTask [ 
 
 	workflow registerNewTask: #task.

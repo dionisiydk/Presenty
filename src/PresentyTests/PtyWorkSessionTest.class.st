@@ -161,32 +161,6 @@ PtyWorkSessionTest >> testRevertingStateShouldKeepWorkflowsSpawnedFromRegistered
 ]
 
 { #category : #tests }
-PtyWorkSessionTest >> testRevertingStateShouldRemoveExistingChildrenOfGivenInitialWorkflow [
-	| anotherSession initialWorkflow spawnedFromInitialWorkflow1 spawnedFromInitialWorkflow2 |
-	initialWorkflow := session addNewWorkflow.
-	spawnedFromInitialWorkflow1 := initialWorkflow spawnNew.
-	spawnedFromInitialWorkflow2 := initialWorkflow spawnNew.
-	anotherSession := PtyWorkSession new.
-		
-	session revertStateTo: anotherSession startingAt: initialWorkflow.
-	
-	session workflows should not include: spawnedFromInitialWorkflow1.
-	session workflows should not include: spawnedFromInitialWorkflow2.
-]
-
-{ #category : #tests }
-PtyWorkSessionTest >> testRevertingStateShouldRemoveExistingDeepChildOfGivenInitialWorkflow [
-	| anotherSession initialWorkflow spawnedDeepChild |
-	initialWorkflow := session addNewWorkflow.
-	spawnedDeepChild  := initialWorkflow spawnNew spawnNew.
-	anotherSession := PtyWorkSession new.
-		
-	session revertStateTo: anotherSession startingAt: initialWorkflow.
-	
-	session workflows should not include: spawnedDeepChild
-]
-
-{ #category : #tests }
 PtyWorkSessionTest >> testRevertingStateShouldRemoveNewChildrenOfGivenCapturedInitialWorkflow [
 	| anotherSession initialWorkflow capturedChildWorkflow capturedStateOfInitialWorkflow newChildWorkflow |
 	initialWorkflow := session addNewWorkflow.
@@ -194,7 +168,8 @@ PtyWorkSessionTest >> testRevertingStateShouldRemoveNewChildrenOfGivenCapturedIn
 	capturedStateOfInitialWorkflow := initialWorkflow captureStateForNewTask.
 	newChildWorkflow := initialWorkflow spawnNew.
 	anotherSession := PtyWorkSession new.
-		
+	anotherSession addWorkflow: initialWorkflow.
+	
 	session revertStateTo: anotherSession startingAt: capturedStateOfInitialWorkflow.
 	
 	session workflows should include: capturedChildWorkflow.
@@ -209,6 +184,7 @@ PtyWorkSessionTest >> testRevertingStateShouldRemoveNewDeepChildOfGivenCapturedI
 	capturedStateOfInitialWorkflow := initialWorkflow captureStateForNewTask.
 	newDeepChildWorkflow := initialWorkflow spawnNew spawnNew.
 	anotherSession := PtyWorkSession new.
+	anotherSession addWorkflow: initialWorkflow.
 		
 	session revertStateTo: anotherSession startingAt: capturedStateOfInitialWorkflow.
 	

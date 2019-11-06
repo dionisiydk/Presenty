@@ -54,6 +54,13 @@ PtyWorkflow >> initialize [
 	forkedWorkflows := OrderedCollection new
 ]
 
+{ #category : #testing }
+PtyWorkflow >> isSpawnedFrom: aWorkflow [ 
+	parentWorkflow ifNil: [ ^false ].
+	
+	^parentWorkflow = aWorkflow or: [ parentWorkflow isSpawnedFrom: aWorkflow ]
+]
+
 { #category : #accessing }
 PtyWorkflow >> parentWorkflow [
 	^ parentWorkflow

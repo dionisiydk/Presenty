@@ -49,9 +49,16 @@ PtyWorkSession >> postCopy [
 ]
 
 { #category : #controlling }
-PtyWorkSession >> revertStateTo: aWorkSession startingAt: aWorkflow [
-
-	workflows := aWorkSession workflows.
+PtyWorkSession >> revertStateTo: aWorkSession startingAt: initialWorkflow [
+	
+	| newWorkflows |
+	newWorkflows := OrderedCollection new.
+	aWorkSession workflows do: [ :requiredWorkflow | | requiredChildren |
+		requiredChildren := self workflowsSpawnedFrom: requiredWorkflow.
+		newWorkflows add: requiredWorkflow.
+		newWorkflows addAll: requiredChildren].
+		
+	workflows := newWorkflows.
 ]
 
 { #category : #controlling }
@@ -78,4 +85,13 @@ PtyWorkSession >> workflows [
 { #category : #accessing }
 PtyWorkSession >> workflows: anObject [
 	workflows := anObject
+]
+
+{ #category : #accessing }
+PtyWorkSession >> workflowsSpawnedFrom: parentWorkflow [
+
+	^workflows select: [ :existingWorkflow | 
+		parentWorkflow forkedWorkflows anySatisfy: [ :requiredWorkflow |
+			existingWorkflow = requiredWorkflow or: [ 
+				existingWorkflow isSpawnedFrom: requiredWorkflow ]]]
 ]
