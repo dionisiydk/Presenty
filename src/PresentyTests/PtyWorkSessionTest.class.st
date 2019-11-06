@@ -74,6 +74,20 @@ PtyWorkSessionTest >> testRevertingStateShouldAddMissingWorkflowsRegisteredInGiv
 ]
 
 { #category : #tests }
+PtyWorkSessionTest >> testRevertingStateShouldKeepChildrenOfParentWorkflowRegisteredInGivenSession [
+	| anotherSession initialWorkflow parentWorkflow childOfParentWorkflow |
+	parentWorkflow := session addNewWorkflow.
+	initialWorkflow := parentWorkflow spawnNew.
+	childOfParentWorkflow := parentWorkflow spawnNew.	
+	anotherSession := PtyWorkSession new.
+	anotherSession addWorkflow: parentWorkflow; addWorkflow: initialWorkflow.		
+	
+	session revertStateTo: anotherSession startingAt: initialWorkflow.
+	
+	session workflows should include: childOfParentWorkflow
+]
+
+{ #category : #tests }
 PtyWorkSessionTest >> testRevertingStateShouldKeepDeepChildSpawnedFromRegisteredWorkflowsInGivenSession [
 	| anotherSession existingWorkflow spawnedDeepChild initialWorkflow |
 	existingWorkflow := session addNewWorkflow.
@@ -126,6 +140,34 @@ PtyWorkSessionTest >> testRevertingStateShouldKeepGivenInitialWorkflow [
 	session revertStateTo: anotherSession startingAt: initialWorkflow.
 	
 	session workflows should include: initialWorkflow
+]
+
+{ #category : #tests }
+PtyWorkSessionTest >> testRevertingStateShouldKeepParentWorkflowRegisteredInGivenSession [
+	| anotherSession initialWorkflow parentWorkflow |
+	parentWorkflow := session addNewWorkflow.
+	initialWorkflow := parentWorkflow spawnNew.
+	anotherSession := PtyWorkSession new.
+	anotherSession addWorkflow: parentWorkflow; addWorkflow: initialWorkflow.
+		
+	session revertStateTo: anotherSession startingAt: initialWorkflow.
+	
+	session workflows should include: parentWorkflow.
+	session workflows should include: initialWorkflow.
+]
+
+{ #category : #tests }
+PtyWorkSessionTest >> testRevertingStateShouldKeepSideParentWorkflowRegisteredInGivenSession [
+	| anotherSession initialWorkflow parentWorkflow sideParentWorkflow |
+	parentWorkflow := session addNewWorkflow.
+	sideParentWorkflow := session addNewWorkflow.
+	initialWorkflow := parentWorkflow spawnNew.
+	anotherSession := PtyWorkSession new.
+	anotherSession addWorkflow: parentWorkflow; addWorkflow: initialWorkflow.		
+	
+	session revertStateTo: anotherSession startingAt: initialWorkflow.
+	
+	session workflows should include: sideParentWorkflow
 ]
 
 { #category : #tests }
