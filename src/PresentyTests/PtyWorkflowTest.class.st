@@ -97,43 +97,6 @@ PtyWorkflowTest >> testRemoveTask [
 ]
 
 { #category : #tests }
-PtyWorkflowTest >> testRevertingStateShouldAlsoRevertStateOfWorkSession [
-
-	| anotherWorkflow |
-	anotherWorkflow := PtyWorkflow in: #anotherSession.
-		
-	workflow revertStateTo: anotherWorkflow.
-	
-	workSession should receive revertStateTo: #anotherSession startingAt: workflow
-]
-
-{ #category : #tests }
-PtyWorkflowTest >> testRevertingStateShouldResetCurrentTasks [ 
-	| anotherWorkflow |
-	anotherWorkflow := PtyWorkflow new.
-	anotherWorkflow registerNewTask: #newTask.
-	workflow registerNewTask: #existingTask.
-	
-	workflow revertStateTo: anotherWorkflow.
-	
-	workflow currentTasks should equal: #(newTask).
-	workflow currentTasks should not be: anotherWorkflow currentTasks.
-]
-
-{ #category : #tests }
-PtyWorkflowTest >> testRevertingStateShouldResetForkedWorkflows [ 
-	| anotherWorkflow spawnedWorkflow |
-	anotherWorkflow := PtyWorkflow in: workSession.
-	spawnedWorkflow := anotherWorkflow spawnNew.
-	workflow spawnNew.
-	
-	workflow revertStateTo: anotherWorkflow.
-	
-	workflow forkedWorkflows should equal: {spawnedWorkflow}.
-	workflow forkedWorkflows should not be: anotherWorkflow forkedWorkflows
-]
-
-{ #category : #tests }
 PtyWorkflowTest >> testSpawnNewWorkflow [ 
 
 	| newWorkflow |
