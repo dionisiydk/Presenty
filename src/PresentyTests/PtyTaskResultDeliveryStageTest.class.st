@@ -25,7 +25,7 @@ PtyTaskResultDeliveryStageTest >> testContinueExecutionShouldPassThrough3Steps [
 
 	executionStage continueExecution.	
 	
-	[task restoreInitialWorkflow.
+	[task activateInitialWorkflow.
 	task prepareExecutionWorkflow.
 	task prepareReturnWorkflow] should beDoneInOrder 
 ]

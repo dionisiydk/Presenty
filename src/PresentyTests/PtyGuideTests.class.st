@@ -316,16 +316,16 @@ PtyGuideTests >> testGettingCurrentTasksLikeSomeTaskContext [
 ]
 
 { #category : #tests }
-PtyGuideTests >> testHasEmptyCurrentTasksByDefault [
-	
-	guide currentTasks should be isEmpty
-]
-
-{ #category : #tests }
 PtyGuideTests >> testHasNavigatorByDefault [
 	
 	guide taskNavigator should beInstanceOf: PtyTaskNavigator.
 	guide taskNavigator guide should be: guide.
+]
+
+{ #category : #tests }
+PtyGuideTests >> testHasNoCurrentTasksByDefault [
+	
+	guide currentTasks should be isEmpty
 ]
 
 { #category : #tests }

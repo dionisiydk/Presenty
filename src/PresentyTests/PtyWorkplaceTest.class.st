@@ -5,6 +5,15 @@ Class {
 }
 
 { #category : #tests }
+PtyWorkplaceTest >> testCurrentTasksShouldIncludeAllTasksFromCurrentWorkflow [
+	| workflow |
+	workflow := Mock new.
+	workplace currentWorkflow: workflow.
+
+	workplace currentTasks should beReturnedFrom: [ workflow allCurrentTasks ]
+]
+
+{ #category : #tests }
 PtyWorkplaceTest >> testFindWorkerRequestingNewTaskWhenActiveWorkerExists [
 
 	| foundWorker activeWorker |
@@ -44,9 +53,9 @@ PtyWorkplaceTest >> testFindWorkerRequestingNewTaskWhenNoWorkersExist [
 ]
 
 { #category : #tests }
-PtyWorkplaceTest >> testHasCurrentWorkSessionByDefault [
+PtyWorkplaceTest >> testHasCurrentWorkflowByDefault [
 
-	workplace currentWorkSession should beInstanceOf: PtyWorkSession
+	workplace currentWorkflow should beInstanceOf: PtyWorkflow
 ]
 
 { #category : #tests }
@@ -68,15 +77,15 @@ PtyWorkplaceTest >> testHaveDefaultTaskExecutionPriority [
 ]
 
 { #category : #tests }
-PtyWorkplaceTest >> testNewWorkflowAddition [
+PtyWorkplaceTest >> testNewWorkflowRegistration [
 
-	| workflow workSession |
-	workSession := Mock new.
-	workplace currentWorkSession: workSession.
+	| newWorkflow currentWorkflow |
+	currentWorkflow := Mock new.
+	workplace currentWorkflow: currentWorkflow.
 	
-	workflow := workplace addNewWorkflow.
+	newWorkflow := workplace registerNewWorkflow.
 	
-	workflow should beReturnedFrom: [workSession addNewWorkflow]
+	newWorkflow should beReturnedFrom: [currentWorkflow spawnNew]
 ]
 
 { #category : #tests }
@@ -124,30 +133,5 @@ PtyWorkplaceTest >> testRegisteringSameWorkerTwice [
 	workplace registerWorker: worker.
 	
 	workplace workers should haveSize: 1.
-	workplace workers should include: worker
-]
-
-{ #category : #tests }
-PtyWorkplaceTest >> testRemovingTask [
-
-	| workSession |
-	workSession := Mock new.
-	workplace currentWorkSession: workSession.
-	
-	workplace removeTask: #task.
-	
-	workSession should receive removeTask: #task
-]
-
-{ #category : #tests }
-PtyWorkplaceTest >> testStartingWorkSession [
-	| worker oldSession |
-	worker := PtyWorker atWorkplace: workplace.
-	oldSession := Mock new.
-	workplace currentWorkSession: oldSession.
-	
-	workplace startWorkSessionBy: worker.
-	
-	workplace currentWorkSession should beReturnedFrom: [ oldSession spawnNew ].
 	workplace workers should include: worker
 ]

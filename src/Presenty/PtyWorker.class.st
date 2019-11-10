@@ -16,12 +16,6 @@ PtyWorker class >> atWorkplace: aWorkplace [
 		workplace: aWorkplace
 ]
 
-{ #category : #'task execution' }
-PtyWorker >> addNewWorkflow [
-
-	^workplace addNewWorkflow
-]
-
 { #category : #controlling }
 PtyWorker >> continueWithTask: aTask [
 	
@@ -89,6 +83,12 @@ PtyWorker >> process: anObject [
 	process := anObject
 ]
 
+{ #category : #'task execution' }
+PtyWorker >> registerNewWorkflow [
+
+	^workplace registerNewWorkflow
+]
+
 { #category : #controlling }
 PtyWorker >> runInitialTask: aTask [
 
@@ -104,7 +104,7 @@ PtyWorker >> runInitialTask: aTask [
 
 { #category : #controlling }
 PtyWorker >> startWithTask: aTask [
-	workplace startWorkSessionBy: self.
+	workplace registerWorker: self.
 	
 	process := [ self runInitialTask: aTask ] newProcess.
 	process name: 'Worker process of ', aTask printString.

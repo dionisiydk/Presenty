@@ -2,18 +2,37 @@ Class {
 	#name : #PtyWorkflow,
 	#superclass : #Object,
 	#instVars : [
-		'workSession',
 		'parentWorkflow',
 		'currentTasks',
-		'forkedWorkflows'
+		'spawnedWorkflows'
 	],
 	#category : #'Presenty-NewCore'
 }
 
-{ #category : #evaluating }
-PtyWorkflow class >> in: aWorkSession [
-	^self new 
-		workSession: aWorkSession
+{ #category : #controlling }
+PtyWorkflow >> activateAs: aWorkflow [
+
+	currentTasks := aWorkflow currentTasks copy.
+	spawnedWorkflows := aWorkflow spawnedWorkflows copy.
+	parentWorkflow notNil & (parentWorkflow ~= aWorkflow parentWorkflow) ifTrue: [ 
+		parentWorkflow removeSpawnedWorkflow: self ].
+	parentWorkflow := aWorkflow parentWorkflow.
+	parentWorkflow ifNotNil: [ parentWorkflow activateWithSpawnedWorkflow: self ]
+]
+
+{ #category : #controlling }
+PtyWorkflow >> activateWithSpawnedWorkflow: aWorkflow [
+
+	(spawnedWorkflows includes: aWorkflow) ifFalse: [ 
+		spawnedWorkflows add: aWorkflow ].
+	
+	parentWorkflow ifNotNil: [ parentWorkflow activateWithSpawnedWorkflow: self ]
+]
+
+{ #category : #accessing }
+PtyWorkflow >> allCurrentTasks [
+
+	^currentTasks, (spawnedWorkflows flatCollect: [ :each | each allCurrentTasks ])
 ]
 
 { #category : #controlling }
@@ -31,16 +50,6 @@ PtyWorkflow >> currentTasks: anObject [
 	currentTasks := anObject
 ]
 
-{ #category : #accessing }
-PtyWorkflow >> forkedWorkflows [
-	^ forkedWorkflows
-]
-
-{ #category : #accessing }
-PtyWorkflow >> forkedWorkflows: anObject [
-	forkedWorkflows := anObject
-]
-
 { #category : #testing }
 PtyWorkflow >> includesTask: aTask [
 	^currentTasks includes: aTask
@@ -51,7 +60,7 @@ PtyWorkflow >> initialize [
 	super initialize.
 	
 	currentTasks := OrderedCollection new.
-	forkedWorkflows := OrderedCollection new
+	spawnedWorkflows := OrderedCollection new
 ]
 
 { #category : #testing }
@@ -76,7 +85,7 @@ PtyWorkflow >> postCopy [
 	super postCopy.
 	
 	currentTasks := currentTasks copy.
-	forkedWorkflows := forkedWorkflows copy
+	spawnedWorkflows := spawnedWorkflows copy
 ]
 
 { #category : #controlling }
@@ -85,34 +94,31 @@ PtyWorkflow >> registerNewTask: aTask [
 ]
 
 { #category : #controlling }
+PtyWorkflow >> removeSpawnedWorkflow: aWorkflow [
+
+	spawnedWorkflows remove: aWorkflow
+]
+
+{ #category : #controlling }
 PtyWorkflow >> removeTask: aTask [ 
 	currentTasks remove: aTask
 ]
 
 { #category : #controlling }
-PtyWorkflow >> revertStateTo: aWorkflow [
-
-	currentTasks := aWorkflow currentTasks copy.
-	forkedWorkflows := aWorkflow forkedWorkflows copy.
-	workSession revertStateTo: aWorkflow workSession startingAt: self.
-]
-
-{ #category : #controlling }
 PtyWorkflow >> spawnNew [
 	| newWorkflow |
-	newWorkflow := self class in: workSession.
+	newWorkflow := self class new.
 	newWorkflow parentWorkflow: self.
-	forkedWorkflows add: newWorkflow.
-	workSession addWorkflow: newWorkflow.
+	spawnedWorkflows add: newWorkflow.
 	^newWorkflow
 ]
 
 { #category : #accessing }
-PtyWorkflow >> workSession [
-	^ workSession
+PtyWorkflow >> spawnedWorkflows [
+	^ spawnedWorkflows
 ]
 
 { #category : #accessing }
-PtyWorkflow >> workSession: anObject [
-	workSession := anObject
+PtyWorkflow >> spawnedWorkflows: anObject [
+	spawnedWorkflows := anObject
 ]

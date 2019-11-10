@@ -3,31 +3,25 @@ Class {
 	#superclass : #Object,
 	#instVars : [
 		'workers',
-		'currentWorkSession',
-		'defaultTaskExecutionPriority'
+		'defaultTaskExecutionPriority',
+		'currentWorkflow'
 	],
 	#category : #'Presenty-NewCore'
 }
 
-{ #category : #'task execution' }
-PtyWorkplace >> addNewWorkflow [
-
-	^currentWorkSession addNewWorkflow
-]
-
 { #category : #accessing }
 PtyWorkplace >> currentTasks [
-	^ currentWorkSession currentTasks
+	^ currentWorkflow allCurrentTasks
 ]
 
 { #category : #accessing }
-PtyWorkplace >> currentWorkSession [
-	^ currentWorkSession
+PtyWorkplace >> currentWorkflow [
+	^ currentWorkflow
 ]
 
 { #category : #accessing }
-PtyWorkplace >> currentWorkSession: anObject [
-	currentWorkSession := anObject
+PtyWorkplace >> currentWorkflow: anObject [
+	currentWorkflow := anObject
 ]
 
 { #category : #accessing }
@@ -67,7 +61,7 @@ PtyWorkplace >> initialize [
 	
 	workers := OrderedCollection new.
 	defaultTaskExecutionPriority := Processor userBackgroundPriority.
-	currentWorkSession := PtyWorkSession new
+	currentWorkflow := PtyWorkflow new
 ]
 
 { #category : #'task execution' }
@@ -81,19 +75,18 @@ PtyWorkplace >> planExecutionOf: aTask by: aUser [
 	^self findPreferredTaskImplementing: aTask
 ]
 
+{ #category : #'task execution' }
+PtyWorkplace >> registerNewWorkflow [
+
+	^currentWorkflow spawnNew
+]
+
 { #category : #controlling }
 PtyWorkplace >> registerWorker: aWorker [ 
 
 	(workers includes: aWorker) ifTrue: [ ^self ].
 	
 	workers add: aWorker
-]
-
-{ #category : #controlling }
-PtyWorkplace >> startWorkSessionBy: aWorker [
-
-	self registerWorker: aWorker.
-	currentWorkSession := currentWorkSession spawnNew
 ]
 
 { #category : #accessing }

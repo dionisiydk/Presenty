@@ -139,12 +139,12 @@ PtyWorkerTest >> testIsNotActiveWhenItIsNotStartedYet [
 ]
 
 { #category : #tests }
-PtyWorkerTest >> testNewWorkflowAddition [
+PtyWorkerTest >> testNewWorkflowRegistration [
 
 	| workflow |
-	workflow := worker addNewWorkflow.
+	workflow := worker registerNewWorkflow.
 	
-	workflow should beReturnedFrom: [workplace addNewWorkflow]
+	workflow should beReturnedFrom: [workplace registerNewWorkflow]
 ]
 
 { #category : #tests }
@@ -160,18 +160,10 @@ PtyWorkerTest >> testNotifyingUserAboutError [
 ]
 
 { #category : #tests }
-PtyWorkerTest >> testRemovingTask [
-
-	worker removeTask: task.
-	
-	workplace should receive removeTask: task.
-]
-
-{ #category : #tests }
 PtyWorkerTest >> testStartWithTaskInBackgroundProcess [
 		
 	worker startWithTask: task.
-	
+
 	task should receive startExecution inAnotherProcess
 ]
 
@@ -180,7 +172,7 @@ PtyWorkerTest >> testStartWithTaskShouldStartNewWorkSessionForIt [
 
 	worker startWithTask: task.
 	
-	[workplace startWorkSessionBy: worker.
+	[workplace registerWorker: worker.
 	task startExecution] should beDoneInOrder
 ]
 

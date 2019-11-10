@@ -24,6 +24,12 @@ PtyTask class >> named: aString [
 ]
 
 { #category : #controlling }
+PtyTask >> activateInitialWorkflow [
+
+	workflow activateAs: initialWorkflow 
+]
+
+{ #category : #controlling }
 PtyTask >> activationRequest [
 
 	^PtyRunTaskRequest for: self
@@ -111,7 +117,7 @@ PtyTask >> beRequestedFor: anUser from: aWorker [
 	worker := aWorker.
 	parentTask := aWorker currentTask.
 	workflow := self isInitialTask 
-		ifTrue: [ worker addNewWorkflow]
+		ifTrue: [ worker registerNewWorkflow]
 		ifFalse: [ parentTask workflow ]
 ]
 
@@ -507,12 +513,6 @@ PtyTask >> requestExecution [
 	initialWorkflow := workflow captureStateForNewTask.
 	
 	^executionStrategy requestExecutionOf: self using: worker
-]
-
-{ #category : #controlling }
-PtyTask >> restoreInitialWorkflow [
-
-	workflow revertStateTo: initialWorkflow 
 ]
 
 { #category : #testing }

@@ -16,7 +16,7 @@ PtyTaskResultDeliveryStage class >> of: aTask withResult: anObject [
 { #category : #controlling }
 PtyTaskResultDeliveryStage >> continueExecution [
 	
-	task restoreInitialWorkflow.
+	task activateInitialWorkflow.
 	task prepareExecutionWorkflow.
 	task prepareReturnWorkflow.
 	

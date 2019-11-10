@@ -66,7 +66,7 @@ PtyTaskTest >> testBecomeRequestedForUserWhenItIsInitialTask [
 	worker stub currentTask willReturn: nil.
 	task beRequestedFor: #user from: worker.
 
-	task workflow should beReturnedFrom: [ worker addNewWorkflow].
+	task workflow should beReturnedFrom: [ worker registerNewWorkflow].
 ]
 
 { #category : #tests }
@@ -207,6 +207,21 @@ PtyTaskTest >> testHasDefaultExecutionStrategy [
 ]
 
 { #category : #tests }
+PtyTaskTest >> testInitialWorkflowActivation [
+
+	| workflow |
+	workflow := Mock new.
+	task workflow: workflow.
+	task initialWorkflow: #initialWorkflow.
+
+	task activateInitialWorkflow.
+	
+	workflow should receive activateAs: #initialWorkflow
+
+	
+]
+
+{ #category : #tests }
 PtyTaskTest >> testIsInitialTask [
 
 	task := PtyTask new.
@@ -301,19 +316,4 @@ PtyTaskTest >> testRequestExecutionShouldCaptureInitialWorkflow [
 	task initialWorkflow should beReturnedFrom: [ workflow captureStateForNewTask ].
 	[ workflow captureStateForNewTask.
 	executionStrategy requestExecutionOf: Any using: Any ] should beDoneInOrder
-]
-
-{ #category : #tests }
-PtyTaskTest >> testRestoreInitialWorkflow [
-
-	| workflow |
-	workflow := Mock new.
-	task workflow: workflow.
-	task initialWorkflow: #initialWorkflow.
-
-	task restoreInitialWorkflow.
-	
-	workflow should receive revertStateTo: #initialWorkflow
-
-	
 ]
