@@ -161,27 +161,30 @@ PtyWorkerTest >> testNotifyingUserAboutError [
 
 { #category : #tests }
 PtyWorkerTest >> testStartWithTaskInBackgroundProcess [
-		
+	worker stub.
+			
 	worker startWithTask: task.
 
-	task should receive startExecution inAnotherProcess
+	(worker should receive continueWithTask: task) inAnotherProcess
 ]
 
 { #category : #tests }
-PtyWorkerTest >> testStartWithTaskShouldStartNewWorkSessionForIt [
-
+PtyWorkerTest >> testStartWithTaskShouldRegisterItselfInWorkplace [
+	worker stub.
+	
 	worker startWithTask: task.
 	
 	[workplace registerWorker: worker.
-	task startExecution] should beDoneInOrder
+	worker continueWithTask: task] should beDoneInOrder
 ]
 
 { #category : #tests }
 PtyWorkerTest >> testStartWithTaskUsingTaskExecutionPriority [
-
+	worker stub.
+	
 	worker startWithTask: task.
 	
-	task should receive startExecution
+	(worker should receive continueWithTask: task)
 		inProcessWhich priority should equal: task executionPriority
 ]
 
