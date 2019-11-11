@@ -69,15 +69,9 @@ PtyWorkplace >> planExecutionOf: aTask by: aUser [
 	aTask workplace: self.
 	self 
 		withActiveWorkerDo: [ :activeWorker | aTask parentTask: activeWorker activeTask ]
-		ifNone: [ aTask workflow: self registerNewWorkflow ].
+		ifNone: [ aTask workflow: currentWorkflow spawnNew ].
 		
 	^self findPreferredTaskImplementing: aTask
-]
-
-{ #category : #'task execution' }
-PtyWorkplace >> registerNewWorkflow [
-
-	^currentWorkflow spawnNew
 ]
 
 { #category : #controlling }

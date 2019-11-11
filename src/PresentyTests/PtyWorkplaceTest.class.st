@@ -77,18 +77,6 @@ PtyWorkplaceTest >> testHaveDefaultTaskExecutionPriority [
 ]
 
 { #category : #tests }
-PtyWorkplaceTest >> testNewWorkflowRegistration [
-
-	| newWorkflow currentWorkflow |
-	currentWorkflow := Mock new.
-	workplace currentWorkflow: currentWorkflow.
-	
-	newWorkflow := workplace registerNewWorkflow.
-	
-	newWorkflow should beReturnedFrom: [currentWorkflow spawnNew]
-]
-
-{ #category : #tests }
 PtyWorkplaceTest >> testPlanningTaskExecutionShouldAssignActiveTaskAsParent [
 
 	| requestedTask activeTask activeWorker |
@@ -107,19 +95,6 @@ PtyWorkplaceTest >> testPlanningTaskExecutionShouldAssignActiveTaskAsParent [
 ]
 
 { #category : #tests }
-PtyWorkplaceTest >> testPlanningTaskExecutionShouldRegisterNewWorkflowForIt [
-
-	| requestedTask workflow |
-	requestedTask := PtyTask new.
-	workflow := Mock new.
-	workplace currentWorkflow: workflow.
-		
-	workplace planExecutionOf: requestedTask by: #user.
-	
-	requestedTask workflow should beReturnedFrom: [workflow spawnNew]
-]
-
-{ #category : #tests }
 PtyWorkplaceTest >> testPlanningTaskExecutionShouldReturnPreferredTask [
 
 	| requestedTask plannedTask |
@@ -129,6 +104,19 @@ PtyWorkplaceTest >> testPlanningTaskExecutionShouldReturnPreferredTask [
 	plannedTask := workplace planExecutionOf: requestedTask by: #user.
 	
 	plannedTask should be: #preferredTask
+]
+
+{ #category : #tests }
+PtyWorkplaceTest >> testPlanningTaskExecutionShouldSpawnNewWorkflowForIt [
+
+	| requestedTask workflow |
+	requestedTask := PtyTask new.
+	workflow := Mock new.
+	workplace currentWorkflow: workflow.
+		
+	workplace planExecutionOf: requestedTask by: #user.
+	
+	requestedTask workflow should beReturnedFrom: [workflow spawnNew]
 ]
 
 { #category : #tests }
