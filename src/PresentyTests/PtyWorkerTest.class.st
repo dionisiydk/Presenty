@@ -19,13 +19,13 @@ PtyWorkerTest >> setUp [
 ]
 
 { #category : #tests }
-PtyWorkerTest >> testContinueWithTaskShouldResetCurrentTaskAtTheEnd [
+PtyWorkerTest >> testContinueWithTaskShouldResetActiveTaskAtTheEnd [
 		
-	worker currentTask: task.
+	worker activeTask: task.
 		
 	worker continueWithTask: task.
 	
-	worker currentTask should beReturnedFrom: [ task parentTask ]
+	worker activeTask should beReturnedFrom: [ task parentTask ]
 ]
 
 { #category : #tests }
@@ -194,10 +194,10 @@ PtyWorkerTest >> testStoppingTaskWhenNoProcess [
 ]
 
 { #category : #tests }
-PtyWorkerTest >> testTaskExecutionShouldFirstSetCurrentTask [
+PtyWorkerTest >> testTaskExecutionShouldFirstSetActiveTask [
 
 	worker stub isActive 
-		when: [worker currentTask] is: task.
+		when: [worker activeTask] is: task.
 	
 	worker executeTask: task
 ]

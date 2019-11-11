@@ -45,31 +45,6 @@ PtyTaskTest >> testBecomeOneShotTask [
 ]
 
 { #category : #tests }
-PtyTaskTest >> testBecomeRequestedForUser [
-
-	| workplace |
-	workplace := Mock new.
-	
-	task beRequestedFor: #user in: workplace.
-
-	task user should be: #user.
-	task workplace should be: workplace.
-	task parentTask should beReturnedFrom: [ workplace currentTask ].
-	task workflow should beReturnedFrom: [ task parentTask workflow].
-]
-
-{ #category : #tests }
-PtyTaskTest >> testBecomeRequestedForUserWhenItIsInitialTask [
-
-	| worker |
-	worker := Mock new.
-	worker stub currentTask willReturn: nil.
-	task beRequestedFor: #user in: worker.
-
-	task workflow should beReturnedFrom: [ worker registerNewWorkflow].
-]
-
-{ #category : #tests }
 PtyTaskTest >> testConvertingToTask [
 	
 	task asTask should be: task

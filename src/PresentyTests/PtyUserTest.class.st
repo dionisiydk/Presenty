@@ -97,8 +97,8 @@ PtyUserTest >> testStoppingCurrentTask [
 			should strictly satisfy: 
 		[guide taskNavigator willReturn: navigator; useArbitrarily.
 		guide context willReturn: context.
-		context task willReturn: #currentTask.
-		navigator forgetTask: #currentTask.
+		context task willReturn: #activeTask.
+		navigator forgetTask: #activeTask.
 		guide retryLastTask]
 	] runWithMocks 
 ]

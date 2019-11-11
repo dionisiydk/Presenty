@@ -110,17 +110,6 @@ PtyTask >> beOneShot [
 	^executionStrategy := PtyOneShotTaskExecution new
 ]
 
-{ #category : #controlling }
-PtyTask >> beRequestedFor: anUser in: aWorkplace [
-
-	user := anUser.
-	workplace := aWorkplace.
-	parentTask := aWorkplace currentTask.
-	workflow := self isInitialTask 
-		ifTrue: [ workplace registerNewWorkflow]
-		ifFalse: [ parentTask workflow ]
-]
-
 { #category : #execution }
 PtyTask >> body [
 	self subclassResponsibility 
@@ -399,8 +388,9 @@ PtyTask >> parentTask [
 ]
 
 { #category : #accessing }
-PtyTask >> parentTask: anObject [
-	parentTask := anObject
+PtyTask >> parentTask: aTask [
+	parentTask := aTask.
+	workflow := aTask workflow
 ]
 
 { #category : #controlling }

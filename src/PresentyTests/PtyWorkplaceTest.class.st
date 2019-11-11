@@ -89,14 +89,34 @@ PtyWorkplaceTest >> testNewWorkflowRegistration [
 ]
 
 { #category : #tests }
-PtyWorkplaceTest >> testPlanningTaskExecutionShouldPrepareRequestedTask [
+PtyWorkplaceTest >> testPlanningTaskExecutionShouldAssignActiveTaskAsParent [
 
-	| requestedTask |
-	requestedTask := Mock new.
-	
+	| requestedTask activeTask activeWorker |
+	requestedTask := PtyTask new.
+	activeTask := PtyTask new.
+	activeTask workflow: #activeWorkflow.
+	activeWorker := Mock new.
+	activeWorker stub isActive willReturn: true.
+	activeWorker stub activeTask willReturn: activeTask.
+	workplace registerWorker: activeWorker.
+		
 	workplace planExecutionOf: requestedTask by: #user.
 	
-	requestedTask should receive beRequestedFor: #user in: workplace
+	requestedTask parentTask should be: activeTask.
+	requestedTask workflow should be: #activeWorkflow.
+]
+
+{ #category : #tests }
+PtyWorkplaceTest >> testPlanningTaskExecutionShouldRegisterNewWorkflowForIt [
+
+	| requestedTask workflow |
+	requestedTask := PtyTask new.
+	workflow := Mock new.
+	workplace currentWorkflow: workflow.
+		
+	workplace planExecutionOf: requestedTask by: #user.
+	
+	requestedTask workflow should beReturnedFrom: [workflow spawnNew]
 ]
 
 { #category : #tests }

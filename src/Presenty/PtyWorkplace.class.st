@@ -50,9 +50,7 @@ PtyWorkplace >> findWorkerExecutingCurrentTask [
 	When this worker will receive a command to execute a task 
 	it will became part of workplace environment (it will be added to workplace)"
 
-	^workers 
-		detect: [ :each | each isActive ] 
-		ifNone: [	PtyWorker atWorkplace: self]
+	^self 	withActiveWorkerDo: [ :worker | worker ] ifNone: [ PtyWorker atWorkplace: self]
 ]
 
 { #category : #initialization }
@@ -67,8 +65,12 @@ PtyWorkplace >> initialize [
 { #category : #'task execution' }
 PtyWorkplace >> planExecutionOf: aTask by: aUser [
 
-	aTask beRequestedFor: aUser in: self.
-	
+	aTask user: aUser.
+	aTask workplace: self.
+	self 
+		withActiveWorkerDo: [ :activeWorker | aTask parentTask: activeWorker activeTask ]
+		ifNone: [ aTask workflow: self registerNewWorkflow ].
+		
 	^self findPreferredTaskImplementing: aTask
 ]
 
@@ -84,6 +86,15 @@ PtyWorkplace >> registerWorker: aWorker [
 	(workers includes: aWorker) ifTrue: [ ^self ].
 	
 	workers add: aWorker
+]
+
+{ #category : #accessing }
+PtyWorkplace >> withActiveWorkerDo: aBlock ifNone: absentBlock [
+
+	^workers 
+		detect: [ :each | each isActive ] 
+		ifFound: aBlock 
+		ifNone: absentBlock
 ]
 
 { #category : #accessing }
