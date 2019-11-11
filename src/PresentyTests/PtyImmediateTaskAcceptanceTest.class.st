@@ -31,6 +31,51 @@ PtyImmediateTaskAcceptanceTest >> testExecutingAsFirstTask [
 ]
 
 { #category : #tests }
+PtyImmediateTaskAcceptanceTest >> testResultDeliveryFromAnotherTask [ 
+
+	| task result resultSenderWasComplete |
+	task := [ #result ] asTask.
+	task beImmediate.	
+	user executeTask: [ result := user executeTask: task] asTask.
+
+	user executeTask: [ task deliverResult: #newResult. resultSenderWasComplete := true] asTask.
+
+	result should be: #newResult.
+	resultSenderWasComplete should not be: true
+	
+]
+
+{ #category : #tests }
+PtyImmediateTaskAcceptanceTest >> testResultDeliveryFromNonCurrentTask [ 
+
+	| task result callerTask |
+	task := [ #result ] asTask.
+	task beImmediate.
+	callerTask := [ result := user executeTask: task] asTask.
+	callerTask beImmediate.
+	user executeTask: callerTask.
+	workplace currentTasks removeAll.
+	 
+	task deliverResult: #newResult.
+	result should be: #newResult.
+	workplace currentTasks should include: task.
+	workplace currentTasks should include: callerTask
+]
+
+{ #category : #tests }
+PtyImmediateTaskAcceptanceTest >> testResultDeliveryFromOutsideOfWorkplace [ 
+
+	| task result |
+	task := [ #result ] asTask.
+	task beImmediate.
+	user executeTask: [ result := user executeTask: task] asTask.
+
+	task deliverResult: #newResult.
+	
+	result should be: #newResult
+]
+
+{ #category : #tests }
 PtyImmediateTaskAcceptanceTest >> testRetryingExecutionFromAnotherTask [ 
 
 	| task result expected repeatOriginatorWasComplete |
@@ -57,51 +102,6 @@ PtyImmediateTaskAcceptanceTest >> testRetryingExecutionFromOutsideOfTask [
 
 	taskResult := #newResult.
 	task repeatExecution.
-	
-	result should be: #newResult
-]
-
-{ #category : #tests }
-PtyImmediateTaskAcceptanceTest >> testReturningResultFromAnotherTask [ 
-
-	| task result resultSenderWasComplete |
-	task := [ #result ] asTask.
-	task beImmediate.	
-	user executeTask: [ result := user executeTask: task] asTask.
-
-	user executeTask: [ task deliverResult: #newResult. resultSenderWasComplete := true] asTask.
-
-	result should be: #newResult.
-	resultSenderWasComplete should not be: true
-	
-]
-
-{ #category : #tests }
-PtyImmediateTaskAcceptanceTest >> testReturningResultFromNotCurrentTask [ 
-
-	| task result callerTask |
-	task := [ #result ] asTask.
-	task beImmediate.
-	callerTask := [ result := user executeTask: task] asTask.
-	callerTask beImmediate.
-	user executeTask: callerTask.
-	workplace currentTasks removeAll.
-	 
-	task deliverResult: #newResult.
-	result should be: #newResult.
-	workplace currentTasks should include: task.
-	workplace currentTasks should include: callerTask
-]
-
-{ #category : #tests }
-PtyImmediateTaskAcceptanceTest >> testReturningResultFromOutsideOfTask [ 
-
-	| task result |
-	task := [ #result ] asTask.
-	task beImmediate.
-	user executeTask: [ result := user executeTask: task] asTask.
-
-	task deliverResult: #newResult.
 	
 	result should be: #newResult
 ]
