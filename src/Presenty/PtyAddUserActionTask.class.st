@@ -7,7 +7,7 @@ Class {
 { #category : #execution }
 PtyAddUserActionTask >> body [
 
-	worker addUserAction: targetTask 
+	workplace addUserAction: targetTask 
 ]
 
 { #category : #accessing }

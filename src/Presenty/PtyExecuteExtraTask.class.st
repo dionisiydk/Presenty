@@ -7,5 +7,5 @@ Class {
 { #category : #execution }
 PtyExecuteExtraTask >> body [
 
-	^worker requestUserFor: targetTask 
+	^workplace requestUserFor: targetTask 
 ]

@@ -47,14 +47,14 @@ PtyTaskTest >> testBecomeOneShotTask [
 { #category : #tests }
 PtyTaskTest >> testBecomeRequestedForUser [
 
-	| worker |
-	worker := Mock new.
+	| workplace |
+	workplace := Mock new.
 	
-	task beRequestedFor: #user from: worker.
+	task beRequestedFor: #user in: workplace.
 
 	task user should be: #user.
-	task worker should be: worker.
-	task parentTask should beReturnedFrom: [ worker currentTask ].
+	task workplace should be: workplace.
+	task parentTask should beReturnedFrom: [ workplace currentTask ].
 	task workflow should beReturnedFrom: [ task parentTask workflow].
 ]
 
@@ -64,7 +64,7 @@ PtyTaskTest >> testBecomeRequestedForUserWhenItIsInitialTask [
 	| worker |
 	worker := Mock new.
 	worker stub currentTask willReturn: nil.
-	task beRequestedFor: #user from: worker.
+	task beRequestedFor: #user in: worker.
 
 	task workflow should beReturnedFrom: [ worker registerNewWorkflow].
 ]
@@ -117,13 +117,13 @@ PtyTaskTest >> testCurrentExecutionStageShouldKeepActualContinuationInTask [
 ]
 
 { #category : #tests }
-PtyTaskTest >> testDefaultExecutionPriorityIsReturnedFromWorker [
+PtyTaskTest >> testDefaultExecutionPriorityIsReturnedFromWorkplace [
 
-	| worker |
-	worker := Mock new.
-	task worker: worker.
+	| workplace |
+	workplace := Mock new.
+	task workplace: workplace.
 	
-	task executionPriority should beReturnedFrom: [ worker defaultTaskExecutionPriority ]
+	task executionPriority should beReturnedFrom: [ workplace defaultTaskExecutionPriority ]
 ]
 
 { #category : #tests }
@@ -153,10 +153,12 @@ PtyTaskTest >> testDeferExecutionShouldReturnFutureResult [
 { #category : #tests }
 PtyTaskTest >> testDeliveringResult [
 
-	| worker |
+	| workplace worker |
 	worker := Mock new.
-	task worker: worker.
+	workplace := Mock new.
+	task workplace: workplace.
 	task continuation: #continuation.
+	workplace stub findWorkerExecutingCurrentTask willReturn: worker.
 		
 	task deliverResult: #taskResult.
 
@@ -166,9 +168,9 @@ PtyTaskTest >> testDeliveringResult [
 { #category : #tests }
 PtyTaskTest >> testDeliveringResultWhenTaskWasNotStarted [
 
-	| worker error |
-	worker := Mock new.
-	task worker: worker.
+	| workplace error |
+	workplace := Mock new.
+	task workplace: workplace.
 	task continuation: nil.
 		
 	error := [task deliverResult: #taskResult] should fail.
@@ -295,9 +297,11 @@ PtyTaskTest >> testPrepareReturnWorkflow [
 { #category : #tests }
 PtyTaskTest >> testRequestExecution [
 
-	| executionStrategy result |
+	| executionStrategy result workplace |
 	executionStrategy := Mock new.
-	task worker: #worker; workflow: Mock new; executionStrategy: executionStrategy.
+	workplace := Mock new.
+	task workplace: workplace; workflow: Mock new; executionStrategy: executionStrategy.
+	workplace stub findWorkerExecutingCurrentTask willReturn: #worker.
 
 	result := task requestExecution.
 
@@ -306,10 +310,11 @@ PtyTaskTest >> testRequestExecution [
 
 { #category : #tests }
 PtyTaskTest >> testRequestExecutionShouldCaptureInitialWorkflow [
-	| executionStrategy workflow |
+	| executionStrategy workflow workplace |
 	executionStrategy := Mock new.
 	workflow := Mock new.
-	task workflow: workflow; executionStrategy: executionStrategy.
+	workplace := Mock new.
+	task workflow: workflow; workplace: workplace; executionStrategy: executionStrategy.
 
 	task requestExecution.
 

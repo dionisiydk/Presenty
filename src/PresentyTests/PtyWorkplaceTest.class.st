@@ -14,27 +14,27 @@ PtyWorkplaceTest >> testCurrentTasksShouldIncludeAllTasksFromCurrentWorkflow [
 ]
 
 { #category : #tests }
-PtyWorkplaceTest >> testFindWorkerRequestingNewTaskWhenActiveWorkerExists [
+PtyWorkplaceTest >> testFindWorkerExecutingCurrentTaskWhenActiveWorkerExists [
 
 	| foundWorker activeWorker |
 	activeWorker := Mock new.
 	activeWorker stub isActive willReturn: true.
 	workplace registerWorker: activeWorker.
 	
-	foundWorker := workplace findWorkerRequestingNewTask.
+	foundWorker := workplace findWorkerExecutingCurrentTask.
 	
 	foundWorker should be: activeWorker
 ]
 
 { #category : #tests }
-PtyWorkplaceTest >> testFindWorkerRequestingNewTaskWhenNoActiveWorkersExist [
+PtyWorkplaceTest >> testFindWorkerExecutingCurrentTaskWhenNoActiveWorkersExist [
 
 	| foundWorker existingWorker |
 	existingWorker := Mock new.
 	existingWorker stub isActive willReturn: false.
 	workplace registerWorker: existingWorker.
 	
-	foundWorker := workplace findWorkerRequestingNewTask.
+	foundWorker := workplace findWorkerExecutingCurrentTask.
 	
 	workplace workers should not include: foundWorker.
 	foundWorker should beInstanceOf: PtyWorker.
@@ -42,10 +42,10 @@ PtyWorkplaceTest >> testFindWorkerRequestingNewTaskWhenNoActiveWorkersExist [
 ]
 
 { #category : #tests }
-PtyWorkplaceTest >> testFindWorkerRequestingNewTaskWhenNoWorkersExist [
+PtyWorkplaceTest >> testFindWorkerExecutingCurrentTaskWhenNoWorkersExist [
 
 	| foundWorker |
-	foundWorker := workplace findWorkerRequestingNewTask.
+	foundWorker := workplace findWorkerExecutingCurrentTask.
 	
 	workplace workers should not include: foundWorker.
 	foundWorker should beInstanceOf: PtyWorker.
@@ -93,11 +93,10 @@ PtyWorkplaceTest >> testPlanningTaskExecutionShouldPrepareRequestedTask [
 
 	| requestedTask |
 	requestedTask := Mock new.
-	workplace stub findWorkerRequestingNewTask willReturn: #currentWorker.
 	
 	workplace planExecutionOf: requestedTask by: #user.
 	
-	requestedTask should receive beRequestedFor: #user from: #currentWorker
+	requestedTask should receive beRequestedFor: #user in: workplace
 ]
 
 { #category : #tests }

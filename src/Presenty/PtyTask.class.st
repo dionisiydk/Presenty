@@ -8,12 +8,12 @@ Class {
 		'prototype',
 		'context',
 		'executionStrategy',
-		'worker',
 		'executionPriority',
 		'parentTask',
 		'initialWorkflow',
 		'workflow',
-		'continuation'
+		'continuation',
+		'workplace'
 	],
 	#category : #'Presenty-Core'
 }
@@ -111,13 +111,13 @@ PtyTask >> beOneShot [
 ]
 
 { #category : #controlling }
-PtyTask >> beRequestedFor: anUser from: aWorker [
+PtyTask >> beRequestedFor: anUser in: aWorkplace [
 
 	user := anUser.
-	worker := aWorker.
-	parentTask := aWorker currentTask.
+	workplace := aWorkplace.
+	parentTask := aWorkplace currentTask.
 	workflow := self isInitialTask 
-		ifTrue: [ worker registerNewWorkflow]
+		ifTrue: [ workplace registerNewWorkflow]
 		ifFalse: [ parentTask workflow ]
 ]
 
@@ -181,6 +181,11 @@ PtyTask >> currentExecutionStage [
 ]
 
 { #category : #accessing }
+PtyTask >> currentWorker [
+	^workplace findWorkerExecutingCurrentTask
+]
+
+{ #category : #accessing }
 PtyTask >> defaultActivationStrategy [
 
 	^PtyInheritedActivationStrategy new 
@@ -191,7 +196,7 @@ PtyTask >> defaultActivationStrategy [
 
 { #category : #accessing }
 PtyTask >> defaultExecutionPriority [
-	^ worker defaultTaskExecutionPriority
+	^ workplace defaultTaskExecutionPriority
 ]
 
 { #category : #'initialize-release' }
@@ -217,7 +222,7 @@ PtyTask >> deliverResult: anObject [
 
 	continuation ifNil: [ ^self error: 'No continuation for return!' ].
 	
-	worker deliverResult: anObject of: self
+	self currentWorker deliverResult: anObject of: self
 ]
 
 { #category : #accessing }
@@ -256,12 +261,12 @@ PtyTask >> findCommonParentWith: aTask [
 
 { #category : #accessing }
 PtyTask >> guide [
-	^ worker
+	^ workplace
 ]
 
 { #category : #accessing }
 PtyTask >> guide: anObject [
-	worker := anObject
+	workplace := anObject
 ]
 
 { #category : #testing }
@@ -313,7 +318,7 @@ PtyTask >> isChildrenShouldRestoreParentArea [
 { #category : #testing }
 PtyTask >> isCreatedByCurrentRequest [
 
-	^worker isCurrentRequestIncludesTask: self
+	^workplace isCurrentRequestIncludesTask: self
 ]
 
 { #category : #testing }
@@ -428,7 +433,7 @@ PtyTask >> populateSettingsMenu: aMenu for: aPrototype [
 PtyTask >> prepareActivationBy: aGuide [
 
 	| newActivation |
-	worker := aGuide.
+	workplace := aGuide.
 	user := aGuide user.
 	context := aGuide context.
 	
@@ -510,9 +515,10 @@ PtyTask >> readSampleProperitiesFrom: someRequestedTask [
 
 { #category : #execution }
 PtyTask >> requestExecution [ 
+
 	initialWorkflow := workflow captureStateForNewTask.
 	
-	^executionStrategy requestExecutionOf: self using: worker
+	^executionStrategy requestExecutionOf: self using: self currentWorker
 ]
 
 { #category : #testing }
@@ -553,16 +559,6 @@ PtyTask >> user: anObject [
 ]
 
 { #category : #accessing }
-PtyTask >> worker [
-	^ worker
-]
-
-{ #category : #accessing }
-PtyTask >> worker: anObject [
-	worker := anObject
-]
-
-{ #category : #accessing }
 PtyTask >> workflow [
 	^ workflow
 ]
@@ -570,4 +566,14 @@ PtyTask >> workflow [
 { #category : #accessing }
 PtyTask >> workflow: anObject [
 	workflow := anObject
+]
+
+{ #category : #accessing }
+PtyTask >> workplace [
+	^ workplace
+]
+
+{ #category : #accessing }
+PtyTask >> workplace: anObject [
+	workplace := anObject
 ]

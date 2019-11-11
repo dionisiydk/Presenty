@@ -16,7 +16,7 @@ PtyEditRequisiteByToolTask >> createInput [
 	
 	super createInput.
 
-	worker add: input inputTool toViewAreaOn: 'editorTool'.
+	workplace add: input inputTool toViewAreaOn: 'editorTool'.
 	
 
 

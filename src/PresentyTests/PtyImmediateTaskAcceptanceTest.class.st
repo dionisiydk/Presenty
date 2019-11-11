@@ -70,7 +70,7 @@ PtyImmediateTaskAcceptanceTest >> testReturningResultFromAnotherTask [
 	user executeTask: [ result := user executeTask: task] asTask.
 
 	user executeTask: [ task deliverResult: #newResult. resultSenderWasComplete := true] asTask.
-	
+
 	result should be: #newResult.
 	resultSenderWasComplete should not be: true
 	

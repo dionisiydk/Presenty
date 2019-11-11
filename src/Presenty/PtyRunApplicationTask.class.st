@@ -23,11 +23,11 @@ PtyRunApplicationTask >> allowChangeParentViewAreaState [
 PtyRunApplicationTask >> body [ 
 
 	context := nil.
-	worker taskNavigator clearTasks.
-	worker rememberTask: worker context.
-	worker context viewAreaActivator parentActivator: nil.
+	workplace taskNavigator clearTasks.
+	workplace rememberTask: workplace context.
+	workplace context viewAreaActivator parentActivator: nil.
 	
-	worker requestUserFor: mainTask 
+	workplace requestUserFor: mainTask 
 ]
 
 { #category : #accessing }

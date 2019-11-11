@@ -38,11 +38,6 @@ PtyWorker >> currentTask: anObject [
 	currentTask := anObject
 ]
 
-{ #category : #accessing }
-PtyWorker >> defaultTaskExecutionPriority [
-	^ workplace defaultTaskExecutionPriority
-]
-
 { #category : #'task execution' }
 PtyWorker >> deliverResult: anObject of: aTask [
 
@@ -81,12 +76,6 @@ PtyWorker >> process [
 { #category : #accessing }
 PtyWorker >> process: anObject [
 	process := anObject
-]
-
-{ #category : #'task execution' }
-PtyWorker >> registerNewWorkflow [
-
-	^workplace registerNewWorkflow
 ]
 
 { #category : #controlling }

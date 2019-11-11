@@ -17,7 +17,7 @@ PtyStopTask class >> on: aTask [
 { #category : #execution }
 PtyStopTask >> body [ 
 
-	worker context: targetTaskContext.
+	workplace context: targetTaskContext.
 	
 	user stopCurrentTask 
 ]

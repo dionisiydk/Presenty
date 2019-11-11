@@ -41,12 +41,6 @@ PtyWorkerTest >> testContinueWithTaskShouldRunExecutionStage [
 ]
 
 { #category : #tests }
-PtyWorkerTest >> testDefaultExecutionPriorityIsReturnedFromWorkspace [
-		
-	worker defaultTaskExecutionPriority should beReturnedFrom: [ workplace defaultTaskExecutionPriority ]
-]
-
-{ #category : #tests }
 PtyWorkerTest >> testDeliveringTaskResultWhenWorkerIsAlreadyActive [
 
 	worker stub isActive willReturn: true.
@@ -136,15 +130,6 @@ PtyWorkerTest >> testIsNotActiveWhenItIsNotStartedYet [
 	worker process: nil.
 	
 	worker should not be isActive
-]
-
-{ #category : #tests }
-PtyWorkerTest >> testNewWorkflowRegistration [
-
-	| workflow |
-	workflow := worker registerNewWorkflow.
-	
-	workflow should beReturnedFrom: [workplace registerNewWorkflow]
 ]
 
 { #category : #tests }

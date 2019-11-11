@@ -7,8 +7,8 @@ Class {
 { #category : #execution }
 PtyShowConfirmationTask >> addActions [ 
 	
-	worker addAction: 'ReturnTrue' returning: true.
-	worker addAction: 'ReturnFalse' returning: false
+	workplace addAction: 'ReturnTrue' returning: true.
+	workplace addAction: 'ReturnFalse' returning: false
 ]
 
 { #category : #accessing }

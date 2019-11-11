@@ -21,9 +21,9 @@ PtyInputRequisitiesTask >> body [
 	announcer on: PtyValueChanged send: #valueChanged to: self.
 	announcer on: PtyInputSubmitted send: #submitInput to: self.
 	
-	editors := items collect: [:each | each createEditorBy: worker].
+	editors := items collect: [:each | each createEditorBy: workplace].
 
-	worker addTask: [
+	workplace addTask: [
 		user execute: [self requestButtonsInput]
 	].
 
@@ -59,10 +59,10 @@ PtyInputRequisitiesTask >> itemSelected: anInputFocused [
 PtyInputRequisitiesTask >> requestButtonsInput [
 
 		(items allSatisfy: [:each | each isValid]) 
-				ifTrue: [worker show: submitButton]
+				ifTrue: [workplace show: submitButton]
 				ifFalse: [
 					items size > 1 
-						ifTrue: [worker show: nextFieldButton]
+						ifTrue: [workplace show: nextFieldButton]
 						ifFalse: [submitButton view ifNotNilDo: [:v | v delete]]					
 					]
 	
@@ -118,9 +118,9 @@ PtyInputRequisitiesTask >> submitInput [
 	(items allSatisfy: [:each | each isValid]) 
 		ifFalse: [^self].
 	
-	worker restoreActiveArea.
+	workplace restoreActiveArea.
 	"guide controller uiActions reset."
-	worker resumeTask: context with: true
+	workplace resumeTask: context with: true
 ]
 
 { #category : #execution }

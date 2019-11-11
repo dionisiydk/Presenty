@@ -7,5 +7,5 @@ Class {
 { #category : #execution }
 PtyShowWarningTask >> addActions [ 
 
-	worker addAction: 'ContinueExecution' returning: nil
+	workplace addAction: 'ContinueExecution' returning: nil
 ]

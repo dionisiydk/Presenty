@@ -41,8 +41,8 @@ PtyWorkplace >> findPreferredTaskImplementing: requestedTask [
 ]
 
 { #category : #'task execution' }
-PtyWorkplace >> findWorkerRequestingNewTask [
-	"Active worker is always one who requesting new tasks because it is executed from active process.
+PtyWorkplace >> findWorkerExecutingCurrentTask [
+	"Active worker is always one who executes current task because it is executed from active process.
 	When it is not exist we assume that it is some implicit worker from the external system
 	(external for Presenty). And workplace will create an instance representing it as a result.
 	For example user can request new task from playground which is not managed by Presenty context.
@@ -67,10 +67,7 @@ PtyWorkplace >> initialize [
 { #category : #'task execution' }
 PtyWorkplace >> planExecutionOf: aTask by: aUser [
 
-	| currentWorker |
-	currentWorker := self findWorkerRequestingNewTask.
-	
-	aTask beRequestedFor: aUser from: currentWorker.
+	aTask beRequestedFor: aUser in: self.
 	
 	^self findPreferredTaskImplementing: aTask
 ]
