@@ -5,7 +5,7 @@ Class {
 }
 
 { #category : #tests }
-PtyDeferredTaskAcceptanceTest >> testExecutingAsChildTask [ 
+PtyDeferredTaskAcceptanceTest >> testExecutionAsChildTask [ 
 
 	| task result |
 	task := [ #result ] asTask.
@@ -18,7 +18,7 @@ PtyDeferredTaskAcceptanceTest >> testExecutingAsChildTask [
 ]
 
 { #category : #tests }
-PtyDeferredTaskAcceptanceTest >> testExecutingAsFirstTask [ 
+PtyDeferredTaskAcceptanceTest >> testExecutionAsFirstTask [ 
 
 	| task result |
 	task := [ result := #done ] asTask.

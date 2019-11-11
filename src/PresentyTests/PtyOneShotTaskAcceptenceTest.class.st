@@ -5,7 +5,7 @@ Class {
 }
 
 { #category : #tests }
-PtyOneShotTaskAcceptenceTest >> testExecutingAsChildTask [ 
+PtyOneShotTaskAcceptenceTest >> testExecutionAsChildTask [ 
 
 	| task result |
 	task := [
@@ -20,7 +20,7 @@ PtyOneShotTaskAcceptenceTest >> testExecutingAsChildTask [
 ]
 
 { #category : #tests }
-PtyOneShotTaskAcceptenceTest >> testExecutingAsFirstTask [ 
+PtyOneShotTaskAcceptenceTest >> testExecutionAsFirstTask [ 
 
 	| task result |
 	task := [

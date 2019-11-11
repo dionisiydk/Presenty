@@ -5,7 +5,7 @@ Class {
 }
 
 { #category : #tests }
-PtyImmediateTaskAcceptanceTest >> testExecutingAsChildTask [ 
+PtyImmediateTaskAcceptanceTest >> testExecutionAsChildTask [ 
 
 	| task result |
 	task := [ #result ] asTask.
@@ -18,7 +18,7 @@ PtyImmediateTaskAcceptanceTest >> testExecutingAsChildTask [
 ]
 
 { #category : #tests }
-PtyImmediateTaskAcceptanceTest >> testExecutingAsFirstTask [ 
+PtyImmediateTaskAcceptanceTest >> testExecutionAsFirstTask [ 
 
 	| task result |
 	task := [ result := #done ] asTask.
@@ -28,6 +28,37 @@ PtyImmediateTaskAcceptanceTest >> testExecutingAsFirstTask [
 	
 	workplace currentTasks should equal: { task }.
 	result should be: #done
+]
+
+{ #category : #tests }
+PtyImmediateTaskAcceptanceTest >> testExecutionRetryFromAnotherTask [ 
+
+	| task result expected repeatOriginatorWasComplete |
+	expected := #result.
+	task := [ expected ] asTask.
+	task beImmediate.	
+	user executeTask: [ result := user executeTask: task] asTask.
+
+	expected := #newResult.
+	user executeTask: [ task retryExecution. repeatOriginatorWasComplete := true] asTask.
+	
+	result should be: #newResult.
+	repeatOriginatorWasComplete should not be: true
+]
+
+{ #category : #tests }
+PtyImmediateTaskAcceptanceTest >> testExecutionRetryFromOutsideOfWorkplace [ 
+
+	| task result taskResult |
+	taskResult := #result.
+	task := [ taskResult ] asTask.
+	task beImmediate.
+	user executeTask: [ result := user executeTask: task] asTask.
+
+	taskResult := #newResult.
+	task retryExecution.
+	
+	result should be: #newResult
 ]
 
 { #category : #tests }
@@ -71,37 +102,6 @@ PtyImmediateTaskAcceptanceTest >> testResultDeliveryFromOutsideOfWorkplace [
 	user executeTask: [ result := user executeTask: task] asTask.
 
 	task deliverResult: #newResult.
-	
-	result should be: #newResult
-]
-
-{ #category : #tests }
-PtyImmediateTaskAcceptanceTest >> testRetryingExecutionFromAnotherTask [ 
-
-	| task result expected repeatOriginatorWasComplete |
-	expected := #result.
-	task := [ expected ] asTask.
-	task beImmediate.	
-	user executeTask: [ result := user executeTask: task] asTask.
-
-	expected := #newResult.
-	user executeTask: [ task repeatExecution. repeatOriginatorWasComplete := true] asTask.
-	
-	result should be: #newResult.
-	repeatOriginatorWasComplete should not be: true
-]
-
-{ #category : #tests }
-PtyImmediateTaskAcceptanceTest >> testRetryingExecutionFromOutsideOfTask [ 
-
-	| task result taskResult |
-	taskResult := #result.
-	task := [ taskResult ] asTask.
-	task beImmediate.
-	user executeTask: [ result := user executeTask: task] asTask.
-
-	taskResult := #newResult.
-	task repeatExecution.
 	
 	result should be: #newResult
 ]
