@@ -33,17 +33,17 @@ PtyImmediateTaskAcceptanceTest >> testExecutionAsFirstTask [
 { #category : #tests }
 PtyImmediateTaskAcceptanceTest >> testExecutionRetryFromAnotherTask [ 
 
-	| task result expected repeatOriginatorWasComplete |
+	| task result expected retryBlockEnds |
 	expected := #result.
 	task := [ expected ] asTask.
 	task beImmediate.	
 	user executeTask: [ result := user executeTask: task] asTask.
 
 	expected := #newResult.
-	user executeTask: [ task retryExecution. repeatOriginatorWasComplete := true] asTask.
+	user executeTask: [ task retryExecution. retryBlockEnds := true] asTask.
 	
 	result should be: #newResult.
-	repeatOriginatorWasComplete should not be: true
+	retryBlockEnds should not be: true
 ]
 
 { #category : #tests }
