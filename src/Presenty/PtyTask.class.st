@@ -357,6 +357,12 @@ PtyTask >> jumpToResultDeliveryStageWith: resultObject [
 	self jumpToExecutionStage: (PtyTaskResultDeliveryStage of: self withResult: resultObject)
 ]
 
+{ #category : #controlling }
+PtyTask >> jumpToRetryStage [
+	
+	self jumpToExecutionStage: (PtyTaskRetryStage of: self)
+]
+
 { #category : #accessing }
 PtyTask >> name [
 	^ name
@@ -509,6 +515,14 @@ PtyTask >> requestExecution [
 	initialWorkflow := workflow captureStateForNewTask.
 	
 	^executionStrategy requestExecutionOf: self using: self currentWorker
+]
+
+{ #category : #execution }
+PtyTask >> retryExecution [
+
+	continuation ifNil: [ ^self error: 'No continuation for retry!' ].
+	
+	self currentWorker retryTask: self
 ]
 
 { #category : #testing }

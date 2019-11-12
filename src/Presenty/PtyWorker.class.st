@@ -78,6 +78,14 @@ PtyWorker >> process: anObject [
 	process := anObject
 ]
 
+{ #category : #'task execution' }
+PtyWorker >> retryTask: aTask [
+
+	self isActive ifTrue: [ ^aTask jumpToRetryStage].
+	
+	self startWithTask: (PtyRetryTask for: aTask)
+]
+
 { #category : #controlling }
 PtyWorker >> runInitialTask: aTask [
 

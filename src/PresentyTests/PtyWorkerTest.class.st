@@ -59,7 +59,7 @@ PtyWorkerTest >> testDeliveringTaskResultWhenWorkerIsNotActiveYet [
 	worker deliverResult: #taskResult of: task.
 	
 	Arg task should beInstanceOf: PtyDeliverResultTask.
-	Arg task where completeTask should be: task.
+	Arg task where executingTask should be: task.
 	Arg task where result should be: #taskResult
 ]
 
@@ -142,6 +142,28 @@ PtyWorkerTest >> testNotifyingUserAboutError [
 		[error signal] on: Error do: [ :exc | 
 			worker notifyUserAbout: error]
 	] should raise: error
+]
+
+{ #category : #tests }
+PtyWorkerTest >> testRetryingTaskWhenWorkerIsAlreadyActive [
+
+	worker stub isActive willReturn: true.
+
+	worker retryTask: task.
+	
+	task should receive jumpToRetryStage
+]
+
+{ #category : #tests }
+PtyWorkerTest >> testRetryingTaskWhenWorkerIsNotActiveYet [
+
+	worker stub isActive willReturn: false.
+	(worker stub startWithTask: Arg task) willReturnYourself. 
+	
+	worker retryTask: task.
+	
+	Arg task should beInstanceOf: PtyRetryTask.
+	Arg task where executingTask should be: task
 ]
 
 { #category : #tests }
