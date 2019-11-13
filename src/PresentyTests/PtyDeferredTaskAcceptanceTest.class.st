@@ -13,7 +13,7 @@ PtyDeferredTaskAcceptanceTest >> testExecutionAsChildTask [
 	
 	user executeTask: [ result := user executeTask: task] asTask.
 
-	result should be: #nil.
+	result should be: nil.
 	workplace currentTasks should include: task
 ]
 

@@ -201,9 +201,7 @@ PtyTask >> defaultPrototypeContextName [
 { #category : #execution }
 PtyTask >> deferExecution [ 
 
-	workflow registerNewTask: self.
-	
-	^PtyTaskExecutionFutureResult of: self
+	workflow registerNewTask: self
 ]
 
 { #category : #execution }

@@ -15,5 +15,5 @@ PtyDeferredTaskExecutionTest >> testRequestingTaskExecution [
 	| result |
 	result := executionStrategy requestExecutionOf: task using: worker.
 	
-	result should beReturnedFrom: [ task deferExecution ]
+	result should beReturnedFrom: [ worker deferTask: task ]
 ]

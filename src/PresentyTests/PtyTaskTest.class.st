@@ -102,7 +102,7 @@ PtyTaskTest >> testDefaultExecutionPriorityIsReturnedFromWorkplace [
 ]
 
 { #category : #tests }
-PtyTaskTest >> testDeferExecutionShouldJustRegisterItInWorkplace [
+PtyTaskTest >> testDeferExecutionShouldJustRegisterItInWorkflow [
 
 	| workflow |
 	workflow := Mock new.
@@ -111,18 +111,6 @@ PtyTaskTest >> testDeferExecutionShouldJustRegisterItInWorkplace [
 	task deferExecution.
 	
 	workflow should receive registerNewTask: task
-]
-
-{ #category : #tests }
-PtyTaskTest >> testDeferExecutionShouldReturnFutureResult [
-
-	| result |
-	task workflow: Mock new.
-	
-	result := task deferExecution.
-	
-	result should beInstanceOf: PtyTaskExecutionFutureResult.
-	result task should be: task
 ]
 
 { #category : #tests }

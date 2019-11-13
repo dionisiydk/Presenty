@@ -16,11 +16,8 @@ PtyUserRequest class >> with: aViewAreaActivator [
 ]
 
 { #category : #execution }
-PtyUserRequest >> executeBy: aGuide [
+PtyUserRequest >> executeBy: aWorker [
 
-	aGuide runInUI: [
-		aGuide showViewAreaBy: viewAreaActivator.		
-	]
 ]
 
 { #category : #accessing }

@@ -41,6 +41,29 @@ PtyWorkerTest >> testContinueWithTaskShouldRunExecutionStage [
 ]
 
 { #category : #tests }
+PtyWorkerTest >> testDeferingTaskWhenWorkerIsAlreadyActive [
+
+	worker stub isActive willReturn: true.
+
+	[worker deferTask: task] should raise: PtyUserRequest.
+	
+	task should receive deferExecution
+]
+
+{ #category : #tests }
+PtyWorkerTest >> testDeferingTaskWhenWorkerIsNotActiveYet [
+
+	| result |
+	worker stub isActive willReturn: false.
+
+	result := worker deferTask: task.
+
+	result should beInstanceOf: PtyTaskExecutionFutureResult.
+	result task should be: task.	
+	task should receive deferExecution
+]
+
+{ #category : #tests }
 PtyWorkerTest >> testDeliveringTaskResultWhenWorkerIsAlreadyActive [
 
 	worker stub isActive willReturn: true.

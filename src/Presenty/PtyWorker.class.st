@@ -39,6 +39,16 @@ PtyWorker >> continueWithTask: aTask [
 ]
 
 { #category : #'task execution' }
+PtyWorker >> deferTask: aTask [
+
+	aTask deferExecution.
+	
+	self isActive ifTrue: [ ^PtyUserRequest signal].
+	
+	^PtyTaskExecutionFutureResult of: aTask
+]
+
+{ #category : #'task execution' }
 PtyWorker >> deliverResult: anObject of: aTask [
 
 	self isActive ifTrue: [ ^aTask jumpToResultDeliveryStageWith: anObject ].
