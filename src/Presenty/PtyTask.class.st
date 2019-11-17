@@ -162,11 +162,11 @@ PtyTask >> createContextFor: anActivationStrategy [
 ]
 
 { #category : #controlling }
-PtyTask >> currentExecutionStage [
+PtyTask >> currentExecutionStageStartedWith: initialExecutionStage [
 
 	^Continuation currentDo: [ :cc | 
 		continuation := cc.	
-		PtyTaskStartStage of: self ].
+		initialExecutionStage ]
 ]
 
 { #category : #accessing }

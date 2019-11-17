@@ -29,8 +29,14 @@ PtyWorker >> activeTask: aTask [
 { #category : #controlling }
 PtyWorker >> continueWithTask: aTask [
 	
+	^self continueWithTask: aTask using: (PtyTaskStartStage of: aTask)
+]
+
+{ #category : #controlling }
+PtyWorker >> continueWithTask: aTask using: initialTaskExecutionStage [
+	
 	| executionStage result |
-	executionStage := aTask currentExecutionStage.	
+	executionStage := aTask currentExecutionStageStartedWith: initialTaskExecutionStage.	
 	
 	result := executionStage continueExecution.
 
@@ -43,7 +49,8 @@ PtyWorker >> deferTask: aTask [
 
 	aTask deferExecution.
 	
-	self isActive ifTrue: [ ^PtyUserRequest signal].
+	self isActive ifTrue: [ 
+		^self continueWithTask: aTask using: (PtyTaskDefermentStage of: aTask)].
 	
 	^PtyTaskExecutionFutureResult of: aTask
 ]

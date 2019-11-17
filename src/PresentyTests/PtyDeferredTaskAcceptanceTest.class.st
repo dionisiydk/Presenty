@@ -29,3 +29,18 @@ PtyDeferredTaskAcceptanceTest >> testExecutionAsFirstTask [
 	workplace currentTasks should equal: { task }.
 	result should be: nil
 ]
+
+{ #category : #tests }
+PtyDeferredTaskAcceptanceTest >> testExecutionRetryFromOutsideOfWorkplace [ 
+	| task result taskResult |
+	taskResult := #result.
+	task := [ taskResult ] asTask.
+	task beDeferred.
+	
+	user executeTask: [ result := user executeTask: task] asTask.
+	
+	taskResult := #newResult.
+	task retryExecution.
+	
+	result should be: #newResult
+]

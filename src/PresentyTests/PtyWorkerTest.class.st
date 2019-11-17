@@ -33,7 +33,7 @@ PtyWorkerTest >> testContinueWithTaskShouldRunExecutionStage [
 	
 	| executionStage result |
 	executionStage := Mock new.
-	task stub currentExecutionStage willReturn: executionStage.	
+	(task stub currentExecutionStageStartedWith: Any) willReturn: executionStage.	
 		
 	result := worker continueWithTask: task.
 	
@@ -41,12 +41,35 @@ PtyWorkerTest >> testContinueWithTaskShouldRunExecutionStage [
 ]
 
 { #category : #tests }
-PtyWorkerTest >> testDeferingTaskWhenWorkerIsAlreadyActive [
-
-	worker stub isActive willReturn: true.
-
-	[worker deferTask: task] should raise: PtyUserRequest.
+PtyWorkerTest >> testContinueWithTaskShouldUseStartExecutionStageAsDefault [
 	
+	task stub currentExecutionStageStartedWith: Arg initialStage.	
+		
+	worker continueWithTask: task.
+	
+	Arg initialStage should beInstanceOf: PtyTaskStartStage.
+	Arg initialStage where task should be: task
+]
+
+{ #category : #tests }
+PtyWorkerTest >> testContinueWithTaskUsingGivenExecutionStage [
+	
+	task stub currentExecutionStageStartedWith: Arg initialStage.
+		
+	worker continueWithTask: task using: #initialTaskExecutionStage.
+	
+	Arg initialStage should be: #initialTaskExecutionStage
+]
+
+{ #category : #tests }
+PtyWorkerTest >> testDeferingTaskWhenWorkerIsAlreadyActive [
+	worker stub isActive willReturn: true.
+	worker stub continueWithTask: task using: Arg initialStage.
+
+	worker deferTask: task.
+	
+	Arg initialStage should beInstanceOf: PtyTaskDefermentStage.
+	Arg initialStage where task should be: task.
 	task should receive deferExecution
 ]
 

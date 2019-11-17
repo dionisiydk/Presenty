@@ -72,23 +72,22 @@ PtyTaskTest >> testCreationFromBlockWithName [
 { #category : #tests }
 PtyTaskTest >> testCurrentExecutionStage [
 
-	| continuation |
-	continuation := task currentExecutionStage.
+	| stage |
+	stage := task currentExecutionStageStartedWith: #initialStage.
 
-	continuation should beInstanceOf: PtyTaskStartStage.
-	continuation task should be: task.
+	stage should be: #initialStage.
 ]
 
 { #category : #tests }
 PtyTaskTest >> testCurrentExecutionStageShouldKeepActualContinuationInTask [
 
-	| result |
-	result := task currentExecutionStage.
+	| stage |
+	stage := task currentExecutionStageStartedWith: #initialStage.
 
-	result class = PtyTaskStartStage ifTrue: [ 
-		task continuation value: #resultFromContinuation].
+	stage = #initialStage ifTrue: [ 
+		task continuation value: #stageFromContinuation].
 	
-	result should be: #resultFromContinuation
+	stage should be: #stageFromContinuation
 ]
 
 { #category : #tests }
