@@ -31,6 +31,22 @@ PtyDeferredTaskAcceptanceTest >> testExecutionAsFirstTask [
 ]
 
 { #category : #tests }
+PtyDeferredTaskAcceptanceTest >> testExecutionRetryFromAnotherTask [ 
+
+	| task result expected retryBlockEnds |
+	expected := #result.
+	task := [ expected ] asTask.
+	task beDeferred.	
+	user executeTask: [ result := user executeTask: task] asTask.
+
+	expected := #newResult.
+	user executeTask: [ task retryExecution. retryBlockEnds := true] asTask.
+	
+	result should be: #newResult.
+	retryBlockEnds should not be: true
+]
+
+{ #category : #tests }
 PtyDeferredTaskAcceptanceTest >> testExecutionRetryFromOutsideOfWorkplace [ 
 	| task result taskResult |
 	taskResult := #result.
@@ -41,6 +57,20 @@ PtyDeferredTaskAcceptanceTest >> testExecutionRetryFromOutsideOfWorkplace [
 	
 	taskResult := #newResult.
 	task retryExecution.
+	
+	result should be: #newResult
+]
+
+{ #category : #tests }
+PtyDeferredTaskAcceptanceTest >> testResultDeliveryFromOutsideOfWorkplace [ 
+	| task result taskResult |
+	taskResult := #result.
+	task := [ taskResult ] asTask.
+	task beDeferred.
+	
+	user executeTask: [ result := user executeTask: task] asTask.
+	
+	task deliverResult: #newResult.
 	
 	result should be: #newResult
 ]

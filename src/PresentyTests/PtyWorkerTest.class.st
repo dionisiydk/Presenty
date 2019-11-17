@@ -70,7 +70,7 @@ PtyWorkerTest >> testDeferingTaskWhenWorkerIsAlreadyActive [
 	
 	Arg initialStage should beInstanceOf: PtyTaskDefermentStage.
 	Arg initialStage where task should be: task.
-	task should receive deferExecution
+	task should receive beActiveInWorkflow
 ]
 
 { #category : #tests }
@@ -83,7 +83,7 @@ PtyWorkerTest >> testDeferingTaskWhenWorkerIsNotActiveYet [
 
 	result should beInstanceOf: PtyTaskExecutionFutureResult.
 	result task should be: task.	
-	task should receive deferExecution
+	task should receive beActiveInWorkflow
 ]
 
 { #category : #tests }

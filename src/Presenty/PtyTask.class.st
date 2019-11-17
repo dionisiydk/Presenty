@@ -92,6 +92,12 @@ PtyTask >> basePrototypeContexts [
 	^{PtyTaskPrototypeContext of: self}
 ]
 
+{ #category : #controlling }
+PtyTask >> beActiveInWorkflow [ 
+
+	workflow registerNewTask: self
+]
+
 { #category : #'initialize-release' }
 PtyTask >> beDeferred [
 
@@ -196,12 +202,6 @@ PtyTask >> defaultExecutionStrategy [
 { #category : #accessing }
 PtyTask >> defaultPrototypeContextName [
 	^self class name
-]
-
-{ #category : #execution }
-PtyTask >> deferExecution [ 
-
-	workflow registerNewTask: self
 ]
 
 { #category : #execution }

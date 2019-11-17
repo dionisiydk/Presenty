@@ -47,7 +47,7 @@ PtyWorker >> continueWithTask: aTask using: initialTaskExecutionStage [
 { #category : #'task execution' }
 PtyWorker >> deferTask: aTask [
 
-	aTask deferExecution.
+	aTask beActiveInWorkflow.
 	
 	self isActive ifTrue: [ 
 		^self continueWithTask: aTask using: (PtyTaskDefermentStage of: aTask)].

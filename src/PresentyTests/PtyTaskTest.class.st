@@ -15,6 +15,18 @@ PtyTaskTest >> setUp [
 ]
 
 { #category : #tests }
+PtyTaskTest >> testBecomeActiveInWorkflow [
+
+	| workflow |
+	workflow := Mock new.
+	task workflow: workflow.
+	
+	task beActiveInWorkflow.
+	
+	workflow should receive registerNewTask: task
+]
+
+{ #category : #tests }
 PtyTaskTest >> testBecomeDefferedTask [
 
 	| executionStrategy |
@@ -98,18 +110,6 @@ PtyTaskTest >> testDefaultExecutionPriorityIsReturnedFromWorkplace [
 	task workplace: workplace.
 	
 	task executionPriority should beReturnedFrom: [ workplace defaultTaskExecutionPriority ]
-]
-
-{ #category : #tests }
-PtyTaskTest >> testDeferExecutionShouldJustRegisterItInWorkflow [
-
-	| workflow |
-	workflow := Mock new.
-	task workflow: workflow.
-	
-	task deferExecution.
-	
-	workflow should receive registerNewTask: task
 ]
 
 { #category : #tests }

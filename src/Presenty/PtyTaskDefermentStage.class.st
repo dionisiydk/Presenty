@@ -6,5 +6,7 @@ Class {
 
 { #category : #controlling }
 PtyTaskDefermentStage >> continueExecution [
-	^task startExecution
+	
+	^PtyUserRequest signal
+	
 ]
