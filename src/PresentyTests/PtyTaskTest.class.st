@@ -15,7 +15,7 @@ PtyTaskTest >> setUp [
 ]
 
 { #category : #tests }
-PtyTaskTest >> testBecomeActiveInWorkflow [
+PtyTaskTest >> testBeActiveInWorkflow [
 
 	| workflow |
 	workflow := Mock new.
@@ -27,43 +27,35 @@ PtyTaskTest >> testBecomeActiveInWorkflow [
 ]
 
 { #category : #tests }
-PtyTaskTest >> testBecomeDefferedTask [
+PtyTaskTest >> testBeDefferedTask [
 
-	| executionStrategy |
-	executionStrategy := task beDeferred.
+	task beDeferred.
 
-	task executionStrategy should be: executionStrategy.
-	executionStrategy should beInstanceOf: PtyDeferredTaskExecutionStrategy
+	task executionStrategy should beInstanceOf: PtyDeferredExecutionStrategy
 ]
 
 { #category : #tests }
-PtyTaskTest >> testBecomeImmediateTask [
+PtyTaskTest >> testBeImmediateTask [
 
-	| executionStrategy |
-	executionStrategy := task beImmediate.
+	task beImmediate.
 
-	task executionStrategy should be: executionStrategy.
-	executionStrategy should beInstanceOf: PtyImmediateTaskExecutionStrategy
+	task executionStrategy should beInstanceOf: PtyImmediateExecutionStrategy
 ]
 
 { #category : #tests }
-PtyTaskTest >> testBecomeOneShotTask [
+PtyTaskTest >> testBeOneShotTask [
 
-	| executionStrategy |
-	executionStrategy := task beOneShot.
+	task beOneShot.
 
-	task executionStrategy should be: executionStrategy.
-	executionStrategy should beInstanceOf: PtyOneShotTaskReturnStrategy
+	task returnStrategy should beInstanceOf: PtyOneShotTaskReturnStrategy
 ]
 
 { #category : #tests }
-PtyTaskTest >> testBecomePermanentTask [
+PtyTaskTest >> testBePermanentTask [
 
-	| executionStrategy |
-	executionStrategy := task bePermanent.
+	task bePermanent.
 
-	task executionStrategy should be: executionStrategy.
-	executionStrategy should beInstanceOf: PtyPermanentTaskReturnStrategy
+	task returnStrategy should beInstanceOf: PtyPermanentTaskReturnStrategy
 ]
 
 { #category : #tests }
@@ -181,6 +173,18 @@ PtyTaskTest >> testHasDefaultExecutionStrategy [
 ]
 
 { #category : #tests }
+PtyTaskTest >> testHasDefaultReturnStrategy [
+
+	task returnStrategy class should equal: task defaultReturnStrategy class
+]
+
+{ #category : #tests }
+PtyTaskTest >> testHasDefaultWorkflowActivationStrategy [
+
+	task workflowActivationStrategy class should equal: task defaultWorkflowActivationStrategy class
+]
+
+{ #category : #tests }
 PtyTaskTest >> testInitialWorkflowActivation [
 
 	| workflow |
@@ -193,6 +197,12 @@ PtyTaskTest >> testInitialWorkflowActivation [
 	workflow should receive activateAs: #initialWorkflow
 
 	
+]
+
+{ #category : #tests }
+PtyTaskTest >> testIsImmediateByDefault [
+
+	task executionStrategy should beInstanceOf: PtyImmediateExecutionStrategy 
 ]
 
 { #category : #tests }
@@ -210,7 +220,7 @@ PtyTaskTest >> testIsInitialTask [
 { #category : #tests }
 PtyTaskTest >> testIsOneShotByDefault [
 
-	task executionStrategy should beInstanceOf: PtyOneShotTaskReturnStrategy 
+	task returnStrategy should beInstanceOf: PtyOneShotTaskReturnStrategy 
 ]
 
 { #category : #tests }
@@ -334,4 +344,26 @@ PtyTaskTest >> testRetryExecutionWhenTaskWasNotStarted [
 		
 	error := [task retryExecution] should fail.
 	error where description should includeSubstring: 'No continuation'
+]
+
+{ #category : #tests }
+PtyTaskTest >> testUseCleanWorkflow [
+
+	task useCleanWorkflow.
+
+	task workflowActivationStrategy should beInstanceOf: PtyCleanWorkflowStrategy 
+]
+
+{ #category : #tests }
+PtyTaskTest >> testUseInheritedWorkflow [
+
+	task useInheritedWorkflow.
+
+	task workflowActivationStrategy should beInstanceOf: PtyInheritWorkflowStrategy 
+]
+
+{ #category : #tests }
+PtyTaskTest >> testUsesInheritedWorkflowByDefault [
+
+	task workflowActivationStrategy should beInstanceOf: PtyInheritWorkflowStrategy 
 ]

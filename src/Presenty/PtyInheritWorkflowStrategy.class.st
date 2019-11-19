@@ -1,11 +1,11 @@
 Class {
-	#name : #PtyInheritedWorkflowActivationStrategy,
+	#name : #PtyInheritWorkflowStrategy,
 	#superclass : #PtyWorkflowActivationStrategy,
 	#category : #'Presenty-NewCore'
 }
 
 { #category : #'task execution' }
-PtyInheritedWorkflowActivationStrategy >> prepareWorkflow: aWorkflow forExecutionOf: aTask [
+PtyInheritWorkflowStrategy >> prepareWorkflow: aWorkflow forExecutionOf: aTask [
 
 	aWorkflow registerNewTask: aTask
 ]

@@ -8,6 +8,8 @@ Class {
 		'prototype',
 		'context',
 		'executionStrategy',
+		'returnStrategy',
+		'workflowActivationStrategy',
 		'executionPriority',
 		'parentTask',
 		'initialWorkflow',
@@ -101,25 +103,25 @@ PtyTask >> beActiveInWorkflow [
 { #category : #'initialize-release' }
 PtyTask >> beDeferred [
 
-	^executionStrategy := PtyDeferredTaskExecutionStrategy new
+	executionStrategy := PtyDeferredExecutionStrategy new
 ]
 
 { #category : #'initialize-release' }
 PtyTask >> beImmediate [
 
-	^executionStrategy := PtyImmediateTaskExecutionStrategy new
+	executionStrategy := PtyImmediateExecutionStrategy new
 ]
 
 { #category : #'initialize-release' }
 PtyTask >> beOneShot [
 
-	^executionStrategy := PtyOneShotTaskReturnStrategy new
+	returnStrategy := PtyOneShotTaskReturnStrategy new
 ]
 
 { #category : #'initialize-release' }
 PtyTask >> bePermanent [
 
-	^executionStrategy := PtyPermanentTaskReturnStrategy new
+	returnStrategy := PtyPermanentTaskReturnStrategy new
 ]
 
 { #category : #execution }
@@ -202,12 +204,22 @@ PtyTask >> defaultExecutionPriority [
 
 { #category : #'initialize-release' }
 PtyTask >> defaultExecutionStrategy [
-	^PtyOneShotTaskReturnStrategy new
+	^PtyImmediateExecutionStrategy new
 ]
 
 { #category : #accessing }
 PtyTask >> defaultPrototypeContextName [
 	^self class name
+]
+
+{ #category : #'initialize-release' }
+PtyTask >> defaultReturnStrategy [
+	^PtyOneShotTaskReturnStrategy new
+]
+
+{ #category : #'initialize-release' }
+PtyTask >> defaultWorkflowActivationStrategy [
+	^PtyInheritWorkflowStrategy new
 ]
 
 { #category : #execution }
@@ -293,7 +305,9 @@ PtyTask >> initialize [
 	super initialize.
 	
 	announcer := Announcer new.
-	executionStrategy := self defaultExecutionStrategy
+	executionStrategy := self defaultExecutionStrategy.
+	returnStrategy := self defaultReturnStrategy.
+	workflowActivationStrategy := self defaultWorkflowActivationStrategy.
 ]
 
 { #category : #testing }
@@ -529,6 +543,16 @@ PtyTask >> retryExecution [
 	self currentWorker retryTask: self
 ]
 
+{ #category : #accessing }
+PtyTask >> returnStrategy [
+	^ returnStrategy
+]
+
+{ #category : #accessing }
+PtyTask >> returnStrategy: anObject [
+	returnStrategy := anObject
+]
+
 { #category : #testing }
 PtyTask >> shouldRestoreParentArea [ 
 	^true
@@ -547,6 +571,18 @@ PtyTask >> startExecution [
 	result := self body.
 	self prepareReturnWorkflow.
 	^result
+]
+
+{ #category : #'initialize-release' }
+PtyTask >> useCleanWorkflow [
+
+	workflowActivationStrategy := PtyCleanWorkflowStrategy new
+]
+
+{ #category : #'initialize-release' }
+PtyTask >> useInheritedWorkflow [
+
+	workflowActivationStrategy := PtyInheritWorkflowStrategy new
 ]
 
 { #category : #accessing }
@@ -574,6 +610,16 @@ PtyTask >> workflow [
 { #category : #accessing }
 PtyTask >> workflow: anObject [
 	workflow := anObject
+]
+
+{ #category : #accessing }
+PtyTask >> workflowActivationStrategy [
+	^ workflowActivationStrategy
+]
+
+{ #category : #accessing }
+PtyTask >> workflowActivationStrategy: anObject [
+	workflowActivationStrategy := anObject
 ]
 
 { #category : #accessing }

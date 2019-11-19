@@ -1,5 +1,5 @@
 Class {
-	#name : #PtyCleanWorkflowActivationStrategy,
+	#name : #PtyCleanWorkflowStrategy,
 	#superclass : #PtyWorkflowActivationStrategy,
 	#category : #'Presenty-NewCore'
 }

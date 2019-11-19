@@ -6,7 +6,7 @@ Class {
 
 { #category : #running }
 PtyDeferredTaskExecutionTest >> createStrategy [
-	^ PtyDeferredTaskExecutionStrategy new
+	^ PtyDeferredExecutionStrategy new
 ]
 
 { #category : #tests }
