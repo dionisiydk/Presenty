@@ -13,7 +13,7 @@ PtyDeferredTaskExecutionTest >> createStrategy [
 PtyDeferredTaskExecutionTest >> testRequestingTaskExecution [ 
 
 	| result |
-	result := executionStrategy requestExecutionOf: task using: worker.
+	result := strategy requestExecutionOf: task using: worker.
 	
 	result should beReturnedFrom: [ worker deferTask: task ]
 ]

@@ -1,6 +1,6 @@
 Class {
 	#name : #PtyOneShotTaskExecutionTest,
-	#superclass : #PtyTaskExecutionStrategyTestCase,
+	#superclass : #PtyTaskReturnStrategyTestCase,
 	#category : #'PresentyTests-NewCore'
 }
 
@@ -13,7 +13,7 @@ PtyOneShotTaskExecutionTest >> createStrategy [
 PtyOneShotTaskExecutionTest >> testRequestingTaskExecution [ 
 
 	| result |
-	result := executionStrategy requestExecutionOf: task using: worker.
+	result := strategy requestExecutionOf: task using: worker.
 	
 	result should beReturnedFrom: [worker executeTask: task]
 ]
@@ -21,7 +21,7 @@ PtyOneShotTaskExecutionTest >> testRequestingTaskExecution [
 { #category : #tests }
 PtyOneShotTaskExecutionTest >> testShouldRemoveFromWorkflowTheTaskWhichReturnsResult [ 
 
-	executionStrategy prepareWorkflow: workflow forReturnFrom: task.
+	strategy prepareWorkflow: workflow forReturnFrom: task.
 	
 	workflow should receive removeTask: task
 ]
