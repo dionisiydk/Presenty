@@ -6,7 +6,7 @@ Class {
 
 { #category : #running }
 PtyImmediateTaskExecutionTest >> createStrategy [
-	^PtyImmediateTaskExecution new
+	^PtyImmediateTaskExecutionStrategy new
 ]
 
 { #category : #tests }

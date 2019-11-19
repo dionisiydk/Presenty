@@ -13,7 +13,7 @@ PtyTaskActivationStrategyTests >> setUp [
 	super setUp.
 	
 	guide := Mock new.	
-	activation := PtyTaskActivationStrategy new.
+	activation := PtyTaskActivationStrategy2 new.
 	activation guide: guide.
 ]
 

@@ -1,11 +1,11 @@
 Class {
-	#name : #PtyImmediateTaskExecution,
+	#name : #PtyImmediateTaskExecutionStrategy,
 	#superclass : #PtyTaskExecutionStrategy,
 	#category : #'Presenty-NewCore'
 }
 
 { #category : #'task execution' }
-PtyImmediateTaskExecution >> requestExecutionOf: aTask using: aWorker [
+PtyImmediateTaskExecutionStrategy >> requestExecutionOf: aTask using: aWorker [
 
 	^aWorker executeTask: aTask
 ]

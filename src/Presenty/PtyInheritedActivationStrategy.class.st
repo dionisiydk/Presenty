@@ -1,6 +1,6 @@
 Class {
 	#name : #PtyInheritedActivationStrategy,
-	#superclass : #PtyTaskActivationStrategy,
+	#superclass : #PtyTaskActivationStrategy2,
 	#category : #'Presenty-Core'
 }
 

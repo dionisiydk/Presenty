@@ -6,7 +6,7 @@ Class {
 
 { #category : #running }
 PtyOneShotTaskExecutionTest >> createStrategy [
-	^PtyOneShotTaskExecution new
+	^PtyOneShotTaskReturnStrategy new
 ]
 
 { #category : #tests }

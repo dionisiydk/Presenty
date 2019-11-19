@@ -1,5 +1,5 @@
 Class {
-	#name : #PtyTaskActivationStrategy,
+	#name : #PtyTaskActivationStrategy2,
 	#superclass : #Object,
 	#instVars : [
 		'guide',
@@ -15,7 +15,7 @@ Class {
 }
 
 { #category : #execution }
-PtyTaskActivationStrategy >> activateTask: aTask [
+PtyTaskActivationStrategy2 >> activateTask: aTask [
 
 	| result |
 	context := aTask createContextFor: self.
@@ -32,32 +32,32 @@ PtyTaskActivationStrategy >> activateTask: aTask [
 ]
 
 { #category : #accessing }
-PtyTaskActivationStrategy >> allowSeparateItems [
+PtyTaskActivationStrategy2 >> allowSeparateItems [
 	^ allowSeparateItems
 ]
 
 { #category : #accessing }
-PtyTaskActivationStrategy >> allowSeparateItems: anObject [
+PtyTaskActivationStrategy2 >> allowSeparateItems: anObject [
 	allowSeparateItems := anObject
 ]
 
 { #category : #accessing }
-PtyTaskActivationStrategy >> context [
+PtyTaskActivationStrategy2 >> context [
 	^ context
 ]
 
 { #category : #accessing }
-PtyTaskActivationStrategy >> context: anObject [
+PtyTaskActivationStrategy2 >> context: anObject [
 	context := anObject
 ]
 
 { #category : #accessing }
-PtyTaskActivationStrategy >> createCopy [
+PtyTaskActivationStrategy2 >> createCopy [
 	^self copy
 ]
 
 { #category : #accessing }
-PtyTaskActivationStrategy >> embedCurrentAreaToParentOn: panelName [
+PtyTaskActivationStrategy2 >> embedCurrentAreaToParentOn: panelName [
 
 	parentViewArea := parentViewArea createCopy.
 	parentViewArea add: guide viewArea on: panelName.
@@ -68,17 +68,17 @@ PtyTaskActivationStrategy >> embedCurrentAreaToParentOn: panelName [
 ]
 
 { #category : #accessing }
-PtyTaskActivationStrategy >> guide [
+PtyTaskActivationStrategy2 >> guide [
 	^ guide
 ]
 
 { #category : #accessing }
-PtyTaskActivationStrategy >> guide: anObject [
+PtyTaskActivationStrategy2 >> guide: anObject [
 	guide := anObject
 ]
 
 { #category : #'initialize-release' }
-PtyTaskActivationStrategy >> initialize [ 
+PtyTaskActivationStrategy2 >> initialize [ 
 	super initialize.
 
 	shouldRememberTask := false.	
@@ -88,27 +88,27 @@ PtyTaskActivationStrategy >> initialize [
 ]
 
 { #category : #accessing }
-PtyTaskActivationStrategy >> parent [
+PtyTaskActivationStrategy2 >> parent [
 	^ parent
 ]
 
 { #category : #accessing }
-PtyTaskActivationStrategy >> parent: anObject [
+PtyTaskActivationStrategy2 >> parent: anObject [
 	parent := anObject
 ]
 
 { #category : #accessing }
-PtyTaskActivationStrategy >> parentViewArea [
+PtyTaskActivationStrategy2 >> parentViewArea [
 	^ parentViewArea
 ]
 
 { #category : #accessing }
-PtyTaskActivationStrategy >> parentViewArea: anObject [
+PtyTaskActivationStrategy2 >> parentViewArea: anObject [
 	parentViewArea := anObject
 ]
 
 { #category : #'morphic-menu' }
-PtyTaskActivationStrategy >> populateSettingsMenu: aMenu for: aPrototype [
+PtyTaskActivationStrategy2 >> populateSettingsMenu: aMenu for: aPrototype [
 
 	#(#shouldRememberTask #shouldForgetCompleteTask #shouldRestoreParentArea #allowSeparateItems)
 		do: [ :eachOption | 
@@ -121,7 +121,7 @@ PtyTaskActivationStrategy >> populateSettingsMenu: aMenu for: aPrototype [
 ]
 
 { #category : #execution }
-PtyTaskActivationStrategy >> prepareForEscapeTo: aTask fromContext: aTaskContext [ 
+PtyTaskActivationStrategy2 >> prepareForEscapeTo: aTask fromContext: aTaskContext [ 
 
 	aTask allowChangeParentViewAreaState ifFalse: [^self].
 	
@@ -136,7 +136,7 @@ PtyTaskActivationStrategy >> prepareForEscapeTo: aTask fromContext: aTaskContext
 ]
 
 { #category : #execution }
-PtyTaskActivationStrategy >> saveViewArea [
+PtyTaskActivationStrategy2 >> saveViewArea [
 
 	parentViewArea := guide viewArea.
 	
@@ -144,13 +144,13 @@ PtyTaskActivationStrategy >> saveViewArea [
 ]
 
 { #category : #execution }
-PtyTaskActivationStrategy >> setUpNewViewArea [
+PtyTaskActivationStrategy2 >> setUpNewViewArea [
 
 	self subclassResponsibility 
 ]
 
 { #category : #execution }
-PtyTaskActivationStrategy >> shareParentAreaWithCurrentRequests [
+PtyTaskActivationStrategy2 >> shareParentAreaWithCurrentRequests [
 
 	| anotherForkedTasks connectedTasks |
 	anotherForkedTasks := (guide currentTasksLike: context).
@@ -164,32 +164,32 @@ PtyTaskActivationStrategy >> shareParentAreaWithCurrentRequests [
 ]
 
 { #category : #accessing }
-PtyTaskActivationStrategy >> shouldForgetCompleteTask [
+PtyTaskActivationStrategy2 >> shouldForgetCompleteTask [
 	^ shouldForgetCompleteTask
 ]
 
 { #category : #accessing }
-PtyTaskActivationStrategy >> shouldForgetCompleteTask: anObject [
+PtyTaskActivationStrategy2 >> shouldForgetCompleteTask: anObject [
 	shouldForgetCompleteTask := anObject
 ]
 
 { #category : #accessing }
-PtyTaskActivationStrategy >> shouldRememberTask [
+PtyTaskActivationStrategy2 >> shouldRememberTask [
 	^ shouldRememberTask
 ]
 
 { #category : #accessing }
-PtyTaskActivationStrategy >> shouldRememberTask: anObject [
+PtyTaskActivationStrategy2 >> shouldRememberTask: anObject [
 	shouldRememberTask := anObject
 ]
 
 { #category : #accessing }
-PtyTaskActivationStrategy >> shouldRestoreParentArea [
+PtyTaskActivationStrategy2 >> shouldRestoreParentArea [
 	^ shouldRestoreParentArea
 ]
 
 { #category : #accessing }
-PtyTaskActivationStrategy >> shouldRestoreParentArea: anObject. [
+PtyTaskActivationStrategy2 >> shouldRestoreParentArea: anObject. [
 
 	shouldRestoreParentArea := anObject
 ]

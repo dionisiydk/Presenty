@@ -101,19 +101,25 @@ PtyTask >> beActiveInWorkflow [
 { #category : #'initialize-release' }
 PtyTask >> beDeferred [
 
-	^executionStrategy := PtyDeferredTaskExecution new
+	^executionStrategy := PtyDeferredTaskExecutionStrategy new
 ]
 
 { #category : #'initialize-release' }
 PtyTask >> beImmediate [
 
-	^executionStrategy := PtyImmediateTaskExecution new
+	^executionStrategy := PtyImmediateTaskExecutionStrategy new
 ]
 
 { #category : #'initialize-release' }
 PtyTask >> beOneShot [
 
-	^executionStrategy := PtyOneShotTaskExecution new
+	^executionStrategy := PtyOneShotTaskReturnStrategy new
+]
+
+{ #category : #'initialize-release' }
+PtyTask >> bePermanent [
+
+	^executionStrategy := PtyPermanentTaskReturnStrategy new
 ]
 
 { #category : #execution }
@@ -196,7 +202,7 @@ PtyTask >> defaultExecutionPriority [
 
 { #category : #'initialize-release' }
 PtyTask >> defaultExecutionStrategy [
-	^PtyOneShotTaskExecution new
+	^PtyOneShotTaskReturnStrategy new
 ]
 
 { #category : #accessing }
@@ -407,7 +413,7 @@ PtyTask >> performExtraRequestBy: aGuide [
 PtyTask >> populateSettingsMenu: aMenu for: aPrototype [ 
 
 	| activations subMenu |
-	activations := PtyTaskActivationStrategy allSubclasses copyWithout: executionStrategy class.
+	activations := PtyTaskActivationStrategy2 allSubclasses copyWithout: executionStrategy class.
 	activations ifEmpty: [ ^ self ].
 	
 	subMenu := MenuMorph new defaultTarget: self.

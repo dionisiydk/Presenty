@@ -33,7 +33,7 @@ PtyTaskTest >> testBecomeDefferedTask [
 	executionStrategy := task beDeferred.
 
 	task executionStrategy should be: executionStrategy.
-	executionStrategy should beInstanceOf: PtyDeferredTaskExecution
+	executionStrategy should beInstanceOf: PtyDeferredTaskExecutionStrategy
 ]
 
 { #category : #tests }
@@ -43,7 +43,7 @@ PtyTaskTest >> testBecomeImmediateTask [
 	executionStrategy := task beImmediate.
 
 	task executionStrategy should be: executionStrategy.
-	executionStrategy should beInstanceOf: PtyImmediateTaskExecution
+	executionStrategy should beInstanceOf: PtyImmediateTaskExecutionStrategy
 ]
 
 { #category : #tests }
@@ -53,7 +53,17 @@ PtyTaskTest >> testBecomeOneShotTask [
 	executionStrategy := task beOneShot.
 
 	task executionStrategy should be: executionStrategy.
-	executionStrategy should beInstanceOf: PtyOneShotTaskExecution
+	executionStrategy should beInstanceOf: PtyOneShotTaskReturnStrategy
+]
+
+{ #category : #tests }
+PtyTaskTest >> testBecomePermanentTask [
+
+	| executionStrategy |
+	executionStrategy := task bePermanent.
+
+	task executionStrategy should be: executionStrategy.
+	executionStrategy should beInstanceOf: PtyPermanentTaskReturnStrategy
 ]
 
 { #category : #tests }
@@ -200,7 +210,7 @@ PtyTaskTest >> testIsInitialTask [
 { #category : #tests }
 PtyTaskTest >> testIsOneShotByDefault [
 
-	task executionStrategy should beInstanceOf: PtyOneShotTaskExecution 
+	task executionStrategy should beInstanceOf: PtyOneShotTaskReturnStrategy 
 ]
 
 { #category : #tests }

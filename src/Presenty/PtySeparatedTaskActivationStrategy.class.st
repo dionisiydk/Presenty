@@ -1,6 +1,6 @@
 Class {
 	#name : #PtySeparatedTaskActivationStrategy,
-	#superclass : #PtyTaskActivationStrategy,
+	#superclass : #PtyTaskActivationStrategy2,
 	#instVars : [
 		'areaActivator'
 	],

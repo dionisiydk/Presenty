@@ -1,5 +1,5 @@
 Class {
 	#name : #PtyEmbeddedTaskActivationStrategy,
-	#superclass : #PtyTaskActivationStrategy,
+	#superclass : #PtyTaskActivationStrategy2,
 	#category : #'Presenty-Core'
 }

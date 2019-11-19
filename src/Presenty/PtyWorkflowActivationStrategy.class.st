@@ -1,11 +1,11 @@
 Class {
-	#name : #PtyTaskExecutionStrategy,
+	#name : #PtyWorkflowActivationStrategy,
 	#superclass : #PtyTaskLifeCycleStrategy,
 	#category : #'Presenty-NewCore'
 }
 
 { #category : #'task execution' }
-PtyTaskExecutionStrategy >> requestExecutionOf: aTask using: aWorker [
+PtyWorkflowActivationStrategy >> prepareWorkflow: aWorkflow forExecutionOf: aTask [
 
 	self subclassResponsibility 
 ]
