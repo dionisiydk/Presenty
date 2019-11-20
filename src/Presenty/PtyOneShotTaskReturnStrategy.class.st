@@ -6,7 +6,6 @@ Class {
 
 { #category : #'task execution' }
 PtyOneShotTaskReturnStrategy >> prepareWorkflow: aWorkflow forReturnFrom: aTask [
-	super prepareWorkflow: aTask forReturnFrom: aTask.
 	
 	aWorkflow removeTask: aTask
 ]
