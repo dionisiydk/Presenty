@@ -160,6 +160,7 @@ PtyTaskTest >> testExecutionShouldReturnResultOfBody [
 	| result |
 	task := [ #done ] asTask.
 	task executionStrategy: Mock new.
+	task workflow: Mock new.
 	
 	result := task startExecution.
 
@@ -267,27 +268,27 @@ PtyTaskTest >> testJumpToRetryStage [
 { #category : #tests }
 PtyTaskTest >> testPrepareExecutionWorkflow [
 	
-	| executionStrategy |
-	executionStrategy := Mock new.
-	task executionStrategy: executionStrategy.
+	| workflowActivationStrategy |
+	workflowActivationStrategy := Mock new.
+	task workflowActivationStrategy: workflowActivationStrategy.
 	task workflow: #workflow.
 		
 	task prepareExecutionWorkflow.
 
-	executionStrategy should receive prepareWorkflow: #workflow forExecutionOf: task
+	workflowActivationStrategy should receive prepareWorkflow: #workflow forExecutionOf: task
 ]
 
 { #category : #tests }
 PtyTaskTest >> testPrepareReturnWorkflow [
 	
-	| executionStrategy |
-	executionStrategy := Mock new.
-	task executionStrategy: executionStrategy.
+	| returnStrategy |
+	returnStrategy := Mock new.
+	task returnStrategy: returnStrategy.
 	task workflow: #workflow.
 		
 	task prepareReturnWorkflow.
 
-	executionStrategy should receive prepareWorkflow: #workflow forReturnFrom: task
+	returnStrategy should receive prepareWorkflow: #workflow forReturnFrom: task
 ]
 
 { #category : #tests }

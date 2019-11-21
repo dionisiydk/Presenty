@@ -463,13 +463,13 @@ PtyTask >> prepareActivationBy: aGuide [
 { #category : #controlling }
 PtyTask >> prepareExecutionWorkflow [
 
-	executionStrategy prepareWorkflow: workflow forExecutionOf: self
+	workflowActivationStrategy prepareWorkflow: workflow forExecutionOf: self
 ]
 
 { #category : #controlling }
 PtyTask >> prepareReturnWorkflow [
 
-	executionStrategy prepareWorkflow: workflow forReturnFrom: self
+	returnStrategy prepareWorkflow: workflow forReturnFrom: self
 ]
 
 { #category : #printing }
