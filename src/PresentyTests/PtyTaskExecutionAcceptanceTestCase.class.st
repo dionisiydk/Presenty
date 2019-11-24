@@ -1,5 +1,5 @@
 Class {
-	#name : #PtyRealInteractionAcceptanceTestCase,
+	#name : #PtyTaskExecutionAcceptanceTestCase,
 	#superclass : #PtyWorkplaceTestCase,
 	#instVars : [
 		'user'
@@ -8,12 +8,12 @@ Class {
 }
 
 { #category : #testing }
-PtyRealInteractionAcceptanceTestCase class >> isAbstract [ 	
-	^self = PtyRealInteractionAcceptanceTestCase 
+PtyTaskExecutionAcceptanceTestCase class >> isAbstract [ 	
+	^self = PtyTaskExecutionAcceptanceTestCase 
 ]
 
 { #category : #running }
-PtyRealInteractionAcceptanceTestCase >> setUp [
+PtyTaskExecutionAcceptanceTestCase >> setUp [
 	super setUp.
 	
 	workplace defaultTaskExecutionPriority: Processor activePriority + 1.

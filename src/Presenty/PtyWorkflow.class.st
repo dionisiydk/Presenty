@@ -94,6 +94,13 @@ PtyWorkflow >> registerNewTask: aTask [
 ]
 
 { #category : #controlling }
+PtyWorkflow >> removeAllTasks [
+
+	currentTasks removeAll.
+	spawnedWorkflows removeAll
+]
+
+{ #category : #controlling }
 PtyWorkflow >> removeSpawnedWorkflow: aWorkflow [
 
 	spawnedWorkflows remove: aWorkflow

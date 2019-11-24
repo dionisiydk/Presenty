@@ -142,3 +142,14 @@ PtyWorkplaceTest >> testRegisteringSameWorkerTwice [
 	workplace workers should haveSize: 1.
 	workplace workers should include: worker
 ]
+
+{ #category : #tests }
+PtyWorkplaceTest >> testRemoveAllTasks [
+	| workflow |
+	workflow := Mock new.
+	workplace currentWorkflow: workflow.
+
+	workplace removeAllTasks.
+	
+	workflow should receive removeAllTasks
+]

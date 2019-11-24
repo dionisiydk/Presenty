@@ -14,6 +14,6 @@ PtyCleanWorkflowStrategyTest >> testShouldCleanWorkflowBeforeRegisteringGivenTas
 	
 	strategy prepareWorkflow: workflow forExecutionOf: #task.
 	
-	[workflow clean.
+	[workflow removeAllTasks.
 	workflow registerNewTask: #task] should beDoneInOrder 
 ]

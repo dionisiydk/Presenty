@@ -82,6 +82,11 @@ PtyWorkplace >> registerWorker: aWorker [
 	workers add: aWorker
 ]
 
+{ #category : #controlling }
+PtyWorkplace >> removeAllTasks [
+	currentWorkflow removeAllTasks
+]
+
 { #category : #accessing }
 PtyWorkplace >> withActiveWorkerDo: aBlock ifNone: absentBlock [
 

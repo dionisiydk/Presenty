@@ -1,35 +1,28 @@
 Class {
 	#name : #PtyOneShotTaskAcceptenceTest,
-	#superclass : #PtyRealInteractionAcceptanceTestCase,
+	#superclass : #PtyTaskExecutionAcceptanceTestCase,
 	#category : #'PresentyTests-NewCore'
 }
 
 { #category : #tests }
 PtyOneShotTaskAcceptenceTest >> testExecutionAsChildTask [ 
 
-	| task result |
-	task := [
-		workplace currentTasks should include: task.
-		result := #done ] asTask.
-	task beOneShot.
+	| task |
+	task := [ ] asTask beOneShot.
 	
-	user executeTask: [result := user executeTask: task] asTask.
+	user executeTask: [user executeTask: task.
+		workplace currentTasks should not include: task] asTask.
 	
-	workplace currentTasks should not include: task.
-	result should be: #done
+	workplace currentTasks should not include: task
 ]
 
 { #category : #tests }
 PtyOneShotTaskAcceptenceTest >> testExecutionAsFirstTask [ 
 
-	| task result |
-	task := [
-		workplace currentTasks should include: task.
-		result := #done ] asTask.
-	task beOneShot.
+	| task |
+	task := [ ] asTask beOneShot.
 	
 	user executeTask: task.
 	
-	workplace currentTasks should be isEmpty.
-	result should be: #done
+	workplace currentTasks should be isEmpty
 ]

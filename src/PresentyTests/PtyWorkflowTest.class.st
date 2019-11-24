@@ -211,6 +211,18 @@ PtyWorkflowTest >> testRegisteringNewTask [
 ]
 
 { #category : #tests }
+PtyWorkflowTest >> testRemoveAllTasks [
+	
+	workflow registerNewTask: #existingTask.
+	workflow spawnNew.
+	
+	workflow removeAllTasks.
+	
+	workflow currentTasks should be isEmpty.
+	workflow spawnedWorkflows should be isEmpty
+]
+
+{ #category : #tests }
 PtyWorkflowTest >> testRemoveSpawnedWorkflow [ 
 
 	| newWorkflow |

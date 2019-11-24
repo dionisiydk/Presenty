@@ -3,3 +3,10 @@ Class {
 	#superclass : #PtyWorkflowActivationStrategy,
 	#category : #'Presenty-NewCore'
 }
+
+{ #category : #'task execution' }
+PtyCleanWorkflowStrategy >> prepareWorkflow: aWorkflow forExecutionOf: aTask [
+
+	aWorkflow removeAllTasks.
+	aWorkflow registerNewTask: aTask
+]

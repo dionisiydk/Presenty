@@ -1,6 +1,6 @@
 Class {
 	#name : #PtyDeferredTaskAcceptanceTest,
-	#superclass : #PtyRealInteractionAcceptanceTestCase,
+	#superclass : #PtyTaskExecutionAcceptanceTestCase,
 	#category : #'PresentyTests-NewCore'
 }
 
@@ -8,8 +8,7 @@ Class {
 PtyDeferredTaskAcceptanceTest >> testExecutionAsChildTask [ 
 
 	| task result |
-	task := [ #result ] asTask.
-	task beDeferred.
+	task := [ #result ] asTask beDeferred.
 	
 	user executeTask: [ result := user executeTask: task] asTask.
 
@@ -21,8 +20,7 @@ PtyDeferredTaskAcceptanceTest >> testExecutionAsChildTask [
 PtyDeferredTaskAcceptanceTest >> testExecutionAsFirstTask [ 
 
 	| task result |
-	task := [ result := #done ] asTask.
-	task beDeferred.
+	task := [ result := #done ] asTask beDeferred.
 	
 	user executeTask: task.
 	
@@ -35,8 +33,7 @@ PtyDeferredTaskAcceptanceTest >> testExecutionRetryFromAnotherTask [
 
 	| task result expected retryBlockEnds |
 	expected := #result.
-	task := [ expected ] asTask.
-	task beDeferred.	
+	task := [ expected ] asTask beDeferred.	
 	user executeTask: [ result := user executeTask: task] asTask.
 
 	expected := #newResult.
@@ -50,8 +47,7 @@ PtyDeferredTaskAcceptanceTest >> testExecutionRetryFromAnotherTask [
 PtyDeferredTaskAcceptanceTest >> testExecutionRetryFromOutsideOfWorkplace [ 
 	| task result taskResult |
 	taskResult := #result.
-	task := [ taskResult ] asTask.
-	task beDeferred.
+	task := [ taskResult ] asTask beDeferred.
 	
 	user executeTask: [ result := user executeTask: task] asTask.
 	
@@ -65,8 +61,7 @@ PtyDeferredTaskAcceptanceTest >> testExecutionRetryFromOutsideOfWorkplace [
 PtyDeferredTaskAcceptanceTest >> testResultDeliveryFromOutsideOfWorkplace [ 
 	| task result taskResult |
 	taskResult := #result.
-	task := [ taskResult ] asTask.
-	task beDeferred.
+	task := [ taskResult ] asTask beDeferred.
 	
 	user executeTask: [ result := user executeTask: task] asTask.
 	

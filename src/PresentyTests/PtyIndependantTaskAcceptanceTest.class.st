@@ -1,6 +1,6 @@
 Class {
 	#name : #PtyIndependantTaskAcceptanceTest,
-	#superclass : #PtyRealInteractionAcceptanceTestCase,
+	#superclass : #PtyTaskExecutionAcceptanceTestCase,
 	#category : #'PresentyTests-NewCore'
 }
 
