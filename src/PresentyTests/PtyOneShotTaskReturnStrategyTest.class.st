@@ -10,9 +10,9 @@ PtyOneShotTaskReturnStrategyTest >> createStrategy [
 ]
 
 { #category : #tests }
-PtyOneShotTaskReturnStrategyTest >> testShouldRemoveFromWorkflowTheTaskWhichReturnsResult [ 
+PtyOneShotTaskReturnStrategyTest >> testShouldActivateInitialWorkflow [ 
 
 	strategy prepareWorkflow: workflow forReturnFrom: task.
 	
-	workflow should receive removeTask: task
+	task should receive activateInitialWorkflow
 ]

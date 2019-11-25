@@ -26,3 +26,17 @@ PtyOneShotTaskAcceptenceTest >> testExecutionAsFirstTask [
 	
 	workplace currentTasks should be isEmpty
 ]
+
+{ #category : #tests }
+PtyOneShotTaskAcceptenceTest >> testExecutionWithOwnChildTask [
+
+	| task childTask |
+	childTask := [ ] asTask bePermanent.
+	task := [ user executeTask: childTask.
+		workplace currentTasks should include: childTask ] asTask beOneShot.
+	
+	user executeTask: task.
+	
+	workplace currentTasks should not include: task.
+	workplace currentTasks should not include: childTask.
+]
