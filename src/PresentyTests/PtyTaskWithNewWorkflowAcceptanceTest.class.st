@@ -1,16 +1,16 @@
 Class {
-	#name : #PtyIndependantTaskAcceptanceTest,
+	#name : #PtyTaskWithNewWorkflowAcceptanceTest,
 	#superclass : #PtyTaskExecutionAcceptanceTestCase,
 	#category : #'PresentyTests-NewCore'
 }
 
 { #category : #tests }
-PtyIndependantTaskAcceptanceTest >> testExecutionAsChildTask [ 
+PtyTaskWithNewWorkflowAcceptanceTest >> testExecutionAsChildTask [ 
 
 	| task result executed |
 	executed := false.
 	task := [ executed := true ] asTask.
-	task beIndependent.
+	task useNewWorkflow.
 	
 	user executeTask: [ result := user executeTask: task] asTask.
 
@@ -19,10 +19,10 @@ PtyIndependantTaskAcceptanceTest >> testExecutionAsChildTask [
 ]
 
 { #category : #tests }
-PtyIndependantTaskAcceptanceTest >> testExecutionRetry [ 
+PtyTaskWithNewWorkflowAcceptanceTest >> testExecutionRetry [ 
 	| task result executed currentTasks parentTask |
 	task := [ executed := true. currentTasks := workplace currentTasks ] asTask.
-	task beIndependent.
+	task useNewWorkflow.
 	parentTask := [ result := user executeTask: task] asTask.
 	user executeTask: parentTask.
 	result := #existingResult.
