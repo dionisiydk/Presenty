@@ -1,16 +1,16 @@
 Class {
-	#name : #PtyImmediateTaskExecutionTest,
+	#name : #PtyImmediateExecutionStrategyTest,
 	#superclass : #PtyTaskExecutionStrategyTestCase,
 	#category : #'PresentyTests-NewCore'
 }
 
 { #category : #running }
-PtyImmediateTaskExecutionTest >> createStrategy [
+PtyImmediateExecutionStrategyTest >> createStrategy [
 	^PtyImmediateExecutionStrategy new
 ]
 
 { #category : #tests }
-PtyImmediateTaskExecutionTest >> testRequestingTaskExecution [ 
+PtyImmediateExecutionStrategyTest >> testRequestingTaskExecution [ 
 
 	| result |
 	result := strategy requestExecutionOf: task using: worker.

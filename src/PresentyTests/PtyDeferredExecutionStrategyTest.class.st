@@ -1,16 +1,16 @@
 Class {
-	#name : #PtyDeferredTaskExecutionTest,
+	#name : #PtyDeferredExecutionStrategyTest,
 	#superclass : #PtyTaskExecutionStrategyTestCase,
 	#category : #'PresentyTests-NewCore'
 }
 
 { #category : #running }
-PtyDeferredTaskExecutionTest >> createStrategy [
+PtyDeferredExecutionStrategyTest >> createStrategy [
 	^ PtyDeferredExecutionStrategy new
 ]
 
 { #category : #tests }
-PtyDeferredTaskExecutionTest >> testRequestingTaskExecution [ 
+PtyDeferredExecutionStrategyTest >> testRequestingTaskExecution [ 
 
 	| result |
 	result := strategy requestExecutionOf: task using: worker.
