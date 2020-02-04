@@ -10,7 +10,7 @@ PtyImmediateExecutionStrategyTest >> createStrategy [
 ]
 
 { #category : #tests }
-PtyImmediateExecutionStrategyTest >> testRequestingTaskExecution [ 
+PtyImmediateExecutionStrategyTest >> testShouldExecuteTaskUsingWorker [ 
 
 	| result |
 	result := strategy requestExecutionOf: task using: worker.
