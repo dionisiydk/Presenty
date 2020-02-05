@@ -22,9 +22,14 @@ PtySeparateWorkflowExecutionStrategy >> requestExecutionOf: aTask using: aWorker
 	| shouldReturnToParentToCompleteSeparation |
 	shouldReturnToParentToCompleteSeparation := true.
 	aTask spawnWorkflow.	
-	^[ | result |
-		result := internalExecutionStrategy requestExecutionOf: aTask using: aWorker.
+	^[ 
+		[internalExecutionStrategy requestExecutionOf: aTask using: aWorker]
+			on: PtyUserRequest do: [ :exc | 
+				shouldReturnToParentToCompleteSeparation 
+					ifTrue: [PtyTaskExecutionFutureResult of: aTask ] 
+					ifFalse: [exc pass] ].
 		shouldReturnToParentToCompleteSeparation 
-			ifTrue: [result] ifFalse: [PtyUserRequest signal]
+			ifTrue: [PtyTaskExecutionFutureResult of: aTask ] 
+			ifFalse: [PtyUserRequest signal]
 	] ensure: [ shouldReturnToParentToCompleteSeparation := false]
 ]

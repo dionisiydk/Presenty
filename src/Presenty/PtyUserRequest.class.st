@@ -1,6 +1,6 @@
 Class {
 	#name : #PtyUserRequest,
-	#superclass : #Exception,
+	#superclass : #Error,
 	#instVars : [
 		'viewAreaActivator'
 	],
