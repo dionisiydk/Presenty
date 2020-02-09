@@ -563,6 +563,14 @@ PtyTask >> shouldSeparateForkTasks [
 	^false
 ]
 
+{ #category : #controlling }
+PtyTask >> spawnWorkflow [ 
+	"Task belongs to its workflow. It keeps the state of this workflow at the time when the task was requested. The initialWorkflow variable represents this initial state.
+	When task is spawned it must ensure this logic. So the initialWorkflow must represent the initial state of this new spawned workflow"
+	workflow := workflow spawnNew.
+	initialWorkflow := workflow captureStateForNewTask
+]
+
 { #category : #execution }
 PtyTask >> startExecution [ 
 	
@@ -583,6 +591,12 @@ PtyTask >> useCleanWorkflow [
 PtyTask >> useInheritedWorkflow [
 
 	workflowActivationStrategy := PtyInheritWorkflowStrategy new
+]
+
+{ #category : #'initialize-release' }
+PtyTask >> useSeparateWorkflow [
+
+	executionStrategy := PtySeparateWorkflowExecutionStrategy using: executionStrategy 
 ]
 
 { #category : #accessing }

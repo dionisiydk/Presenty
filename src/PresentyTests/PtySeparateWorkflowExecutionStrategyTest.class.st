@@ -2,7 +2,7 @@ Class {
 	#name : #PtySeparateWorkflowExecutionStrategyTest,
 	#superclass : #PtyTaskExecutionStrategyTestCase,
 	#instVars : [
-		'internalStrategy'
+		'actualWorkflowStrategy'
 	],
 	#category : #'PresentyTests-NewCore'
 }
@@ -16,8 +16,8 @@ PtySeparateWorkflowExecutionStrategyTest >> createStrategy [
 PtySeparateWorkflowExecutionStrategyTest >> setUp [
 	super setUp.
 	
-	internalStrategy := Mock new.
-	strategy internalExecutionStrategy: internalStrategy
+	actualWorkflowStrategy := Mock new.
+	strategy actualWorkflowExecutionStrategy: actualWorkflowStrategy
 ]
 
 { #category : #tests }
@@ -25,14 +25,14 @@ PtySeparateWorkflowExecutionStrategyTest >> testShouldDelegateExecutionToInterna
 
 	strategy requestExecutionOf: task using: worker.
 	
-	internalStrategy should receive requestExecutionOf: task using: worker
+	actualWorkflowStrategy should receive requestExecutionOf: task using: worker
 ]
 
 { #category : #tests }
 PtySeparateWorkflowExecutionStrategyTest >> testShouldInterceptUserRequestFromFirstTaskReturn [ 
 	
 	| result |
-	(internalStrategy stub requestExecutionOf: task using: worker) 
+	(actualWorkflowStrategy stub requestExecutionOf: task using: worker) 
 		willRaise: PtyUserRequest new.
 	
 	result := strategy requestExecutionOf: task using: worker.
@@ -57,7 +57,7 @@ PtySeparateWorkflowExecutionStrategyTest >> testShouldSpawnTaskWorkflowBeforeExe
 	strategy requestExecutionOf: task using: worker.
 	
 	[task spawnWorkflow.
-	internalStrategy requestExecutionOf: task using: worker] should beDoneInOrder
+	actualWorkflowStrategy requestExecutionOf: task using: worker] should beDoneInOrder
 ]
 
 { #category : #tests }
@@ -65,7 +65,7 @@ PtySeparateWorkflowExecutionStrategyTest >> testShouldStopExecutionForRepeatedTa
 	| numberOfTaskReturns continuation executionWasStopped |
 	numberOfTaskReturns := 0.
 	executionWasStopped := false.
-	(internalStrategy stub requestExecutionOf: task using: worker) will: [ | returnedValue |
+	(actualWorkflowStrategy stub requestExecutionOf: task using: worker) will: [ | returnedValue |
 		returnedValue := Continuation currentDo: [ :cc | continuation := cc. #initialResult].
 		numberOfTaskReturns := numberOfTaskReturns + 1. returnedValue].	
 		
@@ -82,7 +82,7 @@ PtySeparateWorkflowExecutionStrategyTest >> testShouldStopExecutionForRepeatedTa
 	| userRequestCounter continuation numberOfTaskReturns |
 	numberOfTaskReturns := 0.
 	userRequestCounter := 0.
-	(internalStrategy stub requestExecutionOf: task using: worker) will: [ | returnAction |
+	(actualWorkflowStrategy stub requestExecutionOf: task using: worker) will: [ | returnAction |
 		returnAction := Continuation currentDo: [ :cc | continuation := cc. [PtyUserRequest signal]].
 		numberOfTaskReturns := numberOfTaskReturns + 1.
 		returnAction value

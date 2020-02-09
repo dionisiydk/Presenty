@@ -348,6 +348,21 @@ PtyTaskTest >> testRetryExecutionWhenTaskWasNotStarted [
 ]
 
 { #category : #tests }
+PtyTaskTest >> testSpawningWorkflow [
+
+	| newWorkflow currentWorkflow |
+	newWorkflow := Mock new.
+	currentWorkflow := Mock new.
+	task workflow: currentWorkflow.
+	currentWorkflow stub spawnNew willReturn: newWorkflow.
+	
+	task spawnWorkflow.
+	
+	task workflow should be: newWorkflow.
+	task initialWorkflow should beReturnedFrom: [newWorkflow captureStateForNewTask].
+]
+
+{ #category : #tests }
 PtyTaskTest >> testUseCleanWorkflow [
 
 	task useCleanWorkflow.
@@ -361,6 +376,18 @@ PtyTaskTest >> testUseInheritedWorkflow [
 	task useInheritedWorkflow.
 
 	task workflowActivationStrategy should beInstanceOf: PtyInheritWorkflowStrategy 
+]
+
+{ #category : #tests }
+PtyTaskTest >> testUseSeparateWorkflow [
+
+	| currentExecutionStrategy |
+	currentExecutionStrategy := task executionStrategy.
+	
+	task useSeparateWorkflow.
+
+	task executionStrategy should beInstanceOf: PtySeparateWorkflowExecutionStrategy.
+	task executionStrategy actualWorkflowExecutionStrategy should be: currentExecutionStrategy
 ]
 
 { #category : #tests }
