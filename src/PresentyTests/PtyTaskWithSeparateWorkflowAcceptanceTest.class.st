@@ -33,24 +33,6 @@ PtyTaskWithSeparateWorkflowAcceptanceTest >> testExecutionAsChildTaskWhichReques
 ]
 
 { #category : #tests }
-PtyTaskWithSeparateWorkflowAcceptanceTest >> testExecutionRetry [ 
-	| task result executed currentTasks parentTask |
-	task := [ executed := true. currentTasks := workplace currentTasks ] asTask.
-	task useSeparateWorkflow.
-	parentTask := [ result := user executeTask: task] asTask.
-	user executeTask: parentTask.
-	result := #existingResult.
-	executed := false.
-	
-	task retryExecution.
-	
-	result should be: #existingResult.
-	executed should be: true.
-	currentTasks should include: task.
-	currentTasks should include: parentTask.
-]
-
-{ #category : #tests }
 PtyTaskWithSeparateWorkflowAcceptanceTest >> testExecutionRetryDoesNotContinueParentTask [ 
 	| task executed parentCounter |
 	parentCounter := 0.
@@ -80,4 +62,39 @@ PtyTaskWithSeparateWorkflowAcceptanceTest >> testExecutionRetryDoesNotContinuePa
 	
 	executed should be: true.
 	parentCounter should be: 1.
+]
+
+{ #category : #tests }
+PtyTaskWithSeparateWorkflowAcceptanceTest >> testExecutionRetryShouldRestoreMissingOneShotParentsFromParentWorkflows [
+	| task parent grandparent currentTasksDuringChild |
+	task := [ currentTasksDuringChild := workplace currentTasks ] asTask beOneShot useSeparateWorkflow.
+	parent := [ user executeTask: task] asTask beOneShot useSeparateWorkflow.
+	grandparent := [ user executeTask: parent] asTask beOneShot.
+	
+	user executeTask: grandparent.
+	currentTasksDuringChild should equal: { grandparent. parent. task }.
+	
+	task retryExecution.
+	currentTasksDuringChild should equal: { grandparent. parent. task }.
+]
+
+{ #category : #tests }
+PtyTaskWithSeparateWorkflowAcceptanceTest >> testShouldBeIndependentFromOtherSeparateTasks [ 
+	| task1 task2 currentTasksDuringTask1 currentTasksDuringTask2 parentTask child1 |
+	child1 := [  ] asTask bePermanent.
+	task1 := [ currentTasksDuringTask1 ifNotNil: [ user executeTask: child1 ]. 
+		currentTasksDuringTask1 := workplace currentTasks ] asTask.
+	task1 useSeparateWorkflow; bePermanent.
+	task2 := [ currentTasksDuringTask2 := workplace currentTasks ] asTask bePermanent.
+	parentTask := [ user executeTask: task1. user executeTask: task2] asTask bePermanent.
+	user executeTask: parentTask.
+	currentTasksDuringTask1 should equal: { parentTask. task1 }. 
+	currentTasksDuringTask2 should equal: { parentTask. task1. task2.  }.
+
+	task1 retryExecution.
+	
+	currentTasksDuringTask1 should equal: { parentTask. task1. task2. child1 }. 
+	
+	task2 retryExecution.
+	currentTasksDuringTask2 should equal: { parentTask. task1. task2. child1 }.
 ]
