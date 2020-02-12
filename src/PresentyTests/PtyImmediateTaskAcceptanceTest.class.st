@@ -56,6 +56,22 @@ PtyImmediateTaskAcceptanceTest >> testExecutionRetryFromOutsideOfWorkplace [
 ]
 
 { #category : #tests }
+PtyImmediateTaskAcceptanceTest >> testNewTaskCallDuringExecutionRetry [ 
+	| task result shouldCallChild newChild |
+	shouldCallChild := false.
+	newChild := [ #newResult ] asTask beImmediate.
+	task := [ shouldCallChild 
+			ifTrue: [user executeTask: newChild] ifFalse: [ #firstResult ] 
+	] asTask beImmediate.
+	user executeTask: [ result := user executeTask: task] asTask.
+	shouldCallChild := true.
+	
+	task retryExecution.
+	
+	result should be: #newResult
+]
+
+{ #category : #tests }
 PtyImmediateTaskAcceptanceTest >> testResultDeliveryFromAnotherTask [ 
 
 	| task result resultSenderWasComplete |
