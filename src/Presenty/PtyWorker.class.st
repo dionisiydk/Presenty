@@ -38,9 +38,10 @@ PtyWorker >> continueWithTask: aTask using: initialTaskExecutionStage [
 	| executionStage result |
 	executionStage := aTask currentExecutionStageStartedWith: initialTaskExecutionStage.	
 	
+	activeTask := aTask.
 	result := executionStage continueExecution.
-
 	activeTask := aTask parentTask.
+	
 	^result
 ]
 
@@ -65,8 +66,6 @@ PtyWorker >> deliverResult: anObject of: aTask [
 
 { #category : #'task execution' }
 PtyWorker >> executeTask: aTask [
-
-	activeTask := aTask.
 	
 	self isActive ifTrue: [ ^self continueWithTask: aTask].
 	

@@ -41,6 +41,17 @@ PtyWorkerTest >> testContinueWithTaskShouldRunExecutionStage [
 ]
 
 { #category : #tests }
+PtyWorkerTest >> testContinueWithTaskShouldSetActiveTaskBeforeRun [
+	
+	| executionStage |
+	executionStage := Mock new.
+	(task stub currentExecutionStageStartedWith: Any) willReturn: executionStage.	
+
+	executionStage stub continueExecution when: [ worker activeTask ] is: task.	
+	worker continueWithTask: task
+]
+
+{ #category : #tests }
 PtyWorkerTest >> testContinueWithTaskShouldUseStartExecutionStageAsDefault [
 	
 	task stub currentExecutionStageStartedWith: Arg initialStage.	
@@ -53,12 +64,10 @@ PtyWorkerTest >> testContinueWithTaskShouldUseStartExecutionStageAsDefault [
 
 { #category : #tests }
 PtyWorkerTest >> testContinueWithTaskUsingGivenExecutionStage [
-	
-	task stub currentExecutionStageStartedWith: Arg initialStage.
 		
 	worker continueWithTask: task using: #initialTaskExecutionStage.
 	
-	Arg initialStage should be: #initialTaskExecutionStage
+	task should receive currentExecutionStageStartedWith: #initialTaskExecutionStage.
 ]
 
 { #category : #tests }
@@ -259,15 +268,6 @@ PtyWorkerTest >> testStoppingTaskWhenNoProcess [
 	worker process: nil.
 	
 	worker stopTask
-]
-
-{ #category : #tests }
-PtyWorkerTest >> testTaskExecutionShouldFirstSetActiveTask [
-
-	worker stub isActive 
-		when: [worker activeTask] is: task.
-	
-	worker executeTask: task
 ]
 
 { #category : #tests }

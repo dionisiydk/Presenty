@@ -68,6 +68,7 @@ PtyImmediateTaskAcceptanceTest >> testNewTaskCallDuringExecutionRetry [
 	
 	task retryExecution.
 	
+	newChild parentTask should be: task.
 	result should be: #newResult
 ]
 
