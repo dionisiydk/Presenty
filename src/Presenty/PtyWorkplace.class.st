@@ -35,22 +35,22 @@ PtyWorkplace >> defaultTaskExecutionPriority: anObject [
 ]
 
 { #category : #'task execution' }
-PtyWorkplace >> findPreferredTaskImplementing: requestedTask [
-	"Here it should be call to workspace settings"
-	^requestedTask
+PtyWorkplace >> findActiveWorkflowOrCreateNewOne [
+	"Active workflow is one which task is currently executing.
+	When it is not exist we create new one with new servicing worker.
+	For example user can request new task from playground which is not managed by Presenty context.
+	In that case new workflow and new worker will be created to represent this activity"
+
+	^currentWorkflow findActiveWorkflowIfNone: [ 
+		currentWorkflow spawnNew
+			worker: (PtyWorker inWorkplace: self);
+			yourself	]
 ]
 
 { #category : #'task execution' }
-PtyWorkplace >> findWorkerExecutingCurrentTask [
-	"Active worker is always one who executes current task because it is executed from active process.
-	When it is not exist we assume that it is some implicit worker from the external system
-	(external for Presenty). And workplace will create an instance representing it as a result.
-	For example user can request new task from playground which is not managed by Presenty context.
-	In that case new worker will be created to represent this activity. 
-	When this worker will receive a command to execute a task 
-	it will became part of workplace environment (it will be added to workplace)"
-
-	^self 	withActiveWorkerDo: [ :worker | worker ] ifNone: [ PtyWorker atWorkplace: self]
+PtyWorkplace >> findPreferredTaskImplementing: requestedTask [
+	"Here it should be call to workspace settings"
+	^requestedTask
 ]
 
 { #category : #initialization }
@@ -66,10 +66,7 @@ PtyWorkplace >> initialize [
 PtyWorkplace >> planExecutionOf: aTask by: aUser [
 
 	aTask user: aUser.
-	aTask workplace: self.
-	self 
-		withActiveWorkerDo: [ :activeWorker | aTask parentTask: activeWorker activeTask ]
-		ifNone: [ aTask workflow: currentWorkflow spawnNew ].
+	aTask assignToActiveWorkflowIn: self. 
 		
 	^self findPreferredTaskImplementing: aTask
 ]

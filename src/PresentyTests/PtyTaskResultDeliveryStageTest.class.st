@@ -1,21 +1,21 @@
 Class {
 	#name : #PtyTaskResultDeliveryStageTest,
-	#superclass : #PtyTaskExecutionStageTestCase,
+	#superclass : #PtyWorkflowContinuationStageTestCase,
 	#category : #'PresentyTests-NewCore'
 }
 
 { #category : #running }
-PtyTaskResultDeliveryStageTest >> createExecutionStage [
-	^PtyTaskResultDeliveryStage of: task withResult: #taskResult
+PtyTaskResultDeliveryStageTest >> createWorkflowStage [
+	^PtyTaskResultDeliveryStage for: task withResult: #taskResult
 ]
 
 { #category : #tests }
 PtyTaskResultDeliveryStageTest >> testContinueExecution [
 
 	| result |
-	executionStage result: #taskResult.
+	workflowStage result: #taskResult.
 	
-	result := executionStage continueExecution.	
+	result := workflowStage continueExecution.	
 	
 	result should be: #taskResult
 ]
@@ -23,7 +23,7 @@ PtyTaskResultDeliveryStageTest >> testContinueExecution [
 { #category : #tests }
 PtyTaskResultDeliveryStageTest >> testContinueExecutionShouldPassThrough3Steps [
 
-	executionStage continueExecution.	
+	workflowStage continueExecution.	
 	
 	[task activateInitialWorkflow.
 	task prepareExecutionWorkflow.

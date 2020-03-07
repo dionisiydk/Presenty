@@ -4,7 +4,8 @@ Class {
 	#instVars : [
 		'parentWorkflow',
 		'currentTasks',
-		'spawnedWorkflows'
+		'spawnedWorkflows',
+		'worker'
 	],
 	#category : #'Presenty-NewCore'
 }
@@ -30,6 +31,11 @@ PtyWorkflow >> activateWithSpawnedWorkflow: aWorkflow [
 ]
 
 { #category : #accessing }
+PtyWorkflow >> activeTask [ 
+	^worker ifNotNil: [ worker activeTask ]
+]
+
+{ #category : #accessing }
 PtyWorkflow >> allCurrentTasks [
 
 	^currentTasks, (spawnedWorkflows flatCollect: [ :each | each allCurrentTasks ])
@@ -50,6 +56,44 @@ PtyWorkflow >> currentTasks: anObject [
 	currentTasks := anObject
 ]
 
+{ #category : #accessing }
+PtyWorkflow >> defaultTaskExecutionPriority [
+	^worker defaultTaskExecutionPriority
+]
+
+{ #category : #controlling }
+PtyWorkflow >> deferTask: aTask [
+
+	currentTasks add: aTask.
+	
+	^worker executeWorkflowStage: (PtyTaskDefermentStage for: aTask)
+]
+
+{ #category : #controlling }
+PtyWorkflow >> deliverResult: anObject of: aTask [
+	
+	worker executeWorkflowStage: (PtyTaskResultDeliveryStage for: aTask withResult: anObject)
+]
+
+{ #category : #controlling }
+PtyWorkflow >> executeTask: aTask [
+	
+	^worker executeWorkflowStage: (PtyTaskStartStage for: aTask)
+]
+
+{ #category : #accessing }
+PtyWorkflow >> findActiveWorkflowIfNone: noneBlock [
+	| found |
+	found := spawnedWorkflows detect: [ :each | each isActive ] ifNone: [ nil ].
+	found ifNotNil: [ ^found ].
+
+	spawnedWorkflows do: [ :each | 
+		found := each findActiveWorkflowIfNone: [nil].
+		found ifNotNil: [ ^found ]].
+	
+	^noneBlock value
+]
+
 { #category : #testing }
 PtyWorkflow >> includesTask: aTask [
 	^currentTasks includes: aTask
@@ -61,6 +105,12 @@ PtyWorkflow >> initialize [
 	
 	currentTasks := OrderedCollection new.
 	spawnedWorkflows := OrderedCollection new
+]
+
+{ #category : #testing }
+PtyWorkflow >> isActive [
+
+	^worker isActive and: [ worker servesWorkflow: self ]
 ]
 
 { #category : #testing }
@@ -112,10 +162,17 @@ PtyWorkflow >> removeTask: aTask [
 ]
 
 { #category : #controlling }
+PtyWorkflow >> retryTask: aTask [
+	
+	worker executeWorkflowStage: (PtyTaskRetryStage for: aTask)
+]
+
+{ #category : #controlling }
 PtyWorkflow >> spawnNew [
 	| newWorkflow |
 	newWorkflow := self class new.
 	newWorkflow parentWorkflow: self.
+	newWorkflow worker: worker.
 	spawnedWorkflows add: newWorkflow.
 	^newWorkflow
 ]
@@ -128,4 +185,14 @@ PtyWorkflow >> spawnedWorkflows [
 { #category : #accessing }
 PtyWorkflow >> spawnedWorkflows: anObject [
 	spawnedWorkflows := anObject
+]
+
+{ #category : #accessing }
+PtyWorkflow >> worker [
+	^ worker
+]
+
+{ #category : #accessing }
+PtyWorkflow >> worker: anObject [
+	worker := anObject
 ]

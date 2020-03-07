@@ -27,27 +27,27 @@ PtyComboBoxInputTask class >> field: aFieldModel at: aPoint [
 PtyComboBoxInputTask >> body [ 
 
 	| item active viewArea |
-	workplace restoreActiveArea.
-	active := workplace viewport activeViewArea.
-	viewArea := workplace viewArea.	
+	worker restoreActiveArea.
+	active := worker viewport activeViewArea.
+	viewArea := worker viewArea.	
 	
-	workplace doInPopUp: [
+	worker doInPopUp: [
 		item := user select: 'ListFieldItem' from: requisite type items.
 	] at: presenter comboListPosition.
 
-	workplace viewport 
+	worker viewport 
 		viewArea: viewArea;
 		activeViewArea: active.
 		
-	workplace requestUserWith: [workplace showViewArea.
+	worker requestUserWith: [worker showViewArea.
 			requisite value: item value
 		] andContinueWith: true.
 
-	workplace taskNavigator forgetTask: self.
+	worker taskNavigator forgetTask: self.
 		
 	user lookAt: [
-		workplace restoreContext: context.
-		workplace showViewArea].
+		worker restoreContext: context.
+		worker showViewArea].
 	
 	
 ]

@@ -10,7 +10,7 @@ Class {
 }
 
 { #category : #'instance creation' }
-PtyWorker class >> atWorkplace: aWorkplace [
+PtyWorker class >> inWorkplace: aWorkplace [
 
 	^self new 
 		workplace: aWorkplace
@@ -45,32 +45,17 @@ PtyWorker >> continueWithTask: aTask using: initialTaskExecutionStage [
 	^result
 ]
 
-{ #category : #'task execution' }
-PtyWorker >> deferTask: aTask [
-
-	aTask beActiveInWorkflow.
-	
-	self isActive ifTrue: [ 
-		^self continueWithTask: aTask using: (PtyTaskDefermentStage of: aTask)].
-	
-	^PtyTaskExecutionFutureResult of: aTask
+{ #category : #accessing }
+PtyWorker >> defaultTaskExecutionPriority [
+	^workplace defaultTaskExecutionPriority
 ]
 
 { #category : #'task execution' }
-PtyWorker >> deliverResult: anObject of: aTask [
-
-	self isActive ifTrue: [ ^aTask jumpToResultDeliveryStageWith: anObject ].
+PtyWorker >> executeWorkflowStage: aWorkflowStage [
 	
-	self startWithTask: (PtyDeliverResultTask result: anObject from: aTask)
-]
-
-{ #category : #'task execution' }
-PtyWorker >> executeTask: aTask [
-	
-	self isActive ifTrue: [ ^self continueWithTask: aTask].
-	
-	self startWithTask: aTask.
-	^PtyTaskExecutionFutureResult of: aTask
+	^self isActive 
+		ifTrue: [ aWorkflowStage startInActiveWorkflowBy: self]
+		ifFalse: [ aWorkflowStage startInInactiveWorkflowBy: self]
 ]
 
 { #category : #testing }
@@ -94,14 +79,6 @@ PtyWorker >> process: anObject [
 	process := anObject
 ]
 
-{ #category : #'task execution' }
-PtyWorker >> retryTask: aTask [
-
-	self isActive ifTrue: [ ^aTask jumpToRetryStage].
-	
-	self startWithTask: (PtyRetryTask for: aTask)
-]
-
 { #category : #controlling }
 PtyWorker >> runInitialTask: aTask [
 
@@ -113,6 +90,11 @@ PtyWorker >> runInitialTask: aTask [
 			request executeBy: self].
 	
 	self waitUserAction
+]
+
+{ #category : #testing }
+PtyWorker >> servesWorkflow: aWorkflow [
+	^activeTask notNil and: [activeTask workflow = aWorkflow]
 ]
 
 { #category : #controlling }

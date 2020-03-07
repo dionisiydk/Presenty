@@ -14,8 +14,7 @@ Class {
 		'parentTask',
 		'initialWorkflow',
 		'workflow',
-		'continuation',
-		'workplace'
+		'continuation'
 	],
 	#category : #'Presenty-Core'
 }
@@ -87,6 +86,12 @@ PtyTask >> asTask [
 { #category : #converting }
 PtyTask >> asUserAction [
 	^PtyActivateTask task: self
+]
+
+{ #category : #controlling }
+PtyTask >> assignToActiveWorkflowIn: aWorkplace [
+	workflow := aWorkplace findActiveWorkflowOrCreateNewOne.
+	parentTask := workflow activeTask
 ]
 
 { #category : #accessing }
@@ -185,7 +190,7 @@ PtyTask >> currentExecutionStageStartedWith: initialExecutionStage [
 
 { #category : #accessing }
 PtyTask >> currentWorker [
-	^workplace findWorkerExecutingCurrentTask
+	^workflow worker
 ]
 
 { #category : #accessing }
@@ -199,7 +204,7 @@ PtyTask >> defaultActivationStrategy [
 
 { #category : #accessing }
 PtyTask >> defaultExecutionPriority [
-	^ workplace defaultTaskExecutionPriority
+	^workflow defaultTaskExecutionPriority
 ]
 
 { #category : #'initialize-release' }
@@ -227,7 +232,7 @@ PtyTask >> deliverResult: anObject [
 
 	continuation ifNil: [ ^self error: 'No continuation for return!' ].
 	
-	self currentWorker deliverResult: anObject of: self
+	workflow deliverResult: anObject of: self
 ]
 
 { #category : #accessing }
@@ -266,12 +271,12 @@ PtyTask >> findCommonParentWith: aTask [
 
 { #category : #accessing }
 PtyTask >> guide [
-	^ workplace
+	^ worker
 ]
 
 { #category : #accessing }
 PtyTask >> guide: anObject [
-	workplace := anObject
+	worker := anObject
 ]
 
 { #category : #testing }
@@ -325,7 +330,7 @@ PtyTask >> isChildrenShouldRestoreParentArea [
 { #category : #testing }
 PtyTask >> isCreatedByCurrentRequest [
 
-	^workplace isCurrentRequestIncludesTask: self
+	^worker isCurrentRequestIncludesTask: self
 ]
 
 { #category : #testing }
@@ -364,21 +369,15 @@ PtyTask >> isSimilarTo: aTask [
 ]
 
 { #category : #controlling }
-PtyTask >> jumpToExecutionStage: aTaskExecutionStage [ 
+PtyTask >> jumpToExecutionStage: aWorkflowStage [ 
 	
-	continuation value: aTaskExecutionStage 
+	continuation value: aWorkflowStage 
 ]
 
 { #category : #controlling }
 PtyTask >> jumpToResultDeliveryStageWith: resultObject [ 
 	
 	self jumpToExecutionStage: (PtyTaskResultDeliveryStage of: self withResult: resultObject)
-]
-
-{ #category : #controlling }
-PtyTask >> jumpToRetryStage [
-	
-	self jumpToExecutionStage: (PtyTaskRetryStage of: self)
 ]
 
 { #category : #accessing }
@@ -413,8 +412,7 @@ PtyTask >> parentTask [
 
 { #category : #accessing }
 PtyTask >> parentTask: aTask [
-	parentTask := aTask.
-	workflow := aTask workflow
+	parentTask := aTask
 ]
 
 { #category : #controlling }
@@ -447,7 +445,7 @@ PtyTask >> populateSettingsMenu: aMenu for: aPrototype [
 PtyTask >> prepareActivationBy: aGuide [
 
 	| newActivation |
-	workplace := aGuide.
+	worker := aGuide.
 	user := aGuide user.
 	context := aGuide context.
 	
@@ -532,7 +530,7 @@ PtyTask >> requestExecution [
 
 	initialWorkflow := workflow captureStateForNewTask.
 	
-	^executionStrategy requestExecutionOf: self using: self currentWorker
+	^executionStrategy requestExecutionOf: self in: workflow
 ]
 
 { #category : #execution }
@@ -540,7 +538,7 @@ PtyTask >> retryExecution [
 
 	continuation ifNil: [ ^self error: 'No continuation for retry!' ].
 	
-	self currentWorker retryTask: self
+	workflow retryTask: self
 ]
 
 { #category : #accessing }
@@ -634,14 +632,4 @@ PtyTask >> workflowActivationStrategy [
 { #category : #accessing }
 PtyTask >> workflowActivationStrategy: anObject [
 	workflowActivationStrategy := anObject
-]
-
-{ #category : #accessing }
-PtyTask >> workplace [
-	^ workplace
-]
-
-{ #category : #accessing }
-PtyTask >> workplace: anObject [
-	workplace := anObject
 ]

@@ -5,7 +5,7 @@ Class {
 }
 
 { #category : #'task execution' }
-PtyDeferredExecutionStrategy >> requestExecutionOf: aTask using: aWorker [
+PtyDeferredExecutionStrategy >> requestExecutionOf: aTask in: aWorkflow [
 
-	^aWorker deferTask: aTask
+	^aWorkflow deferTask: aTask
 ]

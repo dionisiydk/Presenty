@@ -11,12 +11,12 @@ Class {
 { #category : #execution }
 PtyExecuteBlockWithProgressTask >> body [
 
-	workplace addCancelAction.
+	worker addCancelAction.
 	
 	warning := PtyPresentersDecorator named: 'WaitingWarning'.
 	
 	user lookAt: warning and: [
-		workplace executeTask: (PtyReturnValueFromPresenterTask from: warning)].
+		worker executeTask: (PtyReturnValueFromPresenterTask from: warning)].
 
 	executionProcess := block newProcess.
 	executionProcess
@@ -52,10 +52,10 @@ PtyExecuteBlockWithProgressTask >> showProgressInfo [
 	
 	info := progressContext progressInfo.
 	presenter := info preferredPreviewPresenter.
-	workplace runInUI: [
-		presenter context: workplace context.
-		workplace preparePresenter: presenter.
-		(workplace context viewAreaActivator baseArea view panelNamed: 'body') 
+	worker runInUI: [
+		presenter context: worker context.
+		worker preparePresenter: presenter.
+		(worker context viewAreaActivator baseArea view panelNamed: 'body') 
 			clear;
 			add: presenter view.	
 	]

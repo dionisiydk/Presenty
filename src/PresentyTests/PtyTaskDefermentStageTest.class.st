@@ -1,16 +1,16 @@
 Class {
 	#name : #PtyTaskDefermentStageTest,
-	#superclass : #PtyTaskExecutionStageTestCase,
+	#superclass : #PtyWorkflowContinuationStageTestCase,
 	#category : #'PresentyTests-NewCore'
 }
 
 { #category : #running }
-PtyTaskDefermentStageTest >> createExecutionStage [
-	^PtyTaskDefermentStage of: task
+PtyTaskDefermentStageTest >> createWorkflowStage [
+	^PtyTaskDefermentStage for: task
 ]
 
 { #category : #tests }
 PtyTaskDefermentStageTest >> testContinueExecution [
 
-	[executionStage continueExecution] should raise: PtyUserRequest
+	[workflowStage continueExecution] should raise: PtyUserRequest
 ]

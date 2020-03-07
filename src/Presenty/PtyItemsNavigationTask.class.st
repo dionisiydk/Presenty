@@ -12,7 +12,7 @@ Class {
 { #category : #execution }
 PtyItemsNavigationTask >> body [
 
-	workplace addTask: [ | item |
+	worker addTask: [ | item |
 
 		item := user lookAtList: items of: itemsName.
 
@@ -63,14 +63,14 @@ PtyItemsNavigationTask >> populateSettingsMenu: aMenu for: aPrototype [
 { #category : #execution }
 PtyItemsNavigationTask >> selectItem: anObject [
 
-	listTask ifNil: [listTask := workplace findCurrentTaskLike: PtyShowListTask].
+	listTask ifNil: [listTask := worker findCurrentTaskLike: PtyShowListTask].
 
 	listTask isNil | items isEmpty ifTrue: [^user lookAtViewArea].
 	
-	(needsFirstSelection not and: [workplace isCurrentRequestIncludesTask: self])
+	(needsFirstSelection not and: [worker isCurrentRequestIncludesTask: self])
 		ifTrue: [^user lookAtViewArea].
 		
-	workplace addUIAction: [
+	worker addUIAction: [
 		selectedItem ifNotNil: [listTask deselectItem: selectedItem].
 		selectedItem := anObject.
 		listTask selectItem: selectedItem		

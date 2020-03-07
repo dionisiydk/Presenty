@@ -23,11 +23,11 @@ PtySearchItemTask >> body [
 	searchField becomeActive.
 	searchField on: PtyValueChanged send: #filterItems to: self.
 		
-	editTask := searchField createEditorBy: workplace.
+	editTask := searchField createEditorBy: worker.
 	
-	workplace addTask: [workplace requestUserFor: editTask] named: 'InputFilterString'.	
+	worker addTask: [worker requestUserFor: editTask] named: 'InputFilterString'.	
 	
-	onlyEditorViewArea := workplace viewArea.
+	onlyEditorViewArea := worker viewArea.
 					
 	item := user select: itemsName from: items.
 	
@@ -38,10 +38,10 @@ PtySearchItemTask >> body [
 { #category : #execution }
 PtySearchItemTask >> filterItems [
 
-	workplace setUpContext: (editTask  parentLike: PtyForkTask) context.
-	workplace viewArea: onlyEditorViewArea.
+	worker setUpContext: (editTask  parentLike: PtyForkTask) context.
+	worker viewArea: onlyEditorViewArea.
 	
-	workplace executeTask: ([
+	worker executeTask: ([
 		self showFilteredItems	
 	] asTaskNamed: 'FilterItemsTask')
 ]

@@ -2,7 +2,8 @@ Class {
 	#name : #PtyWorkflowTest,
 	#superclass : #TestCase,
 	#instVars : [
-		'workflow'
+		'workflow',
+		'worker'
 	],
 	#category : #'PresentyTests-NewCore'
 }
@@ -11,7 +12,9 @@ Class {
 PtyWorkflowTest >> setUp [
 	super setUp.
 	
-	workflow := PtyWorkflow new
+	worker := Mock new.
+	workflow := PtyWorkflow new.
+	workflow worker: worker
 ]
 
 { #category : #tests }
@@ -121,6 +124,22 @@ PtyWorkflowTest >> testActivationWithGivenSpawnedWorkflowWhenNoParentExists [
 ]
 
 { #category : #tests }
+PtyWorkflowTest >> testActiveTask [ 
+
+	workflow worker: worker.
+	
+	workflow activeTask should beReturnedFrom: [ worker activeTask ]
+]
+
+{ #category : #tests }
+PtyWorkflowTest >> testActiveTaskWhenThereIsNoWorker [ 
+
+	workflow worker: nil.
+	
+	workflow activeTask should be: nil
+]
+
+{ #category : #tests }
 PtyWorkflowTest >> testAllCurrentTasksShouldIncludeSpawnedWorkflows [
 	
 	| spawned1 spawned2 |
@@ -166,6 +185,100 @@ PtyWorkflowTest >> testCaptureStateForNewTaskShouldCopySpawnedWorkflowsList [
 ]
 
 { #category : #tests }
+PtyWorkflowTest >> testDefaultTaskExecutionPriority [
+
+	| result worker |
+	worker := Mock new.
+	workflow worker: worker.
+	
+	result := workflow defaultTaskExecutionPriority.
+	
+	result should beReturnedFrom: [ worker defaultTaskExecutionPriority]
+]
+
+{ #category : #tests }
+PtyWorkflowTest >> testDeferingTaskShouldExecuteDeferingWorkflowStage [
+
+	| result |
+	(worker stub executeWorkflowStage: Arg stage) willReturn: #result.
+	
+	result := workflow deferTask: #task.
+	
+	result should be: #result.
+	Arg stage should beInstanceOf: PtyTaskDefermentStage.
+	Arg stage where task should be: #task
+]
+
+{ #category : #tests }
+PtyWorkflowTest >> testDeferingTaskShouldRegisterItInCurrentTasks [
+
+	workflow deferTask: #task.
+	
+	workflow currentTasks should include: #task
+]
+
+{ #category : #tests }
+PtyWorkflowTest >> testDeliveringTaskResult [
+
+	| result |
+	worker stub executeWorkflowStage: Arg stage.
+	
+	result := workflow deliverResult: #result of: #task.
+	
+	Arg stage should beInstanceOf: PtyTaskResultDeliveryStage.
+	Arg stage where task should be: #task
+]
+
+{ #category : #tests }
+PtyWorkflowTest >> testFindActiveWorkflowWhenNoneExists [ 
+
+	| result |
+	workflow spawnedWorkflows: #().
+	
+	result := workflow findActiveWorkflowIfNone: [#none].
+	
+	result should be: #none
+]
+
+{ #category : #tests }
+PtyWorkflowTest >> testFindActiveWorkflowWhenThereIsActiveSpawnedWorkflow [ 
+
+	| result childWorkflow |
+	childWorkflow := workflow spawnNew.
+	childWorkflow stub isActive willReturn: true.
+	
+	result := workflow findActiveWorkflowIfNone: [#none].
+		
+	result should be: childWorkflow
+]
+
+{ #category : #tests }
+PtyWorkflowTest >> testFindActiveWorkflowWhenThereIsSpawnedWorkflowWhichFoundAnActiveOne [
+
+	| result childWorkflow |
+	childWorkflow := workflow spawnNew.
+	childWorkflow stub isActive willReturn: false.
+	(childWorkflow stub findActiveWorkflowIfNone: Any) willReturn: #activeWorkflow.
+	
+	result := workflow findActiveWorkflowIfNone: [#none].
+		
+	result should be: #activeWorkflow
+]
+
+{ #category : #tests }
+PtyWorkflowTest >> testFindActiveWorkflowWhenThereNoSpawnedIsActive [
+
+	| result childWorkflow |
+	childWorkflow := workflow spawnNew.
+	childWorkflow stub isActive willReturn: false.
+	(childWorkflow stub findActiveWorkflowIfNone: Any) will: [:noneBlock | noneBlock value].
+	
+	result := workflow findActiveWorkflowIfNone: [#none].
+		
+	result should be: #none
+]
+
+{ #category : #tests }
 PtyWorkflowTest >> testHasNoCurrentTasksByDefault [
 
 	workflow currentTasks should be isEmpty
@@ -185,6 +298,41 @@ PtyWorkflowTest >> testIncludesTask [
 	workflow registerNewTask: #existingTask.
 	
 	workflow should be includesTask: #existingTask.
+]
+
+{ #category : #tests }
+PtyWorkflowTest >> testIsActiveWhenWorkerIsActiveAndServesIt [
+
+	| worker |
+	worker := Mock new.
+	workflow worker: worker.
+	worker stub isActive willReturn: true.
+	(worker stub servesWorkflow: workflow) willReturn: true.
+	
+	workflow should be isActive.
+]
+
+{ #category : #tests }
+PtyWorkflowTest >> testIsNotActiveWhenWorkerIsActiveButDontServeIt [
+
+	| worker |
+	worker := Mock new.
+	workflow worker: worker.
+	worker stub isActive willReturn: true.
+	(worker stub servesWorkflow: workflow) willReturn: false.
+	
+	workflow should not be isActive.
+]
+
+{ #category : #tests }
+PtyWorkflowTest >> testIsNotActiveWhenWorkerIsNotActive [
+
+	| worker |
+	worker := Mock new.
+	workflow worker: worker.
+	worker stub isActive willReturn: false.
+
+	workflow should not be isActive.
 ]
 
 { #category : #tests }
@@ -244,15 +392,41 @@ PtyWorkflowTest >> testRemoveTask [
 ]
 
 { #category : #tests }
+PtyWorkflowTest >> testRetryingTask [
+
+	(worker stub executeWorkflowStage: Arg stage) willReturn: #result.
+	
+	workflow retryTask: #task.
+	
+	Arg stage should beInstanceOf: PtyTaskRetryStage.
+	Arg stage where task should be: #task
+]
+
+{ #category : #tests }
 PtyWorkflowTest >> testSpawnNewWorkflow [ 
 
 	| newWorkflow |
 	workflow registerNewTask: #existingTask.
+	workflow worker: #worker.
 	
 	newWorkflow := workflow spawnNew.
 	
 	newWorkflow parentWorkflow should be: workflow.
+	newWorkflow worker should be: #worker.
 	workflow spawnedWorkflows should include: newWorkflow.
 	newWorkflow currentTasks should be isEmpty.
 	newWorkflow currentTasks should not be: workflow currentTasks
+]
+
+{ #category : #tests }
+PtyWorkflowTest >> testTaskExecution [
+
+	| result |
+	(worker stub executeWorkflowStage: Arg stage) willReturn: #result.
+	
+	result := workflow executeTask: #task.
+	
+	result should be: #result.
+	Arg stage should beInstanceOf: PtyTaskStartStage.
+	Arg stage where task should be: #task
 ]

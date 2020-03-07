@@ -24,7 +24,7 @@ PtyEditRequisiteTask >> body [
 
 	self createInput.
 	
-	user execute: [workplace showViewArea. input focus].
+	user execute: [worker showViewArea. input focus].
 	
 	context resumeWith: nil.
 	
@@ -37,7 +37,7 @@ PtyEditRequisiteTask >> createInput [
 	input := PtyFieldEditorPresenter on: requisite.	
 	input on: PtyInputComplete, PtyInputSubmitted, PtyInputLeftRequested send: #announce: to: self.
 	input on: PtyValueChanged send: #valueChanged to: self.
-	workplace add: input toViewAreaOn: (name ifNil: ['editor']).	
+	worker add: input toViewAreaOn: (name ifNil: ['editor']).	
 	
 ]
 

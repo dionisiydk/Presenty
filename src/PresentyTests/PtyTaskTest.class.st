@@ -107,34 +107,32 @@ PtyTaskTest >> testCurrentExecutionStageShouldKeepActualContinuationInTask [
 { #category : #tests }
 PtyTaskTest >> testDefaultExecutionPriorityIsReturnedFromWorkplace [
 
-	| workplace |
-	workplace := Mock new.
-	task workplace: workplace.
+	| workflow |
+	workflow := Mock new.
+	task workflow: workflow.
 	
-	task executionPriority should beReturnedFrom: [ workplace defaultTaskExecutionPriority ]
+	task executionPriority should beReturnedFrom: [ workflow defaultTaskExecutionPriority ]
 ]
 
 { #category : #tests }
 PtyTaskTest >> testDeliveringResult [
 
-	| workplace worker |
-	worker := Mock new.
-	workplace := Mock new.
-	task workplace: workplace.
+	| workflow |
+	workflow := Mock new.
+	task workflow: workflow.
 	task continuation: #continuation.
-	workplace stub findWorkerExecutingCurrentTask willReturn: worker.
 		
 	task deliverResult: #taskResult.
 
-	worker should receive deliverResult: #taskResult of: task
+	workflow should receive deliverResult: #taskResult of: task
 ]
 
 { #category : #tests }
 PtyTaskTest >> testDeliveringResultWhenTaskWasNotStarted [
 
-	| workplace error |
-	workplace := Mock new.
-	task workplace: workplace.
+	| workflow error |
+	workflow := Mock new.
+	task workflow: workflow.
 	task continuation: nil.
 		
 	error := [task deliverResult: #taskResult] should fail.
@@ -237,35 +235,6 @@ PtyTaskTest >> testJumpToExecutionStage [
 ]
 
 { #category : #tests }
-PtyTaskTest >> testJumpToResultDeliveryStage [
-
-	| continuation |
-	continuation := Mock new.
-	task continuation: continuation.
-	continuation stub value: Arg executionStage.
-	
-	task jumpToResultDeliveryStageWith: #taskResult.
-
-	Arg executionStage should beInstanceOf: PtyTaskResultDeliveryStage.
-	Arg executionStage where task should be: task.
-	Arg executionStage where result should be: #taskResult.
-]
-
-{ #category : #tests }
-PtyTaskTest >> testJumpToRetryStage [
-
-	| continuation |
-	continuation := Mock new.
-	task continuation: continuation.
-	continuation stub value: Arg executionStage.
-	
-	task jumpToRetryStage.
-
-	Arg executionStage should beInstanceOf: PtyTaskRetryStage.
-	Arg executionStage where task should be: task
-]
-
-{ #category : #tests }
 PtyTaskTest >> testPrepareExecutionWorkflow [
 	
 	| workflowActivationStrategy |
@@ -294,57 +263,73 @@ PtyTaskTest >> testPrepareReturnWorkflow [
 { #category : #tests }
 PtyTaskTest >> testRequestExecution [
 
-	| executionStrategy result workplace |
+	| executionStrategy result workflow |
 	executionStrategy := Mock new.
-	workplace := Mock new.
-	task workplace: workplace; workflow: Mock new; executionStrategy: executionStrategy.
-	workplace stub findWorkerExecutingCurrentTask willReturn: #worker.
+	workflow := Mock new.
+	task workflow: workflow; executionStrategy: executionStrategy.
 
 	result := task requestExecution.
 
-	result should beReturnedFrom: [ executionStrategy requestExecutionOf: task using: #worker ]
+	result should beReturnedFrom: [ executionStrategy requestExecutionOf: task in: workflow]
 ]
 
 { #category : #tests }
 PtyTaskTest >> testRequestExecutionShouldCaptureInitialWorkflow [
-	| executionStrategy workflow workplace |
+	| executionStrategy workflow |
 	executionStrategy := Mock new.
 	workflow := Mock new.
-	workplace := Mock new.
-	task workflow: workflow; workplace: workplace; executionStrategy: executionStrategy.
+	task workflow: workflow; executionStrategy: executionStrategy.
 
 	task requestExecution.
 
 	task initialWorkflow should beReturnedFrom: [ workflow captureStateForNewTask ].
 	[ workflow captureStateForNewTask.
-	executionStrategy requestExecutionOf: Any using: Any ] should beDoneInOrder
+	executionStrategy requestExecutionOf: Any in: Any ] should beDoneInOrder
 ]
 
 { #category : #tests }
 PtyTaskTest >> testRetryExecution [
 
-	| workplace worker |
-	worker := Mock new.
-	workplace := Mock new.
-	task workplace: workplace.
+	| workflow |
+	workflow := Mock new.
+	task workflow: workflow.
 	task continuation: #continuation.
-	workplace stub findWorkerExecutingCurrentTask willReturn: worker.
 		
 	task retryExecution.
 
-	worker should receive retryTask: task
+	workflow should receive retryTask: task
 ]
 
 { #category : #tests }
 PtyTaskTest >> testRetryExecutionWhenTaskWasNotStarted [
 
-	| workplace error |
-	workplace := Mock new.
-	task workplace: workplace.
+	| workflow error |
+	workflow := Mock new.
+	task workflow: workflow.
 	task continuation: nil.
 		
 	error := [task retryExecution] should fail.
 	error where description should includeSubstring: 'No continuation'
+]
+
+{ #category : #tests }
+PtyTaskTest >> testSettingWorkerShouldUseActiveTaskAsParent [
+
+	| worker |
+	worker := Mock new.
+	task worker: worker.
+
+	task parentTask should beReturnedFrom: [ worker activeTask ]
+]
+
+{ #category : #tests }
+PtyTaskTest >> testSettingWorkerShouldUseItsCurrentWorkflow [
+
+	| worker |
+	worker := Mock new.
+	task worker: worker.
+
+	task workflow should beReturnedFrom: [ task parentTask workflow ]
 ]
 
 { #category : #tests }

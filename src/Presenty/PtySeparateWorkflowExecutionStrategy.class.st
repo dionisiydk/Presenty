@@ -24,7 +24,7 @@ PtySeparateWorkflowExecutionStrategy >> actualWorkflowExecutionStrategy: anObjec
 ]
 
 { #category : #'task execution' }
-PtySeparateWorkflowExecutionStrategy >> requestExecutionOf: aTask using: aWorker [
+PtySeparateWorkflowExecutionStrategy >> requestExecutionOf: aTask in: aWorkflow [
 	"The given task will be executed by actualWorkflowExecutionStrategy.
 	The first return from the task (as a simple result or UserRequest signal) should continue the parent task execution. This way the parent will be completed together with aTask.
 	But any subsequent returns from the task (using its continuation) should never return to the caller to ensure the separate workflow logic. So the UserRequest will be signalled to prevent parent execution. 
@@ -33,7 +33,7 @@ PtySeparateWorkflowExecutionStrategy >> requestExecutionOf: aTask using: aWorker
 	shouldContinueParentToCompleteSeparation := Array with: true.
 	aTask spawnWorkflow.	
 	^[ 
-		[actualWorkflowExecutionStrategy requestExecutionOf: aTask using: aWorker]
+		[actualWorkflowExecutionStrategy requestExecutionOf: aTask in: aWorkflow]
 			on: PtyUserRequest do: [ :exc | 
 				shouldContinueParentToCompleteSeparation first ifFalse: [exc pass] ].
 		shouldContinueParentToCompleteSeparation first 

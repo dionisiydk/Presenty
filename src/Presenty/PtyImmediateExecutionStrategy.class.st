@@ -5,7 +5,7 @@ Class {
 }
 
 { #category : #'task execution' }
-PtyImmediateExecutionStrategy >> requestExecutionOf: aTask using: aWorker [
+PtyImmediateExecutionStrategy >> requestExecutionOf: aTask in: aWorkflow [
 
-	^aWorker executeTask: aTask
+	^aWorkflow executeTask: aTask
 ]

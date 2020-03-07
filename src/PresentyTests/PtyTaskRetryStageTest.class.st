@@ -1,19 +1,19 @@
 Class {
 	#name : #PtyTaskRetryStageTest,
-	#superclass : #PtyTaskExecutionStageTestCase,
+	#superclass : #PtyWorkflowContinuationStageTestCase,
 	#category : #'PresentyTests-NewCore'
 }
 
 { #category : #running }
-PtyTaskRetryStageTest >> createExecutionStage [
-	^PtyTaskRetryStage of: task
+PtyTaskRetryStageTest >> createWorkflowStage [
+	^PtyTaskRetryStage for: task
 ]
 
 { #category : #tests }
 PtyTaskRetryStageTest >> testContinueExecution [
 
 	| result |
-	result := executionStage continueExecution.	
+	result := workflowStage continueExecution.	
 	
 	result should beReturnedFrom: [ task startExecution ]
 ]
@@ -21,7 +21,7 @@ PtyTaskRetryStageTest >> testContinueExecution [
 { #category : #tests }
 PtyTaskRetryStageTest >> testContinueExecutionShouldActivateInitialWorkflowFirst [
 
-	executionStage continueExecution.	
+	workflowStage continueExecution.	
 	
 	[task activateInitialWorkflow.
 	task startExecution] should beDoneInOrder 

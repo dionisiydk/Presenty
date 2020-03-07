@@ -42,7 +42,7 @@ PtySimpleShowListTask >> deselectItem: anObject [
 
 	i <= 0 ifTrue: [^self].
 	(itemPresenters at: i) view ifNil: [^self].
-	workplace show: (itemPresenters at: i) withStyle: #deselected
+	worker show: (itemPresenters at: i) withStyle: #deselected
 ]
 
 { #category : #execution }
@@ -75,7 +75,7 @@ PtySimpleShowListTask >> selectItem: anObject [
 
 	i <= 0 ifTrue: [^self].
 	(itemPresenters at: i) view ifNil: [^self].
-	workplace show: (itemPresenters at: i) withStyle: #selected
+	worker show: (itemPresenters at: i) withStyle: #selected
 ]
 
 { #category : #execution }

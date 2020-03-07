@@ -1,6 +1,6 @@
 Class {
 	#name : #PtyTaskDefermentStage,
-	#superclass : #PtyTaskExecutionStage,
+	#superclass : #PtyWorkflowContinuationStage,
 	#category : #'Presenty-NewCore'
 }
 

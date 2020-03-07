@@ -16,18 +16,18 @@ PtyForkTask >> allowChangeParentViewAreaState [
 { #category : #execution }
 PtyForkTask >> body [
 	| forkActivation result |
-	forkActivation := workplace context activation.
+	forkActivation := worker context activation.
 	self haltIf: [forkActivation parentViewArea isNil].
 
 	[
-		[^workplace requestUserFor: targetTask] on: PtyUserRequest	do: [ :request | 
-			(workplace isCurrentRequestIncludesTask: self)	ifFalse: [ request pass ] ].
+		[^worker requestUserFor: targetTask] on: PtyUserRequest	do: [ :request | 
+			(worker isCurrentRequestIncludesTask: self)	ifFalse: [ request pass ] ].
 	] ensure: [
-		(workplace isCurrentRequestIncludesTask: self)	ifTrue: [
-			workplace viewArea name: 'ForkedArea'.
+		(worker isCurrentRequestIncludesTask: self)	ifTrue: [
+			worker viewArea name: 'ForkedArea'.
 			forkActivation embedCurrentAreaToParentOn: forkAreaPanelName.
 			forkActivation shareParentAreaWithCurrentRequests.
-			workplace viewArea: forkActivation parentViewArea]
+			worker viewArea: forkActivation parentViewArea]
 	]
 ]
 

@@ -5,7 +5,7 @@ Class {
 }
 
 { #category : #'task execution' }
-PtyTaskExecutionStrategy >> requestExecutionOf: aTask using: aWorker [
+PtyTaskExecutionStrategy >> requestExecutionOf: aTask in: aWorkflow [
 
 	self subclassResponsibility 
 ]

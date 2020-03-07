@@ -11,14 +11,14 @@ Class {
 { #category : #body }
 PtyItemsRequestTask >> activateItemSearch [
 	
-	workplace executeTask: ((PtySearchItemTask forItems: items of: itemsName)
+	worker executeTask: ((PtySearchItemTask forItems: items of: itemsName)
 							 asModalTaskFor: context)
 ]
 
 { #category : #body }
 PtyItemsRequestTask >> addSearchButton [ 
 
-	workplace addUserAction: (PtySearchItemTask forItems: items of: itemsName).
+	worker addUserAction: (PtySearchItemTask forItems: items of: itemsName).
 	
 ]
 
@@ -35,7 +35,7 @@ PtyItemsRequestTask >> body [
 
 	listTask := (PtyItemsSelectionTask forItems: items of: itemsName).
 
-	item := workplace requestUserFor: listTask.
+	item := worker requestUserFor: listTask.
 	
 	^item.
 	

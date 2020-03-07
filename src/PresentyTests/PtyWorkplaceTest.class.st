@@ -14,42 +14,29 @@ PtyWorkplaceTest >> testCurrentTasksShouldIncludeAllTasksFromCurrentWorkflow [
 ]
 
 { #category : #tests }
-PtyWorkplaceTest >> testFindWorkerExecutingCurrentTaskWhenActiveWorkerExists [
+PtyWorkplaceTest >> testFindActiveWorkflow [
 
-	| foundWorker activeWorker |
-	activeWorker := Mock new.
-	activeWorker stub isActive willReturn: true.
-	workplace registerWorker: activeWorker.
+	| mainWorkflow foundWorkflow |
+	mainWorkflow := Mock new.
+	workplace currentWorkflow: mainWorkflow.
 	
-	foundWorker := workplace findWorkerExecutingCurrentTask.
+	foundWorkflow := workplace findActiveWorkflowOrCreateNewOne.
 	
-	foundWorker should be: activeWorker
+	foundWorkflow should beReturnedFrom: [ mainWorkflow findActiveWorkflowIfNone: Any ]
 ]
 
 { #category : #tests }
-PtyWorkplaceTest >> testFindWorkerExecutingCurrentTaskWhenNoActiveWorkersExist [
+PtyWorkplaceTest >> testFindActiveWorkflowWhenItDoesNotExist [
 
-	| foundWorker existingWorker |
-	existingWorker := Mock new.
-	existingWorker stub isActive willReturn: false.
-	workplace registerWorker: existingWorker.
+	| mainWorkflow foundWorkflow |
+	mainWorkflow := Mock new.
+	workplace currentWorkflow: mainWorkflow.
+	(mainWorkflow stub findActiveWorkflowIfNone: Any) will: [ :noneBlock | noneBlock value ].
 	
-	foundWorker := workplace findWorkerExecutingCurrentTask.
+	foundWorkflow := workplace findActiveWorkflowOrCreateNewOne.
 	
-	workplace workers should not include: foundWorker.
-	foundWorker should beInstanceOf: PtyWorker.
-	foundWorker workplace should be: workplace
-]
-
-{ #category : #tests }
-PtyWorkplaceTest >> testFindWorkerExecutingCurrentTaskWhenNoWorkersExist [
-
-	| foundWorker |
-	foundWorker := workplace findWorkerExecutingCurrentTask.
-	
-	workplace workers should not include: foundWorker.
-	foundWorker should beInstanceOf: PtyWorker.
-	foundWorker workplace should be: workplace
+	foundWorkflow should beReturnedFrom: [ mainWorkflow spawnNew ].
+	foundWorkflow should receive worker: [ :worker | worker workplace = workplace ]
 ]
 
 { #category : #tests }
@@ -123,7 +110,7 @@ PtyWorkplaceTest >> testPlanningTaskExecutionShouldSpawnNewWorkflowForIt [
 PtyWorkplaceTest >> testRegisteringNewWorker [
 
 	| worker |
-	worker := PtyWorker atWorkplace: workplace.
+	worker := PtyWorker inWorkplace: workplace.
 	
 	workplace registerWorker: worker.
 	
@@ -134,7 +121,7 @@ PtyWorkplaceTest >> testRegisteringNewWorker [
 PtyWorkplaceTest >> testRegisteringSameWorkerTwice [
 
 	| worker |
-	worker := PtyWorker atWorkplace: workplace.
+	worker := PtyWorker inWorkplace: workplace.
 	
 	workplace registerWorker: worker.
 	workplace registerWorker: worker.

@@ -26,7 +26,7 @@ PtyEditRequisiteNewTask class >> for: aDataField [
 PtyEditRequisiteNewTask >> body [ 
 
 	user lookAt: [
-		workplace showViewArea.
+		worker showViewArea.
 		presenter focusSilently]
 ]
 

@@ -21,10 +21,10 @@ PtyUserRequestTask >> action: anObject [
 { #category : #execution }
 PtyUserRequestTask >> body [
 
-	presenter ifNotNil: [workplace addViewAreaBody: presenter].
-	action ifNotNil: [workplace addUIAction: action].
+	presenter ifNotNil: [worker addViewAreaBody: presenter].
+	action ifNotNil: [worker addUIAction: action].
 	
-	workplace performUserRequest
+	worker performUserRequest
 ]
 
 { #category : #accessing }

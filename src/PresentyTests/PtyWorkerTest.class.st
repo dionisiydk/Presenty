@@ -13,7 +13,7 @@ PtyWorkerTest >> setUp [
 	super setUp.
 	
 	workplace := Mock new.
-	worker := PtyWorker atWorkplace: workplace.
+	worker := PtyWorker inWorkplace: workplace.
 	task := Mock new.
 	task stub executionPriority willReturn: Processor activePriority + 1
 ]
@@ -71,51 +71,29 @@ PtyWorkerTest >> testContinueWithTaskUsingGivenExecutionStage [
 ]
 
 { #category : #tests }
-PtyWorkerTest >> testDeferingTaskWhenWorkerIsAlreadyActive [
-	worker stub isActive willReturn: true.
-	worker stub continueWithTask: task using: Arg initialStage.
-
-	worker deferTask: task.
-	
-	Arg initialStage should beInstanceOf: PtyTaskDefermentStage.
-	Arg initialStage where task should be: task.
-	task should receive beActiveInWorkflow
-]
-
-{ #category : #tests }
-PtyWorkerTest >> testDeferingTaskWhenWorkerIsNotActiveYet [
+PtyWorkerTest >> testDefaultTaskExecutionPriority [
 
 	| result |
-	worker stub isActive willReturn: false.
-
-	result := worker deferTask: task.
-
-	result should beInstanceOf: PtyTaskExecutionFutureResult.
-	result task should be: task.	
-	task should receive beActiveInWorkflow
+	result := worker defaultTaskExecutionPriority.
+	
+	result should beReturnedFrom: [ workplace defaultTaskExecutionPriority]
 ]
 
 { #category : #tests }
-PtyWorkerTest >> testDeliveringTaskResultWhenWorkerIsAlreadyActive [
-
-	worker stub isActive willReturn: true.
-
-	worker deliverResult: #taskResult of: task.
-	
-	task should receive jumpToResultDeliveryStageWith: #taskResult
+PtyWorkerTest >> testDoesNotServeWorkflowDifferentThanActiveTask [
+		
+	worker activeTask: task.
+	task stub workflow willReturn: #anotherWorkflow. 
+		
+	worker should not be servesWorkflow: #workflow
 ]
 
 { #category : #tests }
-PtyWorkerTest >> testDeliveringTaskResultWhenWorkerIsNotActiveYet [
-
-	worker stub isActive willReturn: false.
-	(worker stub startWithTask: Arg task) willReturnYourself. 
-	
-	worker deliverResult: #taskResult of: task.
-	
-	Arg task should beInstanceOf: PtyDeliverResultTask.
-	Arg task where executingTask should be: task.
-	Arg task where result should be: #taskResult
+PtyWorkerTest >> testDoesNotServeWorkflowWhenNoActiveTask [
+		
+	worker activeTask should be: nil.
+		
+	worker should not be servesWorkflow: #workflow
 ]
 
 { #category : #tests }
@@ -200,25 +178,12 @@ PtyWorkerTest >> testNotifyingUserAboutError [
 ]
 
 { #category : #tests }
-PtyWorkerTest >> testRetryingTaskWhenWorkerIsAlreadyActive [
-
-	worker stub isActive willReturn: true.
-
-	worker retryTask: task.
-	
-	task should receive jumpToRetryStage
-]
-
-{ #category : #tests }
-PtyWorkerTest >> testRetryingTaskWhenWorkerIsNotActiveYet [
-
-	worker stub isActive willReturn: false.
-	(worker stub startWithTask: Arg task) willReturnYourself. 
-	
-	worker retryTask: task.
-	
-	Arg task should beInstanceOf: PtyRetryTask.
-	Arg task where executingTask should be: task
+PtyWorkerTest >> testServesWorkflowOfActiveTask [
+		
+	worker activeTask: task.
+	task stub workflow willReturn: #workflow. 
+		
+	worker should be servesWorkflow: #workflow
 ]
 
 { #category : #tests }
@@ -271,26 +236,25 @@ PtyWorkerTest >> testStoppingTaskWhenNoProcess [
 ]
 
 { #category : #tests }
-PtyWorkerTest >> testTaskExecutionWhenWorkerIsAlreadyActive [
+PtyWorkerTest >> testWorkflowStageExecutionWhenWorkerIsActive [
 
-	| result |
+	| result stage |
 	worker stub isActive willReturn: true.
+	stage := Mock new.
 	
-	result := worker executeTask: task.
+	result := worker executeWorkflowStage: stage.
 	
-	result should beReturnedFrom: [ worker continueWithTask: task]
+	result should beReturnedFrom: [ stage startInActiveWorkflowBy: worker]
 ]
 
 { #category : #tests }
-PtyWorkerTest >> testTaskExecutionWhenWorkerIsNotActiveYet [
+PtyWorkerTest >> testWorkflowStageExecutionWhenWorkerIsNotActive [
 
-	| result |
+	| result stage |
 	worker stub isActive willReturn: false.
-
-	result := worker executeTask: task.
+	stage := Mock new.
 	
-	result should beInstanceOf: PtyTaskExecutionFutureResult.
-	result task should be: task.
-	worker should receive startWithTask: task
+	result := worker executeWorkflowStage: stage.
 	
+	result should beReturnedFrom: [ stage startInInactiveWorkflowBy: worker]
 ]

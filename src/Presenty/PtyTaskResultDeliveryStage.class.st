@@ -1,6 +1,6 @@
 Class {
 	#name : #PtyTaskResultDeliveryStage,
-	#superclass : #PtyTaskExecutionStage,
+	#superclass : #PtyWorkflowContinuationStage,
 	#instVars : [
 		'result'
 	],
@@ -8,8 +8,8 @@ Class {
 }
 
 { #category : #accessing }
-PtyTaskResultDeliveryStage class >> of: aTask withResult: anObject [
-	^(self of: aTask)
+PtyTaskResultDeliveryStage class >> for: aTask withResult: anObject [
+	^(self for: aTask)
 		result: anObject
 ]
 

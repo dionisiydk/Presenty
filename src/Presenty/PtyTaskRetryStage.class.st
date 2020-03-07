@@ -1,6 +1,6 @@
 Class {
 	#name : #PtyTaskRetryStage,
-	#superclass : #PtyTaskExecutionStage,
+	#superclass : #PtyWorkflowContinuationStage,
 	#category : #'Presenty-NewCore'
 }
 
