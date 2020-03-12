@@ -18,7 +18,7 @@ PtyTaskStartStage >> startInActiveWorkflowBy: aWorker [
 { #category : #execution }
 PtyTaskStartStage >> startInInactiveWorkflowBy: aWorker [
 
-	aWorker startWithTask: task using: self.
+	aWorker startWorkflowWithTask: task usingStartStage: self.
 	
 	^PtyTaskExecutionFutureResult of: task
 ]

@@ -35,5 +35,5 @@ PtyTaskStartStageTest >> testStartingInInactiveWorkflow [
 	
 	result should beInstanceOf: PtyTaskExecutionFutureResult.
 	result task be: task.
-	worker should receive startWithTask: task using: workflowStage
+	worker should receive startWorkflowWithTask: task usingStartStage: workflowStage
 ]

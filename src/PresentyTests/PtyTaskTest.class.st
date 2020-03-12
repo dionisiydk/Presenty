@@ -223,13 +223,13 @@ PtyTaskTest >> testIsOneShotByDefault [
 ]
 
 { #category : #tests }
-PtyTaskTest >> testJumpToExecutionStage [
+PtyTaskTest >> testJumpToWorkflowStage [
 
 	| continuation |
 	continuation := Mock new.
 	task continuation: continuation.
 	
-	task jumpToExecutionStage: #executionStage.
+	task jumpToWorkflowStage: #executionStage.
 
 	continuation should receiver value: #executionStage
 ]

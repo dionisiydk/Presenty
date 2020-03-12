@@ -12,7 +12,7 @@ PtyWorkflowContinuationStage class >> isAbstract [
 { #category : #execution }
 PtyWorkflowContinuationStage >> startInActiveWorkflowBy: aWorker [
 
-	^task jumpToExecutionStage: self
+	task jumpToWorkflowStage: self
 ]
 
 { #category : #execution }

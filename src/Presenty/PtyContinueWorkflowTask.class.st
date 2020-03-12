@@ -17,7 +17,7 @@ PtyContinueWorkflowTask class >> for: aTask with: aWorkflowContinuationStage [
 
 { #category : #execution }
 PtyContinueWorkflowTask >> body [
-	startingTask jumpToExecutionStage: continuationStage
+	startingTask jumpToWorkflowStage: continuationStage
 ]
 
 { #category : #accessing }

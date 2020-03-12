@@ -369,15 +369,9 @@ PtyTask >> isSimilarTo: aTask [
 ]
 
 { #category : #controlling }
-PtyTask >> jumpToExecutionStage: aWorkflowStage [ 
+PtyTask >> jumpToWorkflowStage: aWorkflowContinuationStage [ 
 	
-	continuation value: aWorkflowStage 
-]
-
-{ #category : #controlling }
-PtyTask >> jumpToResultDeliveryStageWith: resultObject [ 
-	
-	self jumpToExecutionStage: (PtyTaskResultDeliveryStage of: self withResult: resultObject)
+	continuation value: aWorkflowContinuationStage 
 ]
 
 { #category : #accessing }

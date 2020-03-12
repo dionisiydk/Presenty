@@ -12,10 +12,9 @@ PtyWorkflowContinuationStageTestCase class >> isAbstract [
 { #category : #tests }
 PtyWorkflowContinuationStageTestCase >> testStartingInActiveWorkflow [
 
-	| result |
-	result := workflowStage startInActiveWorkflowBy: worker.	
+	workflowStage startInActiveWorkflowBy: worker.	
 	
-	result should beReturnedFrom: [ task jumpToExecutionStage: workflowStage ]
+	task should receive jumpToWorkflowStage: workflowStage
 ]
 
 { #category : #tests }
