@@ -24,7 +24,8 @@ PtyTaskStartStageTest >> testStartingInActiveWorkflow [
 	| result |
 	result := workflowStage startInActiveWorkflowBy: worker.	
 	
-	result should beReturnedFrom: [ worker continueWorkflowWithTask: task usingStartStage: workflowStage ]
+	result should beReturnedFrom: [ 
+		worker continueWorkflowWithTask: task usingStartStage: workflowStage ]
 ]
 
 { #category : #tests }

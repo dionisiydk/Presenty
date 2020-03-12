@@ -1,6 +1,6 @@
 Class {
 	#name : #PtyTaskDefermentStageTest,
-	#superclass : #PtyWorkflowContinuationStageTestCase,
+	#superclass : #PtyWorkflowStageTestCase,
 	#category : #'PresentyTests-NewCore'
 }
 
@@ -13,4 +13,20 @@ PtyTaskDefermentStageTest >> createWorkflowStage [
 PtyTaskDefermentStageTest >> testContinueWorkflow [
 
 	[workflowStage continueWorkflow] should raise: PtyUserRequest
+]
+
+{ #category : #tests }
+PtyTaskDefermentStageTest >> testStartingInActiveWorkflow [
+
+	| result |
+	result := workflowStage startInActiveWorkflowBy: worker.	
+	
+	result should beReturnedFrom: [ 
+		worker continueWorkflowWithTask: task usingStartStage: workflowStage ]
+]
+
+{ #category : #tests }
+PtyTaskDefermentStageTest >> testStartingInInactiveWorkflowShouldDoNothing [
+
+	workflowStage startInInactiveWorkflowBy: nil
 ]
