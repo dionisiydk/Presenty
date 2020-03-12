@@ -230,6 +230,19 @@ PtyWorkflowTest >> testDeliveringTaskResult [
 ]
 
 { #category : #tests }
+PtyWorkflowTest >> testExecutingTask [
+
+	| result |
+	(worker stub executeWorkflowStage: Arg stage) willReturn: #result.
+	
+	result := workflow executeTask: #task.
+	
+	result should be: #result.
+	Arg stage should beInstanceOf: PtyTaskStartStage.
+	Arg stage where task should be: #task
+]
+
+{ #category : #tests }
 PtyWorkflowTest >> testFindActiveWorkflowWhenNoneExists [ 
 
 	| result |
@@ -416,17 +429,4 @@ PtyWorkflowTest >> testSpawnNewWorkflow [
 	workflow spawnedWorkflows should include: newWorkflow.
 	newWorkflow currentTasks should be isEmpty.
 	newWorkflow currentTasks should not be: workflow currentTasks
-]
-
-{ #category : #tests }
-PtyWorkflowTest >> testTaskExecution [
-
-	| result |
-	(worker stub executeWorkflowStage: Arg stage) willReturn: #result.
-	
-	result := workflow executeTask: #task.
-	
-	result should be: #result.
-	Arg stage should beInstanceOf: PtyTaskStartStage.
-	Arg stage where task should be: #task
 ]

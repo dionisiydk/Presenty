@@ -37,7 +37,7 @@ PtyWorkerTest >> testContinueWithTaskShouldRunExecutionStage [
 		
 	result := worker continueWithTask: task.
 	
-	result should beReturnedFrom: [executionStage continueExecution]
+	result should beReturnedFrom: [executionStage continueWorkflow]
 ]
 
 { #category : #tests }
@@ -47,7 +47,7 @@ PtyWorkerTest >> testContinueWithTaskShouldSetActiveTaskBeforeRun [
 	executionStage := Mock new.
 	(task stub currentExecutionStageStartedWith: Any) willReturn: executionStage.	
 
-	executionStage stub continueExecution when: [ worker activeTask ] is: task.	
+	executionStage stub continueWorkflow when: [ worker activeTask ] is: task.	
 	worker continueWithTask: task
 ]
 
@@ -187,32 +187,33 @@ PtyWorkerTest >> testServesWorkflowOfActiveTask [
 ]
 
 { #category : #tests }
-PtyWorkerTest >> testStartWithTaskInBackgroundProcess [
+PtyWorkerTest >> testStartingWorkflowShouldBeDoneInBackgroundProcess [
 	worker stub.
 			
-	worker startWithTask: task.
+	worker startWorkflowWithStage: #workflowStage usingTask: task.
 
-	(worker should receive continueWithTask: task) inAnotherProcess
+	(worker should receive continueWorkflowWithStage: #workflowStage usingTask: task) inAnotherProcess
 ]
 
 { #category : #tests }
-PtyWorkerTest >> testStartWithTaskShouldRegisterItselfInWorkplace [
+PtyWorkerTest >> testStartingWorkflowShouldUseTaskExecutionPriority [
 	worker stub.
 	
-	worker startWithTask: task.
+	worker startWorkflowWithStage: #workflowStage usingTask: task.
 	
-	[workplace registerWorker: worker.
-	worker continueWithTask: task] should beDoneInOrder
-]
-
-{ #category : #tests }
-PtyWorkerTest >> testStartWithTaskUsingTaskExecutionPriority [
-	worker stub.
-	
-	worker startWithTask: task.
-	
-	(worker should receive continueWithTask: task)
+	(worker should receive continueWorkflowWithStage: #workflowStage usingTask: task)
 		inProcessWhich priority should equal: task executionPriority
+]
+
+{ #category : #tests }
+PtyWorkerTest >> testStartingWorkflowWithInitialTask [
+
+	worker stub startWorkflowWithStage: Arg stage usingTask: task.
+			
+	worker startWorkflowWithTask: task.
+
+	Arg stage should beInstanceOf: PtyTaskStartStage. 
+	Arg stage where task should be: task.
 ]
 
 { #category : #tests }

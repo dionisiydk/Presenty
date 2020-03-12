@@ -18,7 +18,7 @@ PtyWorkflowContinuationStage >> startInActiveWorkflowBy: aWorker [
 { #category : #execution }
 PtyWorkflowContinuationStage >> startInInactiveWorkflowBy: aWorker [
 	
-	aWorker startWithTask: (PtyContinueWorkflowTask for: task with: self).
+	aWorker startWorkflowWithTask: (PtyContinueWorkflowTask for: task with: self).
 	
 	^ PtyTaskExecutionFutureResult of: task
 ]

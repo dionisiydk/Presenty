@@ -29,9 +29,9 @@ PtyWorkflowContinuationStageTestCase >> testStartingInInactiveWorkflowShouldRetu
 ]
 
 { #category : #tests }
-PtyWorkflowContinuationStageTestCase >> testStartingInInactiveWorkflowShouldStartSpecialTask [
+PtyWorkflowContinuationStageTestCase >> testStartingInInactiveWorkflowShouldStartItWithSpecialTask [
 
-	worker stub startWithTask: Arg startedTask.
+	worker stub startWorkflowWithTask: Arg startedTask.
 	
 	workflowStage startInInactiveWorkflowBy: worker.	
 	

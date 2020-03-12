@@ -29,7 +29,7 @@ PtyWorker >> activeTask: aTask [
 { #category : #controlling }
 PtyWorker >> continueWithTask: aTask [
 	
-	^self continueWithTask: aTask using: (PtyTaskStartStage of: aTask)
+	^self continueWithTask: aTask using: (PtyTaskStartStage for: aTask)
 ]
 
 { #category : #controlling }
@@ -39,7 +39,20 @@ PtyWorker >> continueWithTask: aTask using: initialTaskExecutionStage [
 	executionStage := aTask currentExecutionStageStartedWith: initialTaskExecutionStage.	
 	
 	activeTask := aTask.
-	result := executionStage continueExecution.
+	result := executionStage continueWorkflow.
+	activeTask := aTask parentTask.
+	
+	^result
+]
+
+{ #category : #controlling }
+PtyWorker >> continueWorkflowWithStage: aWorkflowStage usingTask: aTask [
+	
+	| executionStage result |
+	executionStage := aTask currentExecutionStageStartedWith: aWorkflowStage.	
+	
+	activeTask := aTask.
+	result := executionStage continueWorkflow.
 	activeTask := aTask parentTask.
 	
 	^result
@@ -50,7 +63,7 @@ PtyWorker >> defaultTaskExecutionPriority [
 	^workplace defaultTaskExecutionPriority
 ]
 
-{ #category : #'task execution' }
+{ #category : #controlling }
 PtyWorker >> executeWorkflowStage: aWorkflowStage [
 	
 	^self isActive 
@@ -92,13 +105,35 @@ PtyWorker >> runInitialTask: aTask [
 	self waitUserAction
 ]
 
+{ #category : #controlling }
+PtyWorker >> runInitialWorkflowStage: aWorkflowStage usingTask: aTask [
+
+	[	
+		[self continueWorkflowWithStage: aWorkflowStage usingTask: aTask] 
+			on: Error do: [:err | self notifyUserAbout: err]
+
+	] on: PtyUserRequest do: [:request | 
+			request executeBy: self].
+	
+	self waitUserAction
+]
+
 { #category : #testing }
 PtyWorker >> servesWorkflow: aWorkflow [
 	^activeTask notNil and: [activeTask workflow = aWorkflow]
 ]
 
 { #category : #controlling }
-PtyWorker >> startWithTask: aTask [
+PtyWorker >> startWorkflowWithStage: aWorkflowStage usingTask: aTask [
+	
+	process := [ self runInitialWorkflowStage: aWorkflowStage usingTask: aTask ] newProcess.
+	process name: 'Worker process of ', aTask printString.
+	process priority: aTask executionPriority.
+	process resume
+]
+
+{ #category : #controlling }
+PtyWorker >> startWorkflowWithTask: aTask [
 	workplace registerWorker: self.
 	
 	process := [ self runInitialTask: aTask ] newProcess.

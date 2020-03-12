@@ -10,18 +10,18 @@ PtyTaskRetryStageTest >> createWorkflowStage [
 ]
 
 { #category : #tests }
-PtyTaskRetryStageTest >> testContinueExecution [
+PtyTaskRetryStageTest >> testContinueWorkflow [
 
 	| result |
-	result := workflowStage continueExecution.	
+	result := workflowStage continueWorkflow.	
 	
 	result should beReturnedFrom: [ task startExecution ]
 ]
 
 { #category : #tests }
-PtyTaskRetryStageTest >> testContinueExecutionShouldActivateInitialWorkflowFirst [
+PtyTaskRetryStageTest >> testContinueWorkflowShouldFirstActivateInitialWorkflow [
 
-	workflowStage continueExecution.	
+	workflowStage continueWorkflow.	
 	
 	[task activateInitialWorkflow.
 	task startExecution] should beDoneInOrder 

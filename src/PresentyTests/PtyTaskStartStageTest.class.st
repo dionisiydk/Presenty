@@ -10,10 +10,10 @@ PtyTaskStartStageTest >> createWorkflowStage [
 ]
 
 { #category : #tests }
-PtyTaskStartStageTest >> testContinueExecution [
+PtyTaskStartStageTest >> testContinueWorkflow [
 
 	| result |
-	result := workflowStage continueExecution.	
+	result := workflowStage continueWorkflow.	
 	
 	result should beReturnedFrom: [ task startExecution ]
 ]

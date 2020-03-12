@@ -10,7 +10,7 @@ PtyTaskDefermentStageTest >> createWorkflowStage [
 ]
 
 { #category : #tests }
-PtyTaskDefermentStageTest >> testContinueExecution [
+PtyTaskDefermentStageTest >> testContinueWorkflow [
 
-	[workflowStage continueExecution] should raise: PtyUserRequest
+	[workflowStage continueWorkflow] should raise: PtyUserRequest
 ]

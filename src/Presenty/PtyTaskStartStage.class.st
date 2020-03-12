@@ -5,7 +5,7 @@ Class {
 }
 
 { #category : #controlling }
-PtyTaskStartStage >> continueExecution [
+PtyTaskStartStage >> continueWorkflow [
 	^task startExecution
 ]
 

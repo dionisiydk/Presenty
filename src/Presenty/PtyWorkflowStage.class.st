@@ -19,7 +19,7 @@ PtyWorkflowStage class >> isAbstract [
 ]
 
 { #category : #execution }
-PtyWorkflowStage >> continueExecution [
+PtyWorkflowStage >> continueWorkflow [
 	self subclassResponsibility 
 ]
 

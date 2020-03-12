@@ -14,7 +14,7 @@ PtyTaskResultDeliveryStage class >> for: aTask withResult: anObject [
 ]
 
 { #category : #controlling }
-PtyTaskResultDeliveryStage >> continueExecution [
+PtyTaskResultDeliveryStage >> continueWorkflow [
 	
 	task activateInitialWorkflow.
 	task prepareExecutionWorkflow.

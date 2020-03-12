@@ -10,20 +10,20 @@ PtyTaskResultDeliveryStageTest >> createWorkflowStage [
 ]
 
 { #category : #tests }
-PtyTaskResultDeliveryStageTest >> testContinueExecution [
+PtyTaskResultDeliveryStageTest >> testContinueWorkflow [
 
 	| result |
 	workflowStage result: #taskResult.
 	
-	result := workflowStage continueExecution.	
+	result := workflowStage continueWorkflow.	
 	
 	result should be: #taskResult
 ]
 
 { #category : #tests }
-PtyTaskResultDeliveryStageTest >> testContinueExecutionShouldPassThrough3Steps [
+PtyTaskResultDeliveryStageTest >> testContinueWorkflowShouldPassTaskThrough3Steps [
 
-	workflowStage continueExecution.	
+	workflowStage continueWorkflow.	
 	
 	[task activateInitialWorkflow.
 	task prepareExecutionWorkflow.

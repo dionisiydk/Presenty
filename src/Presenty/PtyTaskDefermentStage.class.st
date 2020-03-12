@@ -5,7 +5,7 @@ Class {
 }
 
 { #category : #controlling }
-PtyTaskDefermentStage >> continueExecution [
+PtyTaskDefermentStage >> continueWorkflow [
 	
 	^PtyUserRequest signal
 	
