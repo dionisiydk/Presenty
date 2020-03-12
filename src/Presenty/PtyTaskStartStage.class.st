@@ -12,7 +12,7 @@ PtyTaskStartStage >> continueWorkflow [
 { #category : #execution }
 PtyTaskStartStage >> startInActiveWorkflowBy: aWorker [
 
-	^aWorker continueWithTask: task using: self
+	^aWorker continueWorkflowWithTask: task usingStartStage: self
 ]
 
 { #category : #execution }

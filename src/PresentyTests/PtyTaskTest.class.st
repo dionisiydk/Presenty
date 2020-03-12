@@ -84,21 +84,21 @@ PtyTaskTest >> testCreationFromBlockWithName [
 ]
 
 { #category : #tests }
-PtyTaskTest >> testCurrentExecutionStage [
+PtyTaskTest >> testCurrentWorkflowStage [
 
 	| stage |
-	stage := task currentExecutionStageStartedWith: #initialStage.
+	stage := task currentWorkflowStageStartedWith: #taskStartStage.
 
-	stage should be: #initialStage.
+	stage should be: #taskStartStage
 ]
 
 { #category : #tests }
-PtyTaskTest >> testCurrentExecutionStageShouldKeepActualContinuationInTask [
+PtyTaskTest >> testCurrentWorkflowStageShouldKeepActualContinuationInTask [
 
 	| stage |
-	stage := task currentExecutionStageStartedWith: #initialStage.
+	stage := task currentWorkflowStageStartedWith: #taskStartStage.
 
-	stage = #initialStage ifTrue: [ 
+	stage = #taskStartStage ifTrue: [ 
 		task continuation value: #stageFromContinuation].
 	
 	stage should be: #stageFromContinuation

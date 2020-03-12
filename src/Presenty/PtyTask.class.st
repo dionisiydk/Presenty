@@ -180,17 +180,17 @@ PtyTask >> createContextFor: anActivationStrategy [
 	^newContext
 ]
 
-{ #category : #controlling }
-PtyTask >> currentExecutionStageStartedWith: initialExecutionStage [
-
-	^Continuation currentDo: [ :cc | 
-		continuation := cc.	
-		initialExecutionStage ]
-]
-
 { #category : #accessing }
 PtyTask >> currentWorker [
 	^workflow worker
+]
+
+{ #category : #controlling }
+PtyTask >> currentWorkflowStageStartedWith: aTaskStartStage [
+
+	^Continuation currentDo: [ :cc | 
+		continuation := cc.	
+		aTaskStartStage ]
 ]
 
 { #category : #accessing }

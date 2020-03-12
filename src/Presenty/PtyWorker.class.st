@@ -27,29 +27,10 @@ PtyWorker >> activeTask: aTask [
 ]
 
 { #category : #controlling }
-PtyWorker >> continueWithTask: aTask [
-	
-	^self continueWithTask: aTask using: (PtyTaskStartStage for: aTask)
-]
-
-{ #category : #controlling }
-PtyWorker >> continueWithTask: aTask using: initialTaskExecutionStage [
+PtyWorker >> continueWorkflowWithTask: aTask usingStartStage: aTaskStartStage [
 	
 	| executionStage result |
-	executionStage := aTask currentExecutionStageStartedWith: initialTaskExecutionStage.	
-	
-	activeTask := aTask.
-	result := executionStage continueWorkflow.
-	activeTask := aTask parentTask.
-	
-	^result
-]
-
-{ #category : #controlling }
-PtyWorker >> continueWorkflowWithStage: aWorkflowStage usingTask: aTask [
-	
-	| executionStage result |
-	executionStage := aTask currentExecutionStageStartedWith: aWorkflowStage.	
+	executionStage := aTask currentWorkflowStageStartedWith: aTaskStartStage.	
 	
 	activeTask := aTask.
 	result := executionStage continueWorkflow.
@@ -93,23 +74,10 @@ PtyWorker >> process: anObject [
 ]
 
 { #category : #controlling }
-PtyWorker >> runInitialTask: aTask [
-
-	[	
-		[self continueWithTask: aTask] 
-			on: Error do: [:err | self notifyUserAbout: err]
-
-	] on: PtyUserRequest do: [:request | 
-			request executeBy: self].
-	
-	self waitUserAction
-]
-
-{ #category : #controlling }
 PtyWorker >> runInitialTask: aTask usingStartStage: aTaskStartStage [
 
 	[	
-		[self continueWithTask: aTask using: aTaskStartStage] 
+		[self continueWorkflowWithTask: aTask usingStartStage: aTaskStartStage] 
 			on: Error do: [:err | self notifyUserAbout: err]
 
 	] on: PtyUserRequest do: [:request | 

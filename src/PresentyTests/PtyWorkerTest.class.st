@@ -23,51 +23,40 @@ PtyWorkerTest >> testContinueWithTaskShouldResetActiveTaskAtTheEnd [
 		
 	worker activeTask: task.
 		
-	worker continueWithTask: task.
+	worker continueWorkflowWithTask: task usingStartStage: #startTaskStage.
 	
 	worker activeTask should beReturnedFrom: [ task parentTask ]
 ]
 
 { #category : #tests }
-PtyWorkerTest >> testContinueWithTaskShouldRunExecutionStage [
-	
-	| executionStage result |
-	executionStage := Mock new.
-	(task stub currentExecutionStageStartedWith: Any) willReturn: executionStage.	
-		
-	result := worker continueWithTask: task.
-	
-	result should beReturnedFrom: [executionStage continueWorkflow]
-]
-
-{ #category : #tests }
 PtyWorkerTest >> testContinueWithTaskShouldSetActiveTaskBeforeRun [
 	
-	| executionStage |
-	executionStage := Mock new.
-	(task stub currentExecutionStageStartedWith: Any) willReturn: executionStage.	
+	| currentWorkflowStage |
+	currentWorkflowStage := Mock new.
+	(task stub currentWorkflowStageStartedWith: #startTaskStage) willReturn: currentWorkflowStage.	
 
-	executionStage stub continueWorkflow when: [ worker activeTask ] is: task.	
-	worker continueWithTask: task
+	currentWorkflowStage stub continueWorkflow when: [ worker activeTask ] is: task.	
+	worker continueWorkflowWithTask: task usingStartStage: #startTaskStage
 ]
 
 { #category : #tests }
-PtyWorkerTest >> testContinueWithTaskShouldUseStartExecutionStageAsDefault [
+PtyWorkerTest >> testContinueWithTaskShouldUseCurrentWorkflowStageOfThisTask [
 	
-	task stub currentExecutionStageStartedWith: Arg initialStage.	
+	| currentWorkflowStage result |
+	currentWorkflowStage := Mock new.
+	(task stub currentWorkflowStageStartedWith: #startTaskStage) willReturn: currentWorkflowStage.	
 		
-	worker continueWithTask: task.
+	result := worker continueWorkflowWithTask: task usingStartStage: #startTaskStage.
 	
-	Arg initialStage should beInstanceOf: PtyTaskStartStage.
-	Arg initialStage where task should be: task
+	result should beReturnedFrom: [currentWorkflowStage continueWorkflow]
 ]
 
 { #category : #tests }
 PtyWorkerTest >> testContinueWithTaskUsingGivenExecutionStage [
 		
-	worker continueWithTask: task using: #initialTaskExecutionStage.
+	worker continueWorkflowWithTask: task usingStartStage: #taskStartStage.
 	
-	task should receive currentExecutionStageStartedWith: #initialTaskExecutionStage.
+	task should receive currentWorkflowStageStartedWith: #taskStartStage.
 ]
 
 { #category : #tests }
@@ -100,9 +89,9 @@ PtyWorkerTest >> testDoesNotServeWorkflowWhenNoActiveTask [
 PtyWorkerTest >> testInitialTaskExecution [
 	worker stub.
 	
-	worker runInitialTask: task.
+	worker runInitialTask: task usingStartStage: #startTaskStage.
 	
-	worker should receive continueWithTask: task
+	worker should receive continueWorkflowWithTask: task usingStartStage: #startTaskStage
 ]
 
 { #category : #tests }
@@ -110,9 +99,9 @@ PtyWorkerTest >> testInitialTaskExecutionShouldExpectUserRequest [
 
 	| request |
 	request := PtyUserRequestStub new.
-	(worker stub continueWithTask: task) willRaise: request.
+	(worker stub continueWorkflowWithTask: task usingStartStage: #startTaskStage) willRaise: request.
 		
-	worker runInitialTask: task.
+	worker runInitialTask: task usingStartStage: #startTaskStage.
 	
 	request should be isExecuted
 ]
@@ -122,9 +111,9 @@ PtyWorkerTest >> testInitialTaskFailedExecution [
 
 	| error |
 	error := Error new.
-	(worker stub continueWithTask: task) willRaise: error.
+	(worker stub continueWorkflowWithTask: task usingStartStage: #startTaskStage) willRaise: error.
 		
-	[worker runInitialTask: task] should raise: error.
+	[worker runInitialTask: task usingStartStage: #startTaskStage] should raise: error.
 	worker should receive notifyUserAbout: error
 ]
 
@@ -132,11 +121,11 @@ PtyWorkerTest >> testInitialTaskFailedExecution [
 PtyWorkerTest >> testInitialTaskFailedExecutionNotificationShouldExpectNewUserRequests [
 
 	| request |
-	(worker stub continueWithTask: task) willRaise: Error new.
+	(worker stub continueWorkflowWithTask: task usingStartStage: #startTaskStage) willRaise: Error new.
 	request := PtyUserRequestStub new.
 	(worker stub notifyUserAbout: Any) willRaise: request.
 		
-	worker runInitialTask: task.
+	worker runInitialTask: task usingStartStage: #startTaskStage.
 	
 	request should be isExecuted
 ]
@@ -192,7 +181,7 @@ PtyWorkerTest >> testStartingWorkflowShouldBeDoneInBackgroundProcess [
 			
 	worker worker startWorkflowWithTask: task usingStartStage: #taskStartStage.
 
-	(worker should receive continueWithTask: task using: #taskStartStage) inAnotherProcess
+	(worker should receive continueWorkflowWithTask: task usingStartStage: #taskStartStage) inAnotherProcess
 ]
 
 { #category : #tests }
@@ -201,7 +190,7 @@ PtyWorkerTest >> testStartingWorkflowShouldUseTaskExecutionPriority [
 	
 	worker startWorkflowWithTask: task usingStartStage: #taskStartStage.
 	
-	(worker should receive continueWithTask: task using: #taskStartStage)
+	(worker should receive continueWorkflowWithTask: task usingStartStage: #taskStartStage)
 		inProcessWhich priority should equal: task executionPriority
 ]
 
