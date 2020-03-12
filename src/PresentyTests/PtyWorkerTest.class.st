@@ -179,7 +179,7 @@ PtyWorkerTest >> testServesWorkflowOfActiveTask [
 PtyWorkerTest >> testStartingWorkflowShouldBeDoneInBackgroundProcess [
 	worker stub.
 			
-	worker worker startWorkflowWithTask: task usingStartStage: #taskStartStage.
+	worker startWorkflowWithTask: task usingStartStage: #taskStartStage.
 
 	(worker should receive continueWorkflowWithTask: task usingStartStage: #taskStartStage) inAnotherProcess
 ]

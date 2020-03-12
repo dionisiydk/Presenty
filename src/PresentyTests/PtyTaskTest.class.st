@@ -313,26 +313,6 @@ PtyTaskTest >> testRetryExecutionWhenTaskWasNotStarted [
 ]
 
 { #category : #tests }
-PtyTaskTest >> testSettingWorkerShouldUseActiveTaskAsParent [
-
-	| worker |
-	worker := Mock new.
-	task worker: worker.
-
-	task parentTask should beReturnedFrom: [ worker activeTask ]
-]
-
-{ #category : #tests }
-PtyTaskTest >> testSettingWorkerShouldUseItsCurrentWorkflow [
-
-	| worker |
-	worker := Mock new.
-	task worker: worker.
-
-	task workflow should beReturnedFrom: [ task parentTask workflow ]
-]
-
-{ #category : #tests }
 PtyTaskTest >> testSpawningWorkflow [
 
 	| newWorkflow currentWorkflow |
