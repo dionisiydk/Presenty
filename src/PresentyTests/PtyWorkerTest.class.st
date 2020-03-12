@@ -190,25 +190,25 @@ PtyWorkerTest >> testServesWorkflowOfActiveTask [
 PtyWorkerTest >> testStartingWorkflowShouldBeDoneInBackgroundProcess [
 	worker stub.
 			
-	worker startWorkflowWithStage: #workflowStage usingTask: task.
+	worker worker startWorkflowWithTask: task usingStartStage: #taskStartStage.
 
-	(worker should receive continueWorkflowWithStage: #workflowStage usingTask: task) inAnotherProcess
+	(worker should receive continueWithTask: task using: #taskStartStage) inAnotherProcess
 ]
 
 { #category : #tests }
 PtyWorkerTest >> testStartingWorkflowShouldUseTaskExecutionPriority [
 	worker stub.
 	
-	worker startWorkflowWithStage: #workflowStage usingTask: task.
+	worker startWorkflowWithTask: task usingStartStage: #taskStartStage.
 	
-	(worker should receive continueWorkflowWithStage: #workflowStage usingTask: task)
+	(worker should receive continueWithTask: task using: #taskStartStage)
 		inProcessWhich priority should equal: task executionPriority
 ]
 
 { #category : #tests }
-PtyWorkerTest >> testStartingWorkflowWithInitialTask [
+PtyWorkerTest >> testStartingWorkflowWithoutExplicitStartStage [
 
-	worker stub startWorkflowWithStage: Arg stage usingTask: task.
+	worker stub startWorkflowWithTask: task usingStartStage: Arg stage.
 			
 	worker startWorkflowWithTask: task.
 
@@ -217,23 +217,23 @@ PtyWorkerTest >> testStartingWorkflowWithInitialTask [
 ]
 
 { #category : #tests }
-PtyWorkerTest >> testStoppingTask [
+PtyWorkerTest >> testStoppingWorkflow [
 
 	| process |
 	process := Mock new.
 
 	worker process: process.	
-	worker stopTask.
+	worker stopWorkflow.
 	
 	process should receive terminate
 ]
 
 { #category : #tests }
-PtyWorkerTest >> testStoppingTaskWhenNoProcess [
+PtyWorkerTest >> testStoppingWorkflowWhenNoProcess [
 
 	worker process: nil.
 	
-	worker stopTask
+	worker stopWorkflow
 ]
 
 { #category : #tests }

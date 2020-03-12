@@ -106,10 +106,10 @@ PtyWorker >> runInitialTask: aTask [
 ]
 
 { #category : #controlling }
-PtyWorker >> runInitialWorkflowStage: aWorkflowStage usingTask: aTask [
+PtyWorker >> runInitialTask: aTask usingStartStage: aTaskStartStage [
 
 	[	
-		[self continueWorkflowWithStage: aWorkflowStage usingTask: aTask] 
+		[self continueWithTask: aTask using: aTaskStartStage] 
 			on: Error do: [:err | self notifyUserAbout: err]
 
 	] on: PtyUserRequest do: [:request | 
@@ -124,26 +124,21 @@ PtyWorker >> servesWorkflow: aWorkflow [
 ]
 
 { #category : #controlling }
-PtyWorker >> startWorkflowWithStage: aWorkflowStage usingTask: aTask [
-	
-	process := [ self runInitialWorkflowStage: aWorkflowStage usingTask: aTask ] newProcess.
-	process name: 'Worker process of ', aTask printString.
-	process priority: aTask executionPriority.
-	process resume
-]
-
-{ #category : #controlling }
 PtyWorker >> startWorkflowWithTask: aTask [
-	workplace registerWorker: self.
+	self startWorkflowWithTask: aTask usingStartStage: (PtyTaskStartStage for: aTask)
+]
+
+{ #category : #controlling }
+PtyWorker >> startWorkflowWithTask: aTask usingStartStage: aTaskStartStage [
 	
-	process := [ self runInitialTask: aTask ] newProcess.
+	process := [ self runInitialTask: aTask usingStartStage: aTaskStartStage ] newProcess.
 	process name: 'Worker process of ', aTask printString.
 	process priority: aTask executionPriority.
 	process resume
 ]
 
 { #category : #controlling }
-PtyWorker >> stopTask [
+PtyWorker >> stopWorkflow [
 	process ifNotNil: [process terminate]
 ]
 
