@@ -27,10 +27,9 @@ PtyTask class >> named: aString [
 { #category : #controlling }
 PtyTask >> activateInitialWorkflow [
 
-	parentTask ifNotNil: [ 
-		parentTask activateInitialWorkflow.
-		parentTask beActiveInWorkflow ].
-	workflow activateAs: initialWorkflow 
+	self spawningParentTask ifNotNil: [:spawningTask | spawningTask beActive ].
+	workflow activateAs: initialWorkflow.
+	
 ]
 
 { #category : #controlling }
@@ -103,6 +102,17 @@ PtyTask >> basePrototypeContexts [
 ]
 
 { #category : #controlling }
+PtyTask >> beActive [
+
+	self spawningParentTask ifNotNil: [:spawningTask | spawningTask beActive ].
+	(workflow includesTask: self) ifTrue: [ ^self ].
+	
+	workflow activateAs: initialWorkflow.
+	self beActiveInWorkflow
+	
+]
+
+{ #category : #controlling }
 PtyTask >> beActiveInWorkflow [ 
 
 	workflow registerNewTask: self
@@ -130,6 +140,11 @@ PtyTask >> beOneShot [
 PtyTask >> bePermanent [
 
 	returnStrategy := PtyPermanentTaskReturnStrategy new
+]
+
+{ #category : #testing }
+PtyTask >> belongsToWorkflow: aWorkflow [
+	^workflow = aWorkflow
 ]
 
 { #category : #execution }
@@ -371,6 +386,11 @@ PtyTask >> isSimilarTo: aTask [
 	^name = aTask name
 ]
 
+{ #category : #testing }
+PtyTask >> isSpawnedTask [
+	^self isInitialTask not and: [ (parentTask belongsToWorkflow: workflow) not ]
+]
+
 { #category : #controlling }
 PtyTask >> jumpToWorkflowStage: aWorkflowContinuationStage [ 
 	
@@ -564,6 +584,14 @@ PtyTask >> spawnWorkflow [
 	When task is spawned it must ensure this logic. So the initialWorkflow must represent the initial state of this new spawned workflow"
 	workflow := workflow spawnNew.
 	initialWorkflow := workflow captureStateForNewTask
+]
+
+{ #category : #accessing }
+PtyTask >> spawningParentTask [
+	
+	self isInitialTask ifTrue: [ ^nil ].
+	self isSpawnedTask ifTrue: [ ^parentTask ].
+	^parentTask spawningParentTask
 ]
 
 { #category : #execution }

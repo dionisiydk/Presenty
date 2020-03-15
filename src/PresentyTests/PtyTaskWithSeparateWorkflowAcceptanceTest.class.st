@@ -73,6 +73,7 @@ PtyTaskWithSeparateWorkflowAcceptanceTest >> testExecutionRetryShouldRestoreMiss
 	
 	user executeTask: grandparent.
 	currentTasksDuringChild should equal: { grandparent. parent. task }.
+	currentTasksDuringChild := nil.
 	
 	task retryExecution.
 	currentTasksDuringChild should equal: { grandparent. parent. task }.
@@ -93,7 +94,7 @@ PtyTaskWithSeparateWorkflowAcceptanceTest >> testShouldBeIndependentFromOtherSep
 
 	task1 retryExecution.
 	
-	currentTasksDuringTask1 should equal: { parentTask. task1. child1 }. 
+	currentTasksDuringTask1 should equal: { parentTask. task1. task2. child1 }. 
 	
 	task2 retryExecution.
 	currentTasksDuringTask2 should equal: { parentTask. task1. task2. child1 }.

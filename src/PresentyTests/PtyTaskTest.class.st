@@ -2,7 +2,9 @@ Class {
 	#name : #PtyTaskTest,
 	#superclass : #TestCase,
 	#instVars : [
-		'task'
+		'task',
+		'workflow',
+		'initialWorkflow'
 	],
 	#category : #'PresentyTests-NewCore'
 }
@@ -11,19 +13,54 @@ Class {
 PtyTaskTest >> setUp [
 	super setUp.
 	
-	task := [  ] asTaskNamed: 'Test task'
+	initialWorkflow := Mock new.
+	workflow := Mock new.
+	task := [  ] asTaskNamed: 'Test task'.
+	task workflow: workflow.
+	task initialWorkflow: initialWorkflow
 ]
 
 { #category : #tests }
 PtyTaskTest >> testBeActiveInWorkflow [
-
-	| workflow |
-	workflow := Mock new.
-	task workflow: workflow.
 	
 	task beActiveInWorkflow.
 	
 	workflow should receive registerNewTask: task
+]
+
+{ #category : #tests }
+PtyTaskTest >> testBeActiveShouldFirstActivateSpawningParentTask [
+
+	| spawningTask |
+	spawningTask := Mock new.
+	task stub spawningParentTask willReturn: spawningTask.
+	(workflow stub includesTask: task) willReturn: false.
+	
+	task beActive.
+	
+	[spawningTask beActive.
+	workflow activateAs: initialWorkflow] should beDoneInOrder
+]
+
+{ #category : #tests }
+PtyTaskTest >> testBeActiveWhenItIsAlreadyActiveInWorkflow [
+
+	(workflow stub includesTask: task) willReturn: true.
+	
+	task beActive.
+	
+	workflow should not receive activateAs: initialWorkflow
+]
+
+{ #category : #tests }
+PtyTaskTest >> testBeActiveWhenItIsNotActiveInWorkflow [
+
+	(workflow stub includesTask: task) willReturn: false.
+	
+	task beActive.
+	
+	[workflow activateAs: initialWorkflow.
+	workflow registerNewTask: task] should beDoneInOrder
 ]
 
 { #category : #tests }
@@ -56,6 +93,15 @@ PtyTaskTest >> testBePermanentTask [
 	task bePermanent.
 
 	task returnStrategy should beInstanceOf: PtyPermanentTaskReturnStrategy
+]
+
+{ #category : #tests }
+PtyTaskTest >> testBelongsToWorkflow [
+
+	task workflow: #workflow.
+	
+	task should be belongsToWorkflow: #workflow.
+	task should not be belongsToWorkflow: #anotherWorkflow
 ]
 
 { #category : #tests }
@@ -186,32 +232,24 @@ PtyTaskTest >> testHasDefaultWorkflowActivationStrategy [
 { #category : #tests }
 PtyTaskTest >> testInitialWorkflowActivation [
 
-	| workflow parentTask |
-	parentTask := Mock new.
-	workflow := Mock new.
-	task workflow: workflow.
-	task initialWorkflow: #initialWorkflow.
-	task parentTask: parentTask.
+	| spawningTask |
+	spawningTask := Mock new.
+	task stub spawningParentTask willReturn: spawningTask.
 
 	task activateInitialWorkflow.
 	
-	[parentTask activateInitialWorkflow.
-	parentTask beActiveInWorkflow.
-	workflow activateAs: #initialWorkflow] should beDoneInOrder
+	[spawningTask beActive.
+	workflow activateAs: initialWorkflow] should beDoneInOrder
 ]
 
 { #category : #tests }
 PtyTaskTest >> testInitialWorkflowActivationWhenItIsInitialTask [
 
-	| workflow |
-	workflow := Mock new.
-	task workflow: workflow.
-	task initialWorkflow: #initialWorkflow.
 	task should be isInitialTask.
 	
 	task activateInitialWorkflow.
 	
-	workflow should receive activateAs: #initialWorkflow
+	workflow should receive activateAs: initialWorkflow
 
 	
 ]
@@ -238,6 +276,22 @@ PtyTaskTest >> testIsInitialTask [
 PtyTaskTest >> testIsOneShotByDefault [
 
 	task returnStrategy should beInstanceOf: PtyOneShotTaskReturnStrategy 
+]
+
+{ #category : #tests }
+PtyTaskTest >> testIsSpawnedTask [
+	| parentTask |
+	task should not be isSpawnedTask.
+	
+	parentTask := Mock new.
+	task parentTask: parentTask.
+	task workflow: #workflow.
+	
+	(parentTask stub belongsToWorkflow: #workflow) willReturn: true.
+	task should not be isSpawnedTask.
+	
+	(parentTask stub belongsToWorkflow: #workflow) willReturn: false.
+	task should be isSpawnedTask.
 ]
 
 { #category : #tests }
@@ -293,10 +347,9 @@ PtyTaskTest >> testRequestExecution [
 
 { #category : #tests }
 PtyTaskTest >> testRequestExecutionShouldCaptureInitialWorkflow [
-	| executionStrategy workflow |
+	| executionStrategy |
 	executionStrategy := Mock new.
-	workflow := Mock new.
-	task workflow: workflow; executionStrategy: executionStrategy.
+	task executionStrategy: executionStrategy.
 
 	task requestExecution.
 
@@ -331,13 +384,41 @@ PtyTaskTest >> testRetryExecutionWhenTaskWasNotStarted [
 ]
 
 { #category : #tests }
+PtyTaskTest >> testSpawningParentTaskIsNilForInitialTask [
+
+	task should be isInitialTask.
+	
+	task spawningParentTask should be: nil
+]
+
+{ #category : #tests }
+PtyTaskTest >> testSpawningParentTaskIsParentSpawningTaskWhenTaskWasNotSpawned [
+
+	| parentTask |
+	parentTask := Mock new.
+	task parentTask: parentTask.
+	
+	task stub isSpawnedTask willReturn: false.
+	
+	task spawningParentTask should beReturnedFrom: [ parentTask spawningParentTask ]
+]
+
+{ #category : #tests }
+PtyTaskTest >> testSpawningParentTaskIsParentWhenTaskWasSpawned [
+
+	task parentTask: #parentTask.
+	
+	task stub isSpawnedTask willReturn: true.
+	
+	task spawningParentTask should be: #parentTask
+]
+
+{ #category : #tests }
 PtyTaskTest >> testSpawningWorkflow [
 
-	| newWorkflow currentWorkflow |
+	| newWorkflow |
 	newWorkflow := Mock new.
-	currentWorkflow := Mock new.
-	task workflow: currentWorkflow.
-	currentWorkflow stub spawnNew willReturn: newWorkflow.
+	workflow stub spawnNew willReturn: newWorkflow.
 	
 	task spawnWorkflow.
 	

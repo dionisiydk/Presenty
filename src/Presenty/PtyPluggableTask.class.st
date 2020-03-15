@@ -35,10 +35,17 @@ PtyPluggableTask >> blockBody: anObject [
 { #category : #execution }
 PtyPluggableTask >> body [
 
-	^blockBody cull: worker cull: user
+	^blockBody cull: user
 ]
 
 { #category : #testing }
 PtyPluggableTask >> canBePrototypeInContextOf: aTask [
 	^true
+]
+
+{ #category : #printing }
+PtyPluggableTask >> printOn: aStream [
+	super printOn: aStream.
+	
+	blockBody printOn: aStream
 ]
