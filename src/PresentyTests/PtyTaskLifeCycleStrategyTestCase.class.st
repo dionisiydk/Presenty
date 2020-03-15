@@ -2,10 +2,9 @@ Class {
 	#name : #PtyTaskLifeCycleStrategyTestCase,
 	#superclass : #TestCase,
 	#instVars : [
-		'worker',
 		'task',
-		'workflow',
-		'strategy'
+		'strategy',
+		'workflow'
 	],
 	#category : #'PresentyTests-NewCore'
 }
@@ -24,7 +23,6 @@ PtyTaskLifeCycleStrategyTestCase >> createStrategy [
 PtyTaskLifeCycleStrategyTestCase >> setUp [
 	super setUp.
 	task := Mock new.
-	worker := Mock new.
 	workflow := Mock new.
 	strategy := self createStrategy
 ]

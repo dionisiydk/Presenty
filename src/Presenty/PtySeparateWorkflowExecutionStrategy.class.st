@@ -33,7 +33,7 @@ PtySeparateWorkflowExecutionStrategy >> requestExecutionOf: aTask in: aWorkflow 
 	shouldContinueParentToCompleteSeparation := Array with: true.
 	aTask spawnWorkflow.	
 	^[ 
-		[actualWorkflowExecutionStrategy requestExecutionOf: aTask in: aWorkflow]
+		[actualWorkflowExecutionStrategy requestExecutionOf: aTask in: aTask workflow]
 			on: PtyUserRequest do: [ :exc | 
 				shouldContinueParentToCompleteSeparation first ifFalse: [exc pass] ].
 		shouldContinueParentToCompleteSeparation first 

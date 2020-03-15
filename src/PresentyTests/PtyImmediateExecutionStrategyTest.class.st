@@ -13,7 +13,7 @@ PtyImmediateExecutionStrategyTest >> createStrategy [
 PtyImmediateExecutionStrategyTest >> testShouldExecuteTaskUsingWorker [ 
 
 	| result |
-	result := strategy requestExecutionOf: task in: worker.
+	result := strategy requestExecutionOf: task in: workflow.
 	
-	result should beReturnedFrom: [worker executeTask: task]
+	result should beReturnedFrom: [workflow executeTask: task]
 ]

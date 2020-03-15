@@ -5,6 +5,22 @@ Class {
 }
 
 { #category : #tests }
+PtyTaskWithSeparateWorkflowAcceptanceTest >> testExecutionAsChildDeferredTask [ 
+
+	| task result executed parent |
+	executed := false.
+	task := [ executed := true ] asTask.
+	task beDeferred; useSeparateWorkflow.
+	parent := [ result := user executeTask: task] asTask bePermanent.
+	user executeTask: parent.
+	
+	executed should be: false.
+	result should beInstanceOf: PtyTaskExecutionFutureResult.
+	workplace currentTasks should equal: { parent. task }.
+	task workflow currentTasks should include: task
+]
+
+{ #category : #tests }
 PtyTaskWithSeparateWorkflowAcceptanceTest >> testExecutionAsChildTask [ 
 
 	| task result executed |
@@ -62,6 +78,20 @@ PtyTaskWithSeparateWorkflowAcceptanceTest >> testExecutionRetryDoesNotContinuePa
 	
 	executed should be: true.
 	parentCounter should be: 1.
+]
+
+{ #category : #tests }
+PtyTaskWithSeparateWorkflowAcceptanceTest >> testExecutionRetryOfChildDeferredTask [ 
+
+	| task parent currentTasks |
+	task := [ currentTasks := workplace currentTasks ] asTask.
+	task beDeferred; useSeparateWorkflow.
+	parent := [ user executeTask: task] asTask bePermanent.
+	user executeTask: parent.
+	currentTasks should be: nil.
+	
+	task retryExecution.
+	currentTasks should equal: { parent. task }
 ]
 
 { #category : #tests }
