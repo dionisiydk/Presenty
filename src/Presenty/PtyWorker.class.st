@@ -47,14 +47,27 @@ PtyWorker >> defaultTaskExecutionPriority [
 { #category : #controlling }
 PtyWorker >> executeWorkflowStage: aWorkflowStage [
 	
-	^self isActive 
-		ifTrue: [ aWorkflowStage startInActiveWorkflowBy: self]
-		ifFalse: [ aWorkflowStage startInInactiveWorkflowBy: self]
+	| futureResult |
+	self isActive ifTrue: [ ^aWorkflowStage startInActiveWorkflowBy: self].
+	
+	futureResult := aWorkflowStage startInInactiveWorkflowBy: self.
+	^self isAnotherWorkerActive 
+		ifTrue: [ PtyUserRequest signal ]
+		ifFalse: [ futureResult ]
 ]
 
 { #category : #testing }
 PtyWorker >> isActive [ 
 	^process == Processor activeProcess
+]
+
+{ #category : #testing }
+PtyWorker >> isAnotherWorkerActive [
+	| activeWorkflow |
+
+	activeWorkflow := workplace findActiveWorkflowIfNone: [ ^false ].
+	
+	^activeWorkflow worker ~= self
 ]
 
 { #category : #'task execution' }

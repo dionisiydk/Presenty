@@ -139,6 +139,36 @@ PtyWorkerTest >> testIsActiveWhenItRunsActiveProcess [
 ]
 
 { #category : #tests }
+PtyWorkerTest >> testIsAnotherWorkerActive [
+
+	| activeWorkflow |
+	activeWorkflow := Mock new.
+	(workplace stub findActiveWorkflowIfNone: Any) willReturn: activeWorkflow.
+	activeWorkflow stub worker willReturn: #anotherWorker.
+	
+	worker should be isAnotherWorkerActive
+]
+
+{ #category : #tests }
+PtyWorkerTest >> testIsAnotherWorkerActiveWhenItIsCurrentActiveWorkflow [
+
+	| activeWorkflow |
+	activeWorkflow := Mock new.
+	(workplace stub findActiveWorkflowIfNone: Any) willReturn: activeWorkflow.
+	activeWorkflow stub worker willReturn: worker.
+	
+	worker should not be isAnotherWorkerActive
+]
+
+{ #category : #tests }
+PtyWorkerTest >> testIsAnotherWorkerActiveWhenNoActiveWorkflowExists [
+
+	(workplace stub findActiveWorkflowIfNone: Any) will: [ :block | block value ].
+	
+	worker should not be isAnotherWorkerActive
+]
+
+{ #category : #tests }
 PtyWorkerTest >> testIsNotActiveWhenItDoesNotRunActiveProcess [
 
 	worker process: [] newProcess.	
@@ -226,7 +256,32 @@ PtyWorkerTest >> testStoppingWorkflowWhenNoProcess [
 ]
 
 { #category : #tests }
-PtyWorkerTest >> testWorkflowStageExecutionWhenWorkerIsActive [
+PtyWorkerTest >> testWorkflowStageExecutionFromAnotherActiveWorker [
+
+	| stage |
+	worker stub isActive willReturn: false.
+	worker stub isAnotherWorkerActive willReturn: true.
+	stage := Mock new.
+	
+	[worker executeWorkflowStage: stage] should raise: PtyUserRequest.
+	stage should receive startInInactiveWorkflowBy: worker
+]
+
+{ #category : #tests }
+PtyWorkerTest >> testWorkflowStageExecutionFromOutsideOfWorkplace [
+
+	| result stage |
+	worker stub isActive willReturn: false.
+	worker stub isAnotherWorkerActive willReturn: false.
+	stage := Mock new.
+	
+	result := worker executeWorkflowStage: stage.
+	
+	result should beReturnedFrom: [ stage startInInactiveWorkflowBy: worker]
+]
+
+{ #category : #tests }
+PtyWorkerTest >> testWorkflowStageExecutionItsActiveWorker [
 
 	| result stage |
 	worker stub isActive willReturn: true.
@@ -235,16 +290,4 @@ PtyWorkerTest >> testWorkflowStageExecutionWhenWorkerIsActive [
 	result := worker executeWorkflowStage: stage.
 	
 	result should beReturnedFrom: [ stage startInActiveWorkflowBy: worker]
-]
-
-{ #category : #tests }
-PtyWorkerTest >> testWorkflowStageExecutionWhenWorkerIsNotActive [
-
-	| result stage |
-	worker stub isActive willReturn: false.
-	stage := Mock new.
-	
-	result := worker executeWorkflowStage: stage.
-	
-	result should beReturnedFrom: [ stage startInInactiveWorkflowBy: worker]
 ]
