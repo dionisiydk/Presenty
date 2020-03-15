@@ -186,11 +186,29 @@ PtyTaskTest >> testHasDefaultWorkflowActivationStrategy [
 { #category : #tests }
 PtyTaskTest >> testInitialWorkflowActivation [
 
+	| workflow parentTask |
+	parentTask := Mock new.
+	workflow := Mock new.
+	task workflow: workflow.
+	task initialWorkflow: #initialWorkflow.
+	task parentTask: parentTask.
+
+	task activateInitialWorkflow.
+	
+	[parentTask activateInitialWorkflow.
+	parentTask beActiveInWorkflow.
+	workflow activateAs: #initialWorkflow] should beDoneInOrder
+]
+
+{ #category : #tests }
+PtyTaskTest >> testInitialWorkflowActivationWhenItIsInitialTask [
+
 	| workflow |
 	workflow := Mock new.
 	task workflow: workflow.
 	task initialWorkflow: #initialWorkflow.
-
+	task should be isInitialTask.
+	
 	task activateInitialWorkflow.
 	
 	workflow should receive activateAs: #initialWorkflow

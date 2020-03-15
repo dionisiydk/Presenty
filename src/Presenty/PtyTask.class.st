@@ -27,6 +27,9 @@ PtyTask class >> named: aString [
 { #category : #controlling }
 PtyTask >> activateInitialWorkflow [
 
+	parentTask ifNotNil: [ 
+		parentTask activateInitialWorkflow.
+		parentTask beActiveInWorkflow ].
 	workflow activateAs: initialWorkflow 
 ]
 

@@ -93,7 +93,7 @@ PtyTaskWithSeparateWorkflowAcceptanceTest >> testShouldBeIndependentFromOtherSep
 
 	task1 retryExecution.
 	
-	currentTasksDuringTask1 should equal: { parentTask. task1. task2. child1 }. 
+	currentTasksDuringTask1 should equal: { parentTask. task1. child1 }. 
 	
 	task2 retryExecution.
 	currentTasksDuringTask2 should equal: { parentTask. task1. task2. child1 }.
