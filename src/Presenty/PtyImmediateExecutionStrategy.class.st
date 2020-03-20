@@ -1,7 +1,7 @@
 Class {
 	#name : #PtyImmediateExecutionStrategy,
 	#superclass : #PtyTaskExecutionStrategy,
-	#category : #'Presenty-NewCore'
+	#category : #Presenty
 }
 
 { #category : #'task execution' }

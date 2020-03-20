@@ -4,7 +4,7 @@ Class {
 	#instVars : [
 		'result'
 	],
-	#category : #'Presenty-NewCore'
+	#category : #Presenty
 }
 
 { #category : #accessing }

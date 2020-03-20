@@ -1,7 +1,7 @@
 Class {
 	#name : #PtyOneShotTaskReturnStrategy,
 	#superclass : #PtyTaskReturnStrategy,
-	#category : #'Presenty-NewCore'
+	#category : #Presenty
 }
 
 { #category : #'task execution' }

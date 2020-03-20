@@ -4,7 +4,7 @@ Class {
 	#instVars : [
 		'task'
 	],
-	#category : #'Presenty-NewCore'
+	#category : #Presenty
 }
 
 { #category : #'instance creation' }

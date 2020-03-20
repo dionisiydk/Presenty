@@ -1,7 +1,7 @@
 Class {
 	#name : #PtyPermanentTaskReturnStrategy,
 	#superclass : #PtyTaskReturnStrategy,
-	#category : #'Presenty-NewCore'
+	#category : #Presenty
 }
 
 { #category : #'task execution' }

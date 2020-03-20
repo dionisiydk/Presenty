@@ -5,7 +5,7 @@ Class {
 		'continuationStage',
 		'startingTask'
 	],
-	#category : #'Presenty-NewCore'
+	#category : #Presenty
 }
 
 { #category : #'instance creation' }

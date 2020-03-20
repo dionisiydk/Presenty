@@ -6,7 +6,7 @@ Class {
 		'defaultTaskExecutionPriority',
 		'currentWorkflow'
 	],
-	#category : #'Presenty-NewCore'
+	#category : #Presenty
 }
 
 { #category : #accessing }

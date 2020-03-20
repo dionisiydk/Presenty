@@ -16,7 +16,7 @@ Class {
 		'workflow',
 		'continuation'
 	],
-	#category : #'Presenty-Core'
+	#category : #Presenty
 }
 
 { #category : #'instance creation' }

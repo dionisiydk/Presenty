@@ -1,7 +1,7 @@
 Class {
 	#name : #PtyWorkflowContinuationStage,
 	#superclass : #PtyWorkflowStage,
-	#category : #'Presenty-NewCore'
+	#category : #Presenty
 }
 
 { #category : #testing }

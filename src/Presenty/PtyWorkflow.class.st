@@ -7,7 +7,7 @@ Class {
 		'spawnedWorkflows',
 		'worker'
 	],
-	#category : #'Presenty-NewCore'
+	#category : #Presenty
 }
 
 { #category : #controlling }

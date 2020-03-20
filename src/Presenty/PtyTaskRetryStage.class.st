@@ -1,7 +1,7 @@
 Class {
 	#name : #PtyTaskRetryStage,
 	#superclass : #PtyWorkflowContinuationStage,
-	#category : #'Presenty-NewCore'
+	#category : #Presenty
 }
 
 { #category : #controlling }
