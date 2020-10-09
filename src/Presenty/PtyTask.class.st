@@ -22,14 +22,6 @@ PtyTask class >> named: aString [
 	^self new name: aString 
 ]
 
-{ #category : #controlling }
-PtyTask >> activateInitialWorkflow [
-
-	self spawningParentTask ifNotNil: [:spawningTask | spawningTask beActive ].
-	workflow activateAs: initialWorkflow.
-	
-]
-
 { #category : #accessing }
 PtyTask >> announcer [
 	^ announcer
@@ -49,23 +41,6 @@ PtyTask >> asTask [
 PtyTask >> assignToActiveWorkflowIn: aWorkplace [
 	workflow := aWorkplace findActiveWorkflowOrCreateNewOne.
 	parentTask := workflow activeTask
-]
-
-{ #category : #controlling }
-PtyTask >> beActive [
-
-	self spawningParentTask ifNotNil: [:spawningTask | spawningTask beActive ].
-	(workflow includesTask: self) ifTrue: [ ^self ].
-	
-	workflow activateAs: initialWorkflow.
-	self beActiveInWorkflow
-	
-]
-
-{ #category : #controlling }
-PtyTask >> beActiveInWorkflow [ 
-
-	workflow registerNewTask: self
 ]
 
 { #category : #'initialize-release' }
@@ -233,7 +208,7 @@ PtyTask >> prepareExecutionWorkflow [
 { #category : #controlling }
 PtyTask >> prepareReturnWorkflow [
 
-	returnStrategy prepareWorkflow: workflow forReturnFrom: self
+	returnStrategy prepareReturnFrom: self
 ]
 
 { #category : #printing }
@@ -262,6 +237,25 @@ PtyTask >> requestExecution [
 	initialWorkflow := workflow captureStateForNewTask.
 	
 	^executionStrategy requestExecutionOf: self in: workflow
+]
+
+{ #category : #controlling }
+PtyTask >> resumeInitialWorkflow [
+
+	self spawningParentTask ifNotNil: [:spawningTask | spawningTask resumeWorkflow ].
+	workflow prepareActivationAs: initialWorkflow.
+	
+]
+
+{ #category : #controlling }
+PtyTask >> resumeWorkflow [
+
+	self spawningParentTask ifNotNil: [:spawningTask | spawningTask resumeWorkflow ].
+	(workflow includesTask: self) ifTrue: [ ^self ].
+	
+	workflow prepareActivationAs: initialWorkflow.
+	workflow registerNewTask: self
+	
 ]
 
 { #category : #execution }

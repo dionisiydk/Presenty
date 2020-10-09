@@ -5,7 +5,7 @@ Class {
 }
 
 { #category : #'task execution' }
-PtyTaskReturnStrategy >> prepareWorkflow: aWorkflow forReturnFrom: aTask [
+PtyTaskReturnStrategy >> prepareReturnFrom: aTask [
 	
 	self subclassResponsibility 
 ]

@@ -23,6 +23,6 @@ PtyTaskRetryStageTest >> testContinueWorkflowShouldFirstActivateInitialWorkflow 
 
 	workflowStage continueWorkflow.	
 	
-	[task activateInitialWorkflow.
+	[task resumeInitialWorkflow.
 	task startExecution] should beDoneInOrder 
 ]

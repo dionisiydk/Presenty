@@ -10,9 +10,9 @@ PtyPermanentTaskReturnStrategyTest >> createStrategy [
 ]
 
 { #category : #tests }
-PtyPermanentTaskReturnStrategyTest >> testShouldDoNothingWithWorkflowOnTaskReturn [
+PtyPermanentTaskReturnStrategyTest >> testShouldDoNothing [
 
-	strategy prepareWorkflow: workflow forReturnFrom: task.
+	strategy prepareReturnFrom: task.
 	
-	workflow should not receive anyMessage
+	task should not receive anyMessage
 ]

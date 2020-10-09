@@ -5,6 +5,6 @@ Class {
 }
 
 { #category : #'task execution' }
-PtyPermanentTaskReturnStrategy >> prepareWorkflow: aWorkflow forReturnFrom: aTask [
+PtyPermanentTaskReturnStrategy >> prepareReturnFrom: aTask [
 
 ]

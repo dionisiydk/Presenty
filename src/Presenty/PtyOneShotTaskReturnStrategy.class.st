@@ -5,7 +5,7 @@ Class {
 }
 
 { #category : #'task execution' }
-PtyOneShotTaskReturnStrategy >> prepareWorkflow: aWorkflow forReturnFrom: aTask [
+PtyOneShotTaskReturnStrategy >> prepareReturnFrom: aTask [
 	
-	aTask activateInitialWorkflow
+	aTask resumeInitialWorkflow
 ]

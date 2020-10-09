@@ -10,9 +10,9 @@ PtyOneShotTaskReturnStrategyTest >> createStrategy [
 ]
 
 { #category : #tests }
-PtyOneShotTaskReturnStrategyTest >> testShouldActivateInitialWorkflow [ 
+PtyOneShotTaskReturnStrategyTest >> testShouldResumeInitialWorkflow [ 
 
-	strategy prepareWorkflow: workflow forReturnFrom: task.
+	strategy prepareReturnFrom: task.
 	
-	task should receive activateInitialWorkflow
+	task should receive resumeInitialWorkflow
 ]

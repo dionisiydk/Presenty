@@ -10,26 +10,6 @@ Class {
 	#category : #Presenty
 }
 
-{ #category : #controlling }
-PtyWorkflow >> activateAs: aWorkflow [
-
-	currentTasks := aWorkflow currentTasks copy.
-	spawnedWorkflows := aWorkflow spawnedWorkflows copy.
-	parentWorkflow notNil & (parentWorkflow ~= aWorkflow parentWorkflow) ifTrue: [ 
-		parentWorkflow removeSpawnedWorkflow: self ].
-	parentWorkflow := aWorkflow parentWorkflow.
-	parentWorkflow ifNotNil: [ parentWorkflow activateWithSpawnedWorkflow: self ]
-]
-
-{ #category : #controlling }
-PtyWorkflow >> activateWithSpawnedWorkflow: aWorkflow [
-
-	(spawnedWorkflows includes: aWorkflow) ifFalse: [ 
-		spawnedWorkflows add: aWorkflow ].
-	
-	parentWorkflow ifNotNil: [ parentWorkflow activateWithSpawnedWorkflow: self ]
-]
-
 { #category : #accessing }
 PtyWorkflow >> activeTask [ 
 	^worker ifNotNil: [ worker activeTask ]
@@ -136,6 +116,26 @@ PtyWorkflow >> postCopy [
 	
 	currentTasks := currentTasks copy.
 	spawnedWorkflows := spawnedWorkflows copy
+]
+
+{ #category : #controlling }
+PtyWorkflow >> prepareActivationAs: aTemplateWorkflow [
+
+	currentTasks := aTemplateWorkflow currentTasks copy.
+	spawnedWorkflows := aTemplateWorkflow spawnedWorkflows copy.
+	parentWorkflow notNil & (parentWorkflow ~= aTemplateWorkflow parentWorkflow) ifTrue: [ 
+		parentWorkflow removeSpawnedWorkflow: self ].
+	parentWorkflow := aTemplateWorkflow parentWorkflow.
+	parentWorkflow ifNotNil: [ parentWorkflow prepareActivationWith: self ]
+]
+
+{ #category : #controlling }
+PtyWorkflow >> prepareActivationWith: aSpawnedWorkflow [
+
+	(spawnedWorkflows includes: aSpawnedWorkflow) ifFalse: [ 
+		spawnedWorkflows add: aSpawnedWorkflow ].
+	
+	parentWorkflow ifNotNil: [ parentWorkflow prepareActivationWith: self ]
 ]
 
 { #category : #controlling }

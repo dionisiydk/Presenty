@@ -7,6 +7,6 @@ Class {
 { #category : #controlling }
 PtyTaskRetryStage >> continueWorkflow [
 
-	task activateInitialWorkflow.
+	task resumeInitialWorkflow.
 	^task startExecution
 ]

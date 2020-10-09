@@ -18,112 +18,6 @@ PtyWorkflowTest >> setUp [
 ]
 
 { #category : #tests }
-PtyWorkflowTest >> testActivationShouldAlsoActivatesParent [ 
-	| parentWorkflow anotherWorkflow |
-	parentWorkflow := Mock new.
-	anotherWorkflow := PtyWorkflow new.
-	anotherWorkflow parentWorkflow: parentWorkflow.
-	workflow parentWorkflow: parentWorkflow.
-	
-	workflow activateAs: anotherWorkflow.
-	
-	parentWorkflow should receive activateWithSpawnedWorkflow: workflow.
-]
-
-{ #category : #tests }
-PtyWorkflowTest >> testActivationShouldCleanExistingParent [ 
-	| anotherWorkflow newParentWorkflow existingParent |
-	newParentWorkflow := Mock new.
-	anotherWorkflow := PtyWorkflow new.
-	anotherWorkflow parentWorkflow: newParentWorkflow.
-	existingParent := Mock new.
-	workflow parentWorkflow: existingParent.
-	
-	workflow activateAs: anotherWorkflow.
-	
-	existingParent should receive removeSpawnedWorkflow: workflow.
-	workflow parentWorkflow should be: newParentWorkflow.
-]
-
-{ #category : #tests }
-PtyWorkflowTest >> testActivationShouldSetNewCurrentTasks [ 
-	| anotherWorkflow |
-	anotherWorkflow := PtyWorkflow new.
-	anotherWorkflow registerNewTask: #newTask.
-	
-	workflow registerNewTask: #existingTask.	
-	workflow activateAs: anotherWorkflow.
-	
-	workflow currentTasks should equal: #(newTask).
-	workflow currentTasks should not be: anotherWorkflow currentTasks.
-]
-
-{ #category : #tests }
-PtyWorkflowTest >> testActivationShouldSetNewParent [ 
-	| anotherWorkflow newParentWorkflow |
-	newParentWorkflow := Mock new.
-	anotherWorkflow := PtyWorkflow new.
-	anotherWorkflow parentWorkflow: newParentWorkflow.
-	
-	workflow activateAs: anotherWorkflow.
-	
-	workflow parentWorkflow should be: newParentWorkflow
-]
-
-{ #category : #tests }
-PtyWorkflowTest >> testActivationShouldSetNewSpawnedWorkflows [ 
-	| anotherWorkflow spawnedWorkflow |
-	anotherWorkflow := PtyWorkflow new.
-	spawnedWorkflow := anotherWorkflow spawnNew.
-	workflow spawnNew.
-	
-	workflow activateAs: anotherWorkflow.
-	
-	workflow spawnedWorkflows should equal: {spawnedWorkflow}.
-	workflow spawnedWorkflows should not be: anotherWorkflow spawnedWorkflows
-]
-
-{ #category : #tests }
-PtyWorkflowTest >> testActivationWithGivenSpawnedWorkflow [ 
-
-	| newWorkflow parentWorkflow |
-	parentWorkflow := Mock new.
-	workflow parentWorkflow: parentWorkflow.
-	newWorkflow := PtyWorkflow new.
-	
-	workflow activateWithSpawnedWorkflow: newWorkflow.
-	
-	workflow spawnedWorkflows should include: newWorkflow.
-	parentWorkflow should receive activateWithSpawnedWorkflow: workflow
-]
-
-{ #category : #tests }
-PtyWorkflowTest >> testActivationWithGivenSpawnedWorkflowWhenItIsAlreadyActivated [
-
-	| newWorkflow parentWorkflow |
-	parentWorkflow := Mock new.
-	workflow parentWorkflow: parentWorkflow.
-	newWorkflow := workflow spawnNew.
-	
-	workflow activateWithSpawnedWorkflow: newWorkflow.
-	
-	workflow spawnedWorkflows should haveSize: 1.
-	parentWorkflow should receive activateWithSpawnedWorkflow: workflow
-]
-
-{ #category : #tests }
-PtyWorkflowTest >> testActivationWithGivenSpawnedWorkflowWhenNoParentExists [
-
-	| newWorkflow |
-	workflow parentWorkflow: nil.
-	newWorkflow := PtyWorkflow new.
-	
-	workflow activateWithSpawnedWorkflow: newWorkflow.
-	
-	workflow spawnedWorkflows should include: newWorkflow
-]
-
-{ #category : #tests }
 PtyWorkflowTest >> testActiveTask [ 
 
 	workflow worker: worker.
@@ -361,6 +255,112 @@ PtyWorkflowTest >> testIsSpawnedFromAnotherWorkflow [
 	grandparent := PtyWorkflow new.
 	anotherWorkflow parentWorkflow: grandparent.
 	workflow should be isSpawnedFrom: grandparent.
+]
+
+{ #category : #tests }
+PtyWorkflowTest >> testPreparingActivationAsAnotherWorkflowShouldCleanExistingParent [ 
+	| anotherWorkflow newParentWorkflow existingParent |
+	newParentWorkflow := Mock new.
+	anotherWorkflow := PtyWorkflow new.
+	anotherWorkflow parentWorkflow: newParentWorkflow.
+	existingParent := Mock new.
+	workflow parentWorkflow: existingParent.
+	
+	workflow prepareActivationAs: anotherWorkflow.
+	
+	existingParent should receive removeSpawnedWorkflow: workflow.
+	workflow parentWorkflow should be: newParentWorkflow.
+]
+
+{ #category : #tests }
+PtyWorkflowTest >> testPreparingActivationAsAnotherWorkflowShouldSetNewCurrentTasks [ 
+	| anotherWorkflow |
+	anotherWorkflow := PtyWorkflow new.
+	anotherWorkflow registerNewTask: #newTask.
+	
+	workflow registerNewTask: #existingTask.	
+	workflow prepareActivationAs: anotherWorkflow.
+	
+	workflow currentTasks should equal: #(newTask).
+	workflow currentTasks should not be: anotherWorkflow currentTasks.
+]
+
+{ #category : #tests }
+PtyWorkflowTest >> testPreparingActivationAsAnotherWorkflowShouldSetNewParent [ 
+	| anotherWorkflow newParentWorkflow |
+	newParentWorkflow := Mock new.
+	anotherWorkflow := PtyWorkflow new.
+	anotherWorkflow parentWorkflow: newParentWorkflow.
+	
+	workflow prepareActivationAs: anotherWorkflow.
+	
+	workflow parentWorkflow should be: newParentWorkflow
+]
+
+{ #category : #tests }
+PtyWorkflowTest >> testPreparingActivationOfAnotherWorkflowShouldPrepareItsParent [ 
+	| parentWorkflow anotherWorkflow |
+	parentWorkflow := Mock new.
+	anotherWorkflow := PtyWorkflow new.
+	anotherWorkflow parentWorkflow: parentWorkflow.
+	workflow parentWorkflow: parentWorkflow.
+	
+	workflow prepareActivationAs: anotherWorkflow.
+	
+	parentWorkflow should receive prepareActivationWith: workflow.
+]
+
+{ #category : #tests }
+PtyWorkflowTest >> testPreparingActivationOfAnotherWorkflowShouldSetNewSpawnedWorkflows [ 
+	| anotherWorkflow spawnedWorkflow |
+	anotherWorkflow := PtyWorkflow new.
+	spawnedWorkflow := anotherWorkflow spawnNew.
+	workflow spawnNew.
+	
+	workflow prepareActivationAs: anotherWorkflow.
+	
+	workflow spawnedWorkflows should equal: {spawnedWorkflow}.
+	workflow spawnedWorkflows should not be: anotherWorkflow spawnedWorkflows
+]
+
+{ #category : #tests }
+PtyWorkflowTest >> testPreparingActivationWithSpawnedWorkflow [ 
+
+	| newWorkflow parentWorkflow |
+	parentWorkflow := Mock new.
+	workflow parentWorkflow: parentWorkflow.
+	newWorkflow := PtyWorkflow new.
+	
+	workflow prepareActivationWith: newWorkflow.
+	
+	workflow spawnedWorkflows should include: newWorkflow.
+	parentWorkflow should receive prepareActivationWith: workflow
+]
+
+{ #category : #tests }
+PtyWorkflowTest >> testPreparingActivationWithSpawnedWorkflowWhenItIsAlreadyRegistered [
+
+	| newWorkflow parentWorkflow |
+	parentWorkflow := Mock new.
+	workflow parentWorkflow: parentWorkflow.
+	newWorkflow := workflow spawnNew.
+	
+	workflow prepareActivationWith: newWorkflow.
+	
+	workflow spawnedWorkflows should haveSize: 1.
+	parentWorkflow should receive prepareActivationWith: workflow
+]
+
+{ #category : #tests }
+PtyWorkflowTest >> testPreparingActivationWithSpawnedWorkflowWhenNoParentExists [
+
+	| newWorkflow |
+	workflow parentWorkflow: nil.
+	newWorkflow := PtyWorkflow new.
+	
+	workflow prepareActivationWith: newWorkflow.
+	
+	workflow spawnedWorkflows should include: newWorkflow
 ]
 
 { #category : #tests }
