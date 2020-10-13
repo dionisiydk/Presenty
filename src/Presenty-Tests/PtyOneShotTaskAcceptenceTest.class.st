@@ -24,7 +24,8 @@ PtyOneShotTaskAcceptenceTest >> testExecutionAsFirstTask [
 	
 	user executeTask: task.
 	
-	workplace currentTasks should be isEmpty
+	workplace currentTasks should be isEmpty.
+	workplace currentWorkflow spawnedWorkflows should be isEmpty
 ]
 
 { #category : #tests }

@@ -268,12 +268,14 @@ PtyTaskTest >> testPrepareReturnWorkflow [
 	
 	| returnStrategy |
 	returnStrategy := Mock new.
+	workflow := Mock new.
 	task returnStrategy: returnStrategy.
-	task workflow: #workflow.
+	task workflow: workflow.
 		
 	task prepareReturnWorkflow.
 
-	returnStrategy should receive prepareReturnFrom: task
+	[returnStrategy prepareReturnFrom: task.
+	workflow disableIfEmpty] should beDoneInOrder
 ]
 
 { #category : #tests }

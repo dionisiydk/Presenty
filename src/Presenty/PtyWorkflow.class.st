@@ -56,6 +56,17 @@ PtyWorkflow >> deliverResult: anObject of: aTask [
 ]
 
 { #category : #controlling }
+PtyWorkflow >> disable [
+	parentWorkflow ifNotNil: [parentWorkflow removeSpawnedWorkflow: self]
+]
+
+{ #category : #controlling }
+PtyWorkflow >> disableIfEmpty [
+	
+	self isEmpty ifTrue: [ self disable ]
+]
+
+{ #category : #controlling }
 PtyWorkflow >> executeTask: aTask [
 	
 	^worker executeWorkflowStage: (PtyTaskStartStage for: aTask)
@@ -91,6 +102,13 @@ PtyWorkflow >> initialize [
 PtyWorkflow >> isActive [
 
 	^worker isActive and: [ worker servesWorkflow: self ]
+]
+
+{ #category : #testing }
+PtyWorkflow >> isEmpty [ 
+
+	^currentTasks isEmpty and: [ 
+		spawnedWorkflows allSatisfy: [ :each | each isEmpty ]]
 ]
 
 { #category : #testing }

@@ -208,7 +208,8 @@ PtyTask >> prepareExecutionWorkflow [
 { #category : #controlling }
 PtyTask >> prepareReturnWorkflow [
 
-	returnStrategy prepareReturnFrom: self
+	returnStrategy prepareReturnFrom: self.
+	workflow disableIfEmpty
 ]
 
 { #category : #printing }

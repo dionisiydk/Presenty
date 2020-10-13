@@ -124,6 +124,88 @@ PtyWorkflowTest >> testDeliveringTaskResult [
 ]
 
 { #category : #tests }
+PtyWorkflowTest >> testDisable [
+
+	| parentWorkflow |
+	parentWorkflow := Mock new.
+	workflow parentWorkflow: parentWorkflow.
+	
+	workflow disable.
+	
+	parentWorkflow should receive removeSpawnedWorkflow: workflow
+]
+
+{ #category : #tests }
+PtyWorkflowTest >> testDisableIfEmptyWhenNoParentExists [
+
+	workflow parentWorkflow: nil.
+	workflow currentTasks should be isEmpty.
+	
+	workflow disableIfEmpty
+]
+
+{ #category : #tests }
+PtyWorkflowTest >> testDisableIfEmptyWhenThereAreEmptySpawnedWorkflows [
+
+	| parentWorkflow |
+	parentWorkflow := Mock new.
+	workflow parentWorkflow: parentWorkflow.
+	workflow spawnNew.
+	
+	workflow disableIfEmpty.
+	
+	parentWorkflow should receive removeSpawnedWorkflow: workflow
+]
+
+{ #category : #tests }
+PtyWorkflowTest >> testDisableIfEmptyWhenThereAreNoRegisteredTasks [
+
+	| parentWorkflow |
+	parentWorkflow := Mock new.
+	workflow parentWorkflow: parentWorkflow.
+	workflow currentTasks should be isEmpty.
+	
+	workflow disableIfEmpty.
+	
+	parentWorkflow should receive removeSpawnedWorkflow: workflow
+]
+
+{ #category : #tests }
+PtyWorkflowTest >> testDisableIfEmptyWhenThereAreNonEmptySpawnedWorkflows [
+
+	| parentWorkflow spawnedWorkflow |
+	parentWorkflow := Mock new.
+	workflow parentWorkflow: parentWorkflow.
+	spawnedWorkflow := workflow spawnNew.
+	spawnedWorkflow registerNewTask: #task.
+	
+	workflow disableIfEmpty.
+	
+	parentWorkflow should not receive anyMessage
+]
+
+{ #category : #tests }
+PtyWorkflowTest >> testDisableIfEmptyWhenThereAreRegisteredTasks [
+
+	| parentWorkflow |
+	parentWorkflow := Mock new.
+	workflow parentWorkflow: parentWorkflow.
+	workflow registerNewTask: #task.
+	
+	workflow disableIfEmpty.
+	
+	parentWorkflow should not receive anyMessage
+]
+
+{ #category : #tests }
+PtyWorkflowTest >> testDisableIfItIsRootWorkflow [
+
+	workflow parentWorkflow: nil.
+	
+	workflow disable
+]
+
+{ #category : #tests }
 PtyWorkflowTest >> testExecutingTask [
 
 	| result |
