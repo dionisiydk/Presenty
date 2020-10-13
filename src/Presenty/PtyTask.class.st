@@ -243,7 +243,7 @@ PtyTask >> requestExecution [
 PtyTask >> resumeInitialWorkflow [
 
 	self spawningParentTask ifNotNil: [:spawningTask | spawningTask resumeWorkflow ].
-	workflow prepareActivationAs: initialWorkflow.
+	workflow resumeWorkflow: initialWorkflow.
 	
 ]
 
@@ -253,7 +253,7 @@ PtyTask >> resumeWorkflow [
 	self spawningParentTask ifNotNil: [:spawningTask | spawningTask resumeWorkflow ].
 	(workflow includesTask: self) ifTrue: [ ^self ].
 	
-	workflow prepareActivationAs: initialWorkflow.
+	workflow resumeWorkflow: initialWorkflow.
 	workflow registerNewTask: self
 	
 ]

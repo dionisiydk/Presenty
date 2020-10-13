@@ -312,7 +312,7 @@ PtyTaskTest >> testResumingInitialWorkflow [
 	task resumeInitialWorkflow.
 	
 	[spawningTask resumeWorkflow.
-	workflow prepareActivationAs: initialWorkflow] should beDoneInOrder
+	workflow resumeWorkflow: initialWorkflow] should beDoneInOrder
 ]
 
 { #category : #tests }
@@ -322,7 +322,7 @@ PtyTaskTest >> testResumingInitialWorkflowOfInitialTask [
 	
 	task resumeInitialWorkflow.
 	
-	workflow should receive prepareActivationAs: initialWorkflow
+	workflow should receive resumeWorkflow: initialWorkflow
 
 	
 ]
@@ -334,7 +334,7 @@ PtyTaskTest >> testResumingWorkflowShouldAddTaskIntoIt [
 	
 	task resumeWorkflow.
 	
-	[workflow prepareActivationAs: initialWorkflow.
+	[workflow resumeWorkflow: initialWorkflow.
 	workflow registerNewTask: task] should beDoneInOrder
 ]
 
@@ -349,7 +349,7 @@ PtyTaskTest >> testResumingWorkflowShouldFirstResumeSpawningParentTask [
 	task resumeWorkflow.
 	
 	[spawningTask resumeWorkflow.
-	workflow prepareActivationAs: initialWorkflow] should beDoneInOrder
+	workflow resumeWorkflow: initialWorkflow] should beDoneInOrder
 ]
 
 { #category : #tests }
@@ -359,7 +359,7 @@ PtyTaskTest >> testResumingWorkflowWhichAlreadyIncludesTask [
 	
 	task resumeWorkflow.
 	
-	workflow should not receive prepareActivationAs: initialWorkflow
+	workflow should not receive resumeWorkflow: initialWorkflow
 ]
 
 { #category : #tests }
