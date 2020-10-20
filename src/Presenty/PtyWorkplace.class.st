@@ -2,7 +2,6 @@ Class {
 	#name : #PtyWorkplace,
 	#superclass : #Object,
 	#instVars : [
-		'workers',
 		'defaultTaskExecutionPriority',
 		'currentWorkflow'
 	],
@@ -63,7 +62,6 @@ PtyWorkplace >> findPreferredTaskImplementing: requestedTask [
 PtyWorkplace >> initialize [
 	super initialize.
 	
-	workers := OrderedCollection new.
 	defaultTaskExecutionPriority := Processor userBackgroundPriority.
 	currentWorkflow := PtyWorkflow new
 ]
@@ -78,33 +76,6 @@ PtyWorkplace >> planExecutionOf: aTask by: aUser [
 ]
 
 { #category : #controlling }
-PtyWorkplace >> registerWorker: aWorker [ 
-
-	(workers includes: aWorker) ifTrue: [ ^self ].
-	
-	workers add: aWorker
-]
-
-{ #category : #controlling }
 PtyWorkplace >> removeAllTasks [
 	currentWorkflow removeAllTasks
-]
-
-{ #category : #accessing }
-PtyWorkplace >> withActiveWorkerDo: aBlock ifNone: absentBlock [
-
-	^workers 
-		detect: [ :each | each isActive ] 
-		ifFound: aBlock 
-		ifNone: absentBlock
-]
-
-{ #category : #accessing }
-PtyWorkplace >> workers [
-	^ workers
-]
-
-{ #category : #accessing }
-PtyWorkplace >> workers: anObject [
-	workers := anObject
 ]

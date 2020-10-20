@@ -46,12 +46,6 @@ PtyWorkplaceTest >> testHasCurrentWorkflowByDefault [
 ]
 
 { #category : #tests }
-PtyWorkplaceTest >> testHasEmptyWorkersByDefault [
-
-	workplace workers should be isEmpty
-]
-
-{ #category : #tests }
 PtyWorkplaceTest >> testHasNoCurrentTasksByDefault [
 
 	workplace currentTasks should be isEmpty
@@ -99,30 +93,6 @@ PtyWorkplaceTest >> testPlanningTaskExecutionShouldReturnPreferredTask [
 	plannedTask := workplace planExecutionOf: requestedTask by: #user.
 	
 	plannedTask should be: #preferredTask
-]
-
-{ #category : #tests }
-PtyWorkplaceTest >> testRegisteringNewWorker [
-
-	| worker |
-	worker := PtyWorker inWorkplace: workplace.
-	
-	workplace registerWorker: worker.
-	
-	workplace workers should include: worker
-]
-
-{ #category : #tests }
-PtyWorkplaceTest >> testRegisteringSameWorkerTwice [
-
-	| worker |
-	worker := PtyWorker inWorkplace: workplace.
-	
-	workplace registerWorker: worker.
-	workplace registerWorker: worker.
-	
-	workplace workers should haveSize: 1.
-	workplace workers should include: worker
 ]
 
 { #category : #tests }
