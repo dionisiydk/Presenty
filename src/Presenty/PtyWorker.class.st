@@ -89,7 +89,7 @@ PtyWorker >> process: anObject [
 { #category : #controlling }
 PtyWorker >> runInitialTask: aTask usingStartStage: aTaskStartStage [
 
-	[	
+	[	aTask startNewSession.
 		[self continueWorkflowWithTask: aTask usingStartStage: aTaskStartStage] 
 			on: Error do: [:err | self notifyUserAbout: err]
 

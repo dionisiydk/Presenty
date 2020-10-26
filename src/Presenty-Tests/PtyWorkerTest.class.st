@@ -107,6 +107,16 @@ PtyWorkerTest >> testInitialTaskExecutionShouldExpectUserRequest [
 ]
 
 { #category : #tests }
+PtyWorkerTest >> testInitialTaskExecutionShouldFirstStartNewSession [
+	worker stub.
+	
+	worker runInitialTask: task usingStartStage: #startTaskStage.
+
+	[task startNewSession.	
+	worker continueWorkflowWithTask: task usingStartStage: #startTaskStage] should beDoneInOrder 
+]
+
+{ #category : #tests }
 PtyWorkerTest >> testInitialTaskFailedExecution [
 
 	| error |

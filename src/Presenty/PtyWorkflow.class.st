@@ -5,7 +5,8 @@ Class {
 		'parentWorkflow',
 		'currentTasks',
 		'spawnedWorkflows',
-		'worker'
+		'worker',
+		'currentSession'
 	],
 	#category : #Presenty
 }
@@ -22,8 +23,18 @@ PtyWorkflow >> allCurrentTasks [
 ]
 
 { #category : #controlling }
-PtyWorkflow >> captureStateForNewTask [
+PtyWorkflow >> captureState [
 	^self copy
+]
+
+{ #category : #accessing }
+PtyWorkflow >> currentSession [
+	^ currentSession
+]
+
+{ #category : #accessing }
+PtyWorkflow >> currentSession: anObject [
+	^ currentSession := anObject
 ]
 
 { #category : #accessing }
@@ -68,6 +79,7 @@ PtyWorkflow >> disableIfEmpty [
 
 { #category : #controlling }
 PtyWorkflow >> executeTask: aTask [
+	aTask workSession: currentSession.
 	
 	^worker executeWorkflowStage: (PtyTaskStartStage for: aTask)
 ]
@@ -203,6 +215,11 @@ PtyWorkflow >> spawnedWorkflows [
 { #category : #accessing }
 PtyWorkflow >> spawnedWorkflows: anObject [
 	spawnedWorkflows := anObject
+]
+
+{ #category : #controlling }
+PtyWorkflow >> startNewSession [
+	^currentSession := PtyWorkSession for: self
 ]
 
 { #category : #accessing }

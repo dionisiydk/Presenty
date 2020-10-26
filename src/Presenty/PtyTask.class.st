@@ -12,7 +12,8 @@ Class {
 		'parentTask',
 		'initialWorkflow',
 		'workflow',
-		'continuation'
+		'continuation',
+		'workSession'
 	],
 	#category : #Presenty
 }
@@ -235,7 +236,7 @@ PtyTask >> printOn: aStream [
 { #category : #execution }
 PtyTask >> requestExecution [ 
 
-	initialWorkflow := workflow captureStateForNewTask.
+	initialWorkflow := workflow captureState.
 	
 	^executionStrategy requestExecutionOf: self in: workflow
 ]
@@ -282,7 +283,7 @@ PtyTask >> spawnWorkflow [
 	"Task belongs to its workflow. It keeps the state of this workflow at the time when the task was requested. The initialWorkflow variable represents this initial state.
 	When task is spawned it must ensure this logic. So the initialWorkflow must represent the initial state of this new spawned workflow"
 	workflow := workflow spawnNew.
-	initialWorkflow := workflow captureStateForNewTask
+	initialWorkflow := workflow captureState
 ]
 
 { #category : #accessing }
@@ -301,6 +302,17 @@ PtyTask >> startExecution [
 	result := self body.
 	self prepareReturnWorkflow.
 	^result
+]
+
+{ #category : #controlling }
+PtyTask >> startNewSession [ 
+	workSession := workflow startNewSession
+]
+
+{ #category : #execution }
+PtyTask >> stopExecution [
+	
+	workSession stopWorkflow: workflow
 ]
 
 { #category : #'initialize-release' }
@@ -329,6 +341,16 @@ PtyTask >> user [
 { #category : #accessing }
 PtyTask >> user: anObject [
 	user := anObject
+]
+
+{ #category : #accessing }
+PtyTask >> workSession [
+	^ workSession
+]
+
+{ #category : #accessing }
+PtyTask >> workSession: anObject [
+	workSession := anObject
 ]
 
 { #category : #accessing }

@@ -55,24 +55,24 @@ PtyWorkflowTest >> testAllCurrentTasksWhenNothingWasSpawned [
 ]
 
 { #category : #tests }
-PtyWorkflowTest >> testCaptureStateForNewTask [ 
+PtyWorkflowTest >> testCaptureState [ 
 
 	| capturedWorkflow |
 	workflow registerNewTask: #existingTask.
 	
-	capturedWorkflow := workflow captureStateForNewTask.
+	capturedWorkflow := workflow captureState.
 	
 	capturedWorkflow currentTasks should include: #existingTask.
 	capturedWorkflow currentTasks should not be: workflow currentTasks
 ]
 
 { #category : #tests }
-PtyWorkflowTest >> testCaptureStateForNewTaskShouldCopySpawnedWorkflowsList [
+PtyWorkflowTest >> testCaptureStateShouldCopySpawnedWorkflowsList [
 
 	| capturedWorkflow forkedWorkflow |
 	forkedWorkflow := workflow spawnNew.
 	
-	capturedWorkflow := workflow captureStateForNewTask.
+	capturedWorkflow := workflow captureState.
 	
 	capturedWorkflow spawnedWorkflows should include: forkedWorkflow.
 	capturedWorkflow spawnedWorkflows should not be: workflow spawnedWorkflows
@@ -208,14 +208,27 @@ PtyWorkflowTest >> testDisableIfItIsRootWorkflow [
 { #category : #tests }
 PtyWorkflowTest >> testExecutingTask [
 
-	| result |
+	| result task |
+	task := [ ] asTask.
 	(worker stub executeWorkflowStage: Arg stage) willReturn: #result.
 	
-	result := workflow executeTask: #task.
+	result := workflow executeTask: task.
 	
 	result should be: #result.
 	Arg stage should beInstanceOf: PtyTaskStartStage.
-	Arg stage where task should be: #task
+	Arg stage where task should be: task
+]
+
+{ #category : #tests }
+PtyWorkflowTest >> testExecutingTaskShouldBindItToCurrentSession [
+
+	| task |
+	task := [] asTask.
+	workflow currentSession: #session.
+	
+	workflow executeTask: task.
+	
+	task workSession should be: #session
 ]
 
 { #category : #tests }
@@ -511,4 +524,32 @@ PtyWorkflowTest >> testSpawnNewWorkflow [
 	workflow spawnedWorkflows should include: newWorkflow.
 	newWorkflow currentTasks should be isEmpty.
 	newWorkflow currentTasks should not be: workflow currentTasks
+]
+
+{ #category : #tests }
+PtyWorkflowTest >> testStartingNewSession [
+
+	| session |
+	session := workflow startNewSession.
+	
+	session should beInstanceOf: PtyWorkSession.
+	session should be: workflow currentSession
+]
+
+{ #category : #tests }
+PtyWorkflowTest >> testStartingNewSessionShouldCaptureWorkflowState [
+
+	| session |
+	workflow stub.
+	session := workflow startNewSession.
+	
+	session initialWorkflow should beReturnedFrom: [ workflow captureState ]
+]
+
+{ #category : #tests }
+PtyWorkflowTest >> testStopExecutionWhenWorkflowIsNotActive [
+
+	worker stub isActive willReturn: false.
+	
+	workflow stopExecution
 ]

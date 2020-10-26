@@ -67,9 +67,7 @@ PtyTaskTest >> testBePermanentTask [
 { #category : #tests }
 PtyTaskTest >> testBelongsToWorkflow [
 
-	task workflow: #workflow.
-	
-	task should be belongsToWorkflow: #workflow.
+	task should be belongsToWorkflow: workflow.
 	task should not be belongsToWorkflow: #anotherWorkflow
 ]
 
@@ -122,19 +120,12 @@ PtyTaskTest >> testCurrentWorkflowStageShouldKeepActualContinuationInTask [
 { #category : #tests }
 PtyTaskTest >> testDefaultExecutionPriorityIsReturnedFromWorkplace [
 
-	| workflow |
-	workflow := Mock new.
-	task workflow: workflow.
-	
 	task executionPriority should beReturnedFrom: [ workflow defaultTaskExecutionPriority ]
 ]
 
 { #category : #tests }
 PtyTaskTest >> testDeliveringResult [
 
-	| workflow |
-	workflow := Mock new.
-	task workflow: workflow.
 	task continuation: #continuation.
 		
 	task deliverResult: #taskResult.
@@ -145,9 +136,7 @@ PtyTaskTest >> testDeliveringResult [
 { #category : #tests }
 PtyTaskTest >> testDeliveringResultWhenTaskWasNotStarted [
 
-	| workflow error |
-	workflow := Mock new.
-	task workflow: workflow.
+	| error |
 	task continuation: nil.
 		
 	error := [task deliverResult: #taskResult] should fail.
@@ -157,7 +146,6 @@ PtyTaskTest >> testDeliveringResultWhenTaskWasNotStarted [
 { #category : #tests }
 PtyTaskTest >> testExecutionShouldPassThrough3Steps [
 	
-	task workflow: Mock new.
 	task stub.
 	
 	task startExecution.
@@ -256,11 +244,10 @@ PtyTaskTest >> testPrepareExecutionWorkflow [
 	| workflowActivationStrategy |
 	workflowActivationStrategy := Mock new.
 	task workflowActivationStrategy: workflowActivationStrategy.
-	task workflow: #workflow.
 		
 	task prepareExecutionWorkflow.
 
-	workflowActivationStrategy should receive prepareWorkflow: #workflow forExecutionOf: task
+	workflowActivationStrategy should receive prepareWorkflow: workflow forExecutionOf: task
 ]
 
 { #category : #tests }
@@ -281,10 +268,9 @@ PtyTaskTest >> testPrepareReturnWorkflow [
 { #category : #tests }
 PtyTaskTest >> testRequestExecution [
 
-	| executionStrategy result workflow |
+	| executionStrategy result |
 	executionStrategy := Mock new.
-	workflow := Mock new.
-	task workflow: workflow; executionStrategy: executionStrategy.
+	task executionStrategy: executionStrategy.
 
 	result := task requestExecution.
 
@@ -299,8 +285,8 @@ PtyTaskTest >> testRequestExecutionShouldCaptureInitialWorkflow [
 
 	task requestExecution.
 
-	task initialWorkflow should beReturnedFrom: [ workflow captureStateForNewTask ].
-	[ workflow captureStateForNewTask.
+	task initialWorkflow should beReturnedFrom: [ workflow captureState ].
+	[ workflow captureState.
 	executionStrategy requestExecutionOf: Any in: Any ] should beDoneInOrder
 ]
 
@@ -367,9 +353,6 @@ PtyTaskTest >> testResumingWorkflowWhichAlreadyIncludesTask [
 { #category : #tests }
 PtyTaskTest >> testRetryExecution [
 
-	| workflow |
-	workflow := Mock new.
-	task workflow: workflow.
 	task continuation: #continuation.
 		
 	task retryExecution.
@@ -380,9 +363,7 @@ PtyTaskTest >> testRetryExecution [
 { #category : #tests }
 PtyTaskTest >> testRetryExecutionWhenTaskWasNotStarted [
 
-	| workflow error |
-	workflow := Mock new.
-	task workflow: workflow.
+	| error |
 	task continuation: nil.
 		
 	error := [task retryExecution] should fail.
@@ -429,7 +410,27 @@ PtyTaskTest >> testSpawningWorkflow [
 	task spawnWorkflow.
 	
 	task workflow should be: newWorkflow.
-	task initialWorkflow should beReturnedFrom: [newWorkflow captureStateForNewTask].
+	task initialWorkflow should beReturnedFrom: [newWorkflow captureState].
+]
+
+{ #category : #tests }
+PtyTaskTest >> testStartingNewSession [
+
+	task startNewSession.
+
+	task workSession should beReturnedFrom: [ workflow startNewSession ].
+]
+
+{ #category : #tests }
+PtyTaskTest >> testStopExecution [
+
+	| session |
+	session := Mock new.
+	task workSession: session.
+
+	task stopExecution.
+
+	session should receive stopWorkflow: workflow
 ]
 
 { #category : #tests }
