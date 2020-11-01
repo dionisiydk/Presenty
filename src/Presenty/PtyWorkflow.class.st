@@ -107,7 +107,8 @@ PtyWorkflow >> initialize [
 	super initialize.
 	
 	currentTasks := OrderedCollection new.
-	spawnedWorkflows := OrderedCollection new
+	spawnedWorkflows := OrderedCollection new.
+	self startNewSession
 ]
 
 { #category : #testing }
@@ -220,6 +221,12 @@ PtyWorkflow >> spawnedWorkflows: anObject [
 { #category : #controlling }
 PtyWorkflow >> startNewSession [
 	^currentSession := PtyWorkSession for: self
+]
+
+{ #category : #controlling }
+PtyWorkflow >> stopTask: aTask [
+	
+	worker executeWorkflowStage: (PtyTaskStopStage for: aTask)
 ]
 
 { #category : #accessing }

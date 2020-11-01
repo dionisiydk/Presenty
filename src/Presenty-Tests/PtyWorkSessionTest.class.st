@@ -25,6 +25,5 @@ PtyWorkSessionTest >> testStopWorkflow [
 
 	session stopWorkflow: workflow.
 	
-	[workflow stopExecution.
-	workflow resumeWorkflow: initialWorkflow] should beDoneInOrder 
+	workflow should receive resumeWorkflow: initialWorkflow
 ]

@@ -54,7 +54,7 @@ PtyWorkplace >> findActiveWorkflowOrCreateNewOne [
 
 { #category : #'task execution' }
 PtyWorkplace >> findPreferredTaskImplementing: requestedTask [
-	"Here it should be call to workspace settings"
+	"Here it should be a call to workplace settings"
 	^requestedTask
 ]
 

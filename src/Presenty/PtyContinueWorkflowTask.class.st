@@ -44,6 +44,11 @@ PtyContinueWorkflowTask >> startExecution [
 	self error: 'It should resume continuation and never return'
 ]
 
+{ #category : #controlling }
+PtyContinueWorkflowTask >> startNewSession [
+	startingTask startNewSession
+]
+
 { #category : #accessing }
 PtyContinueWorkflowTask >> startingTask [
 	^ startingTask

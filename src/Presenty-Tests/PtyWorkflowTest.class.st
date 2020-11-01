@@ -281,6 +281,17 @@ PtyWorkflowTest >> testFindActiveWorkflowWhenThereNoSpawnedIsActive [
 ]
 
 { #category : #tests }
+PtyWorkflowTest >> testHasCurrentSessionByDefaultWithEmptyWorkflow [
+
+	| session |
+	session := workflow currentSession.
+	
+	session should beInstanceOf: PtyWorkSession.
+	session initialWorkflow should be isEmpty.
+	session initialWorkflow should not be: workflow
+]
+
+{ #category : #tests }
 PtyWorkflowTest >> testHasNoCurrentTasksByDefault [
 
 	workflow currentTasks should be isEmpty
@@ -547,9 +558,12 @@ PtyWorkflowTest >> testStartingNewSessionShouldCaptureWorkflowState [
 ]
 
 { #category : #tests }
-PtyWorkflowTest >> testStopExecutionWhenWorkflowIsNotActive [
+PtyWorkflowTest >> testStoppingTask [
 
-	worker stub isActive willReturn: false.
+	(worker stub executeWorkflowStage: Arg stage) willReturn: #result.
 	
-	workflow stopExecution
+	workflow stopTask: #task.
+	
+	Arg stage should beInstanceOf: PtyTaskStopStage.
+	Arg stage where task should be: #task
 ]

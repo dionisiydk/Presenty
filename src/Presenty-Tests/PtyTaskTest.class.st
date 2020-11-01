@@ -423,12 +423,20 @@ PtyTaskTest >> testStartingNewSession [
 
 { #category : #tests }
 PtyTaskTest >> testStopExecution [
+		
+	task stopExecution.
+
+	workflow should receive stopTask: task
+]
+
+{ #category : #tests }
+PtyTaskTest >> testStopWorkSession [
 
 	| session |
 	session := Mock new.
 	task workSession: session.
 
-	task stopExecution.
+	task stopWorkSession.
 
 	session should receive stopWorkflow: workflow
 ]

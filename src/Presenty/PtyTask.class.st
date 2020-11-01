@@ -312,6 +312,12 @@ PtyTask >> startNewSession [
 { #category : #execution }
 PtyTask >> stopExecution [
 	
+	workflow stopTask: self
+]
+
+{ #category : #execution }
+PtyTask >> stopWorkSession [
+	
 	workSession stopWorkflow: workflow
 ]
 

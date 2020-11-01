@@ -25,6 +25,5 @@ PtyWorkSession >> initialWorkflow: anObject [
 
 { #category : #'as yet unclassified' }
 PtyWorkSession >> stopWorkflow: aWorkflow [
-	aWorkflow stopExecution.
 	aWorkflow resumeWorkflow: initialWorkflow
 ]

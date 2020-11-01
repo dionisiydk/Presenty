@@ -5,6 +5,20 @@ Class {
 }
 
 { #category : #tests }
+PtyStopTaskAcceptanceTests >> testCanBeDoneFromChildTaskDuringExecution [
+
+	| task childTask childTask2 |
+	childTask := [ task stopExecution ] asTask bePermanent.	
+	childTask2 := [ #result2 ] asTask bePermanent.
+	task := [ user executeTask: childTask. user executeTask: childTask2 ] asTask bePermanent.
+	
+	user executeTask: task.
+	
+	workplace currentTasks should be isEmpty.
+	
+]
+
+{ #category : #tests }
 PtyStopTaskAcceptanceTests >> testCanBeDoneFromTaskItself [
 
 	| task |
@@ -12,8 +26,7 @@ PtyStopTaskAcceptanceTests >> testCanBeDoneFromTaskItself [
 	
 	user executeTask: task.
 	
-	workplace currentTasks should be isEmpty.
-	workplace currentWorkflow spawnedWorkflows should be isEmpty
+	workplace currentTasks should be isEmpty
 ]
 
 { #category : #tests }
@@ -28,7 +41,6 @@ PtyStopTaskAcceptanceTests >> testDoesNotRemoveChildrenOfParentFromAnotherRun [
 	childTask2 retryExecution.
 	childTask2 stopExecution.
 	
-	workplace currentTasks should not include: childTask2.
 	workplace currentTasks should include: childTask
 ]
 
@@ -44,22 +56,21 @@ PtyStopTaskAcceptanceTests >> testDoesNotRemoveOtherChildrenOfSpawningParent [
 	
 	workplace currentTasks should not include: childTask.
 	workplace currentTasks should include: childTask2.
-	task workflow spawnedWorkflows should haveSize: 1
+	
 ]
 
 { #category : #tests }
 PtyStopTaskAcceptanceTests >> testDoesNotRemoveParentWhenItWasNotInvolvedInLastRun [
-	| task parentTask |
-	task := [ #result ] asTask bePermanent.
-	parentTask := [ user executeTask: task ] asTask bePermanent.	
+	| childTask parentTask |
+	childTask := [ #result ] asTask bePermanent.
+	parentTask := [ user executeTask: childTask ] asTask bePermanent.	
 	user executeTask: parentTask.
-	workplace currentTasks should include: task.
+	workplace currentTasks should include: childTask.
 
-	task retryExecution.	
-	task stopExecution.
+	childTask retryExecution.	
+	childTask stopExecution.
 	
-	workplace currentTasks should include: parentTask.
-	workplace currentTasks should not include: task
+	workplace currentTasks should include: parentTask
 ]
 
 { #category : #tests }
@@ -73,7 +84,20 @@ PtyStopTaskAcceptanceTests >> testDoesNotRemoveSpawningParent [
 	
 	workplace currentTasks should not include: childTask.
 	workplace currentTasks should include: task.
-	task workflow spawnedWorkflows should haveSize: 1
+	
+]
+
+{ #category : #tests }
+PtyStopTaskAcceptanceTests >> testDoesNotTaskWhenStopHappensAfterRetry [
+
+	| task |
+	task := [ #result ] asTask bePermanent.	
+	user executeTask: task.
+	
+	task retryExecution.
+	task stopExecution.
+	
+	workplace currentTasks should include: task
 ]
 
 { #category : #tests }
@@ -89,7 +113,7 @@ PtyStopTaskAcceptanceTests >> testRemovesOtherChildrenOfParentFromSameRun [
 	childTask2 stopExecution.
 	
 	workplace currentTasks should be isEmpty.
-	workplace currentWorkflow spawnedWorkflows should be isEmpty
+	
 ]
 
 { #category : #tests }
@@ -104,7 +128,7 @@ PtyStopTaskAcceptanceTests >> testRemovesParentFromSameRun [
 	task stopExecution.
 	
 	workplace currentTasks should be isEmpty.
-	workplace currentWorkflow spawnedWorkflows should be isEmpty
+	
 ]
 
 { #category : #tests }
@@ -118,7 +142,7 @@ PtyStopTaskAcceptanceTests >> testRemovesSeparatedChildren [
 	task stopExecution.
 	
 	workplace currentTasks should be isEmpty.
-	workplace currentWorkflow spawnedWorkflows should be isEmpty
+	
 ]
 
 { #category : #tests }
@@ -131,24 +155,22 @@ PtyStopTaskAcceptanceTests >> testRemovesTask [
 	
 	task stopExecution.
 	
-	workplace currentTasks should be isEmpty.
-	workplace currentWorkflow spawnedWorkflows should be isEmpty
+	workplace currentTasks should be isEmpty
 ]
 
 { #category : #tests }
 PtyStopTaskAcceptanceTests >> testRestoresChildrenFromPreviousRun [
-	| task stopNow previousChildTask activeChildTask |
-	stopNow := false.
-	previousChildTask := [ #result ] asTask bePermanent.
-	activeChildTask := [ stopNow ifTrue: [ activeChildTask stopExecution ]. PtyUserRequest signal ] asTask useCleanWorkflow.	
+	| task retryStep previousChildTask activeChildTask |
+	retryStep := false.
+	previousChildTask := [ retryStep ifFalse: [ PtyUserRequest signal ] ] asTask bePermanent.
+	activeChildTask := [ activeChildTask stopExecution ] asTask useCleanWorkflow.	
 	task := [ user executeTask: previousChildTask. user executeTask: activeChildTask ] asTask bePermanent.	
 	user executeTask: task.
-	workplace currentTasks should not include: previousChildTask.
-	workplace currentTasks should not include: task.
-	workplace currentTasks should include: activeChildTask.
+	workplace currentTasks should include: previousChildTask.
+	workplace currentTasks should include: task.
 	
-	stopNow := true.
-	activeChildTask retryExecution.
+	retryStep  := true.
+	previousChildTask retryExecution.
 	workplace currentTasks should include: previousChildTask.
 	workplace currentTasks should include: task.
 	workplace currentTasks should not include: activeChildTask.
