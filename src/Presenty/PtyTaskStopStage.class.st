@@ -1,7 +1,7 @@
 Class {
 	#name : #PtyTaskStopStage,
 	#superclass : #PtyWorkflowStage,
-	#category : #Presenty
+	#category : #'Presenty-Tasks'
 }
 
 { #category : #execution }

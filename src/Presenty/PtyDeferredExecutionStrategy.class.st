@@ -1,7 +1,7 @@
 Class {
 	#name : #PtyDeferredExecutionStrategy,
 	#superclass : #PtyTaskExecutionStrategy,
-	#category : #Presenty
+	#category : #'Presenty-Tasks'
 }
 
 { #category : #'task execution' }

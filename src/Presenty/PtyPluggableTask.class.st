@@ -4,7 +4,7 @@ Class {
 	#instVars : [
 		'blockBody'
 	],
-	#category : #Presenty
+	#category : #'Presenty-Tasks'
 }
 
 { #category : #'instance creation' }

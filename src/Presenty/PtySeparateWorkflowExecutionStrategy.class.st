@@ -4,7 +4,7 @@ Class {
 	#instVars : [
 		'actualWorkflowExecutionStrategy'
 	],
-	#category : #Presenty
+	#category : #'Presenty-Tasks'
 }
 
 { #category : #'instance creation' }

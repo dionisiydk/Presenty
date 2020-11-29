@@ -4,7 +4,7 @@ Class {
 	#instVars : [
 		'user'
 	],
-	#category : #'Presenty-Tests'
+	#category : #'Presenty-Tests-Tasks'
 }
 
 { #category : #running }

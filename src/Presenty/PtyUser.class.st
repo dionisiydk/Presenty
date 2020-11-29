@@ -4,7 +4,7 @@ Class {
 	#instVars : [
 		'workplace'
 	],
-	#category : #Presenty
+	#category : #'Presenty-Tasks'
 }
 
 { #category : #'instance creation' }

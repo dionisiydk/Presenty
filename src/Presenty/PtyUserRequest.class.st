@@ -1,7 +1,7 @@
 Class {
 	#name : #PtyUserRequest,
 	#superclass : #Error,
-	#category : #Presenty
+	#category : #'Presenty-Tasks'
 }
 
 { #category : #execution }

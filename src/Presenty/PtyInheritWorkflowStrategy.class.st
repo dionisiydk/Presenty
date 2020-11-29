@@ -1,7 +1,7 @@
 Class {
 	#name : #PtyInheritWorkflowStrategy,
 	#superclass : #PtyWorkflowActivationStrategy,
-	#category : #Presenty
+	#category : #'Presenty-Tasks'
 }
 
 { #category : #'task execution' }

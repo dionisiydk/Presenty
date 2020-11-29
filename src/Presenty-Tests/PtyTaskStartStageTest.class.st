@@ -1,7 +1,7 @@
 Class {
 	#name : #PtyTaskStartStageTest,
 	#superclass : #PtyWorkflowStageTestCase,
-	#category : #'Presenty-Tests'
+	#category : #'Presenty-Tests-Tasks'
 }
 
 { #category : #running }

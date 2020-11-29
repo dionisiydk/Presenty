@@ -4,7 +4,7 @@ Class {
 	#instVars : [
 		'workplace'
 	],
-	#category : #'Presenty-Tests'
+	#category : #'Presenty-Tests-Tasks'
 }
 
 { #category : #testing }

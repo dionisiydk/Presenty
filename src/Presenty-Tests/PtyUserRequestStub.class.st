@@ -4,7 +4,7 @@ Class {
 	#instVars : [
 		'isExecuted'
 	],
-	#category : #'Presenty-Tests'
+	#category : #'Presenty-Tests-Tasks'
 }
 
 { #category : #execution }

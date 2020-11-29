@@ -6,7 +6,7 @@ Class {
 		'strategy',
 		'workflow'
 	],
-	#category : #'Presenty-Tests'
+	#category : #'Presenty-Tests-Tasks'
 }
 
 { #category : #testing }

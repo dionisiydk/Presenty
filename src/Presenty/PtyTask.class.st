@@ -15,7 +15,7 @@ Class {
 		'continuation',
 		'workSession'
 	],
-	#category : #Presenty
+	#category : #'Presenty-Tasks'
 }
 
 { #category : #'instance creation' }

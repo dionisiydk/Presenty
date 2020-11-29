@@ -1,7 +1,7 @@
 Class {
 	#name : #PtyTaskWithInheritedWorkflowAcceptenceTest,
 	#superclass : #PtyTaskExecutionAcceptanceTestCase,
-	#category : #'Presenty-Tests'
+	#category : #'Presenty-Tests-Tasks'
 }
 
 { #category : #tests }

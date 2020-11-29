@@ -6,7 +6,7 @@ Class {
 		'workflow',
 		'initialWorkflow'
 	],
-	#category : #'Presenty-Tests'
+	#category : #'Presenty-Tests-Tasks'
 }
 
 { #category : #running }

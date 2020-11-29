@@ -1,7 +1,7 @@
 Class {
 	#name : #PtyTaskReturnStrategyTestCase,
 	#superclass : #PtyTaskLifeCycleStrategyTestCase,
-	#category : #'Presenty-Tests'
+	#category : #'Presenty-Tests-Tasks'
 }
 
 { #category : #testing }

@@ -1,7 +1,7 @@
 Class {
 	#name : #PtyImmediateExecutionStrategyTest,
 	#superclass : #PtyTaskExecutionStrategyTestCase,
-	#category : #'Presenty-Tests'
+	#category : #'Presenty-Tests-Tasks'
 }
 
 { #category : #running }

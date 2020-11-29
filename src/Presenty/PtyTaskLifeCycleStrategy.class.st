@@ -1,5 +1,5 @@
 Class {
 	#name : #PtyTaskLifeCycleStrategy,
 	#superclass : #Object,
-	#category : #Presenty
+	#category : #'Presenty-Tasks'
 }

@@ -4,7 +4,7 @@ Class {
 	#instVars : [
 		'initialWorkflow'
 	],
-	#category : #Presenty
+	#category : #'Presenty-Tasks'
 }
 
 { #category : #'instance creation' }

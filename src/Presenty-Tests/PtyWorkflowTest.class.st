@@ -5,7 +5,7 @@ Class {
 		'workflow',
 		'worker'
 	],
-	#category : #'Presenty-Tests'
+	#category : #'Presenty-Tests-Tasks'
 }
 
 { #category : #running }

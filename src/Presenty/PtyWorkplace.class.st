@@ -5,7 +5,7 @@ Class {
 		'defaultTaskExecutionPriority',
 		'currentWorkflow'
 	],
-	#category : #Presenty
+	#category : #'Presenty-Tasks'
 }
 
 { #category : #accessing }

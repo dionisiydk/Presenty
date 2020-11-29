@@ -8,7 +8,7 @@ Class {
 		'worker',
 		'currentSession'
 	],
-	#category : #Presenty
+	#category : #'Presenty-Tasks'
 }
 
 { #category : #accessing }

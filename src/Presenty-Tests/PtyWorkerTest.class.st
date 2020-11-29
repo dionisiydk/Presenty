@@ -5,7 +5,7 @@ Class {
 		'worker',
 		'task'
 	],
-	#category : #'Presenty-Tests'
+	#category : #'Presenty-Tests-Tasks'
 }
 
 { #category : #running }

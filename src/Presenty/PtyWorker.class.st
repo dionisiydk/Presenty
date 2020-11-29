@@ -6,7 +6,7 @@ Class {
 		'process',
 		'activeTask'
 	],
-	#category : #Presenty
+	#category : #'Presenty-Tasks'
 }
 
 { #category : #'instance creation' }

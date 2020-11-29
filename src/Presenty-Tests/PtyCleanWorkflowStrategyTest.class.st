@@ -1,7 +1,7 @@
 Class {
 	#name : #PtyCleanWorkflowStrategyTest,
 	#superclass : #PtyTaskWorkflowActivationStrategyTestCase,
-	#category : #'Presenty-Tests'
+	#category : #'Presenty-Tests-Tasks'
 }
 
 { #category : #running }
