@@ -8,6 +8,12 @@ Class {
 }
 
 { #category : #controlling }
+PtyTool >> assignToPanel: aPanel [
+
+	panel := aPanel
+]
+
+{ #category : #controlling }
 PtyTool >> attachToPanel [
 	self subclassResponsibility 
 ]
