@@ -13,6 +13,13 @@ PtyTextNoticeTool class >> label: aString [
 		label: aString
 ]
 
+{ #category : #controlling }
+PtyTextNoticeTool >> attachToPanel [
+	view := panel configureViewForTool: self.
+	view contents: label.
+	panel placeTool: self
+]
+
 { #category : #accessing }
 PtyTextNoticeTool >> label [
 	^ label

@@ -8,3 +8,14 @@ Class {
 PtyVisualToolTestCase class >> isAbstract [ 
 	^self = PtyVisualToolTestCase
 ]
+
+{ #category : #tests }
+PtyVisualToolTestCase >> testDefinesDefaultView [
+
+	| settings view |
+	settings := PtySettings new.
+	
+	view := settings preferredViewFor: tool.
+	
+	view should not be: nil
+]

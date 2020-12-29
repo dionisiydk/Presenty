@@ -7,6 +7,11 @@ Class {
 	#category : #'Presenty-Tools'
 }
 
+{ #category : #testing }
+PtyTool class >> isAbstract [ 
+	^self = PtyTool 
+]
+
 { #category : #controlling }
 PtyTool >> assignToPanel: aPanel [
 
