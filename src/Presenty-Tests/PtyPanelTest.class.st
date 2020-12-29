@@ -1,21 +1,21 @@
 Class {
-	#name : #PtyPanelTests,
+	#name : #PtyPanelTest,
 	#superclass : #PtyVisualToolTestCase,
 	#category : #'Presenty-Tests-Tools'
 }
 
 { #category : #running }
-PtyPanelTests >> createTool [
+PtyPanelTest >> createTool [
 	^PtyPanel new
 ]
 
 { #category : #running }
-PtyPanelTests >> panel [
+PtyPanelTest >> panel [
 	^tool
 ]
 
 { #category : #tests }
-PtyPanelTests >> testConfiguringViewForTool [
+PtyPanelTest >> testConfiguringViewForTool [
 
 	| someTool view |
 	someTool := Mock new.
@@ -25,7 +25,7 @@ PtyPanelTests >> testConfiguringViewForTool [
 ]
 
 { #category : #tests }
-PtyPanelTests >> testHasSettingsByDefault [
+PtyPanelTest >> testHasSettingsByDefault [
 
 	self panel settings should beInstanceOf: PtySettings
 ]

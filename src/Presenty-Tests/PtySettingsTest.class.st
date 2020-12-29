@@ -1,11 +1,11 @@
 Class {
-	#name : #PtySettingsTests,
+	#name : #PtySettingsTest,
 	#superclass : #TestCase,
 	#category : #'Presenty-Tests-Tools'
 }
 
 { #category : #tests }
-PtySettingsTests >> testHasViewLibraryByDefault [
+PtySettingsTest >> testHasViewLibraryByDefault [
 
 	| settings |
 	settings := PtySettings new.
