@@ -5,6 +5,12 @@ Class {
 }
 
 { #category : #views }
+PtyMorphicViewLibrary >> labelView [
+
+	^StringMorph new
+]
+
+{ #category : #views }
 PtyMorphicViewLibrary >> panelView [
 
 	^Morph new

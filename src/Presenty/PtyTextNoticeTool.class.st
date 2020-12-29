@@ -20,6 +20,11 @@ PtyTextNoticeTool >> attachToPanel [
 	panel placeTool: self
 ]
 
+{ #category : #initialization }
+PtyTextNoticeTool >> chooseDefaultViewIn: aViewLibrary [
+	^aViewLibrary labelView
+]
+
 { #category : #accessing }
 PtyTextNoticeTool >> label [
 	^ label
