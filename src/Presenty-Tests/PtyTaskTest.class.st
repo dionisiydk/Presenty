@@ -21,6 +21,14 @@ PtyTaskTest >> setUp [
 ]
 
 { #category : #tests }
+PtyTaskTest >> testAddTool [
+	
+	task addTool: #tool.
+	
+	task tools should include: #tool
+]
+
+{ #category : #tests }
 PtyTaskTest >> testAssignToActiveWorkflow [
 
 	| workplace |
@@ -30,6 +38,19 @@ PtyTaskTest >> testAssignToActiveWorkflow [
 	
 	task workflow should beReturnedFrom: [ workplace findActiveWorkflowOrCreateNewOne ].
 	task parentTask should beReturnedFrom: [ task workflow activeTask ]
+]
+
+{ #category : #tests }
+PtyTaskTest >> testAttachToolsToPanel [
+	
+	| tool1 tool2 |
+	tool1 := Mock new. tool2 := Mock new.	
+	task tools: {tool1. tool2}.
+	
+	task attachToolsToPanel.
+	
+	tool1 should receive attachToPanel.
+	tool2 should receive attachToPanel
 ]
 
 { #category : #tests }
@@ -69,6 +90,63 @@ PtyTaskTest >> testBelongsToWorkflow [
 
 	task should be belongsToWorkflow: workflow.
 	task should not be belongsToWorkflow: #anotherWorkflow
+]
+
+{ #category : #tests }
+PtyTaskTest >> testControlPanel [
+	
+	| panel anotherTool actual |
+	panel := PtyPanel new.
+	anotherTool := Mock new.
+	task tools: {anotherTool. panel}.
+	task stub isEnabled willReturn: true.
+	
+	actual := task controlPanel.
+	
+	actual should be: panel
+]
+
+{ #category : #tests }
+PtyTaskTest >> testControlPanelIsCreatedForRootTask [
+	
+	| panel |
+	task stub isEnabled willReturn: true.
+	task tools removeAll.
+	
+	panel := task controlPanel.
+	
+	task tools should include: panel
+]
+
+{ #category : #tests }
+PtyTaskTest >> testControlPanelIsInheritedFromParentWhenOwnPanelIsAbsent [
+	
+	| panel parent |
+	task tools removeAll.
+	parent := Mock new.
+	task parentTask: parent.
+	task stub isEnabled willReturn: true.
+	
+	panel := task controlPanel.
+	
+	panel should beReturnedFrom: [ parent controlPanel ].
+	task tools should be isEmpty
+]
+
+{ #category : #tests }
+PtyTaskTest >> testControlPanelIsInheritedFromParentWhenTaskIsDisabled [
+	
+	| panel parent ownPanel |
+	ownPanel := PtyPanel new.
+	task tools: {ownPanel}.
+	parent := Mock new.
+	task parentTask: parent.
+	task stub isEnabled willReturn: false.
+	
+	panel := task controlPanel.
+	
+	panel should beReturnedFrom: [ parent controlPanel ].
+	task tools should equal: { ownPanel }
 ]
 
 { #category : #tests }
@@ -184,6 +262,21 @@ PtyTaskTest >> testHasDefaultReturnStrategy [
 PtyTaskTest >> testHasDefaultWorkflowActivationStrategy [
 
 	task workflowActivationStrategy class should equal: task defaultWorkflowActivationStrategy class
+]
+
+{ #category : #tests }
+PtyTaskTest >> testHasEmptyToolsByDefault [
+	
+	task tools should be isEmpty
+]
+
+{ #category : #tests }
+PtyTaskTest >> testIsEnabled [
+	
+	| actual |
+	actual := task isEnabled.
+	
+	actual should beReturnedFrom: [ workflow includesTask: task ]
 ]
 
 { #category : #tests }

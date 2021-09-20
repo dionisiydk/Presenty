@@ -229,6 +229,13 @@ PtyWorkflow >> stopTask: aTask [
 	worker executeWorkflowStage: (PtyTaskStopStage for: aTask)
 ]
 
+{ #category : #controlling }
+PtyWorkflow >> updateControlPanel [
+
+	currentTasks do: [ :each | each attachToolsToPanel ].
+	spawnedWorkflows do: [ :each | each updateControlPanel ]
+]
+
 { #category : #accessing }
 PtyWorkflow >> worker [
 	^ worker

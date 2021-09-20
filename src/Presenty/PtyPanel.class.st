@@ -7,6 +7,23 @@ Class {
 	#category : #'Presenty-Tools'
 }
 
+{ #category : #controlling }
+PtyPanel >> attachToPanel [ 
+	
+	targetTask parentTask ifNil: [ ^self ].
+	
+	panel := targetTask parentTask controlPanel.
+	panel addTool: self
+]
+
+{ #category : #controlling }
+PtyPanel >> attachToWorkflow [
+
+	workflow allCurrentTasks do: [ :each | 
+			components addAll: each tools
+	]
+]
+
 { #category : #initialization }
 PtyPanel >> chooseDefaultViewIn: aViewLibrary [
 	^aViewLibrary panelView
@@ -23,6 +40,11 @@ PtyPanel >> initialize [
 	super initialize.
 	
 	settings := PtySettings new
+]
+
+{ #category : #testing }
+PtyPanel >> isPanel [ 
+	^true
 ]
 
 { #category : #accessing }

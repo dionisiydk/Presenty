@@ -16,7 +16,7 @@ PtyTextNoticeToolTest >> testAttachingToPanel [
 	view := Mock new.
 	(panel stub configureViewForTool: tool) willReturn: view.
 	
-	tool attachToPanel.
+	tool activateOnPanel.
 	
 	view should receive contents: tool label.
 	panel should receive placeTool: tool

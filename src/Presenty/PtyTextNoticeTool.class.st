@@ -14,7 +14,7 @@ PtyTextNoticeTool class >> label: aString [
 ]
 
 { #category : #controlling }
-PtyTextNoticeTool >> attachToPanel [
+PtyTextNoticeTool >> activateOnPanel [
 	view := panel configureViewForTool: self.
 	view contents: label.
 	panel placeTool: self

@@ -13,7 +13,8 @@ Class {
 		'initialWorkflow',
 		'workflow',
 		'continuation',
-		'workSession'
+		'workSession',
+		'tools'
 	],
 	#category : #'Presenty-Tasks'
 }
@@ -21,6 +22,11 @@ Class {
 { #category : #'instance creation' }
 PtyTask class >> named: aString [
 	^self new name: aString 
+]
+
+{ #category : #accessing }
+PtyTask >> addTool: aTool [ 
+	tools add: aTool
 ]
 
 { #category : #accessing }
@@ -42,6 +48,12 @@ PtyTask >> asTask [
 PtyTask >> assignToActiveWorkflowIn: aWorkplace [
 	workflow := aWorkplace findActiveWorkflowOrCreateNewOne.
 	parentTask := workflow activeTask
+]
+
+{ #category : #controlling }
+PtyTask >> attachToolsToPanel [
+
+	tools do: [ :each | each attachToPanel ]
 ]
 
 { #category : #'initialize-release' }
@@ -86,6 +98,19 @@ PtyTask >> continuation [
 { #category : #accessing }
 PtyTask >> continuation: anObject [
 	continuation := anObject
+]
+
+{ #category : #accessing }
+PtyTask >> controlPanel [
+
+	| panel |
+	self isEnabled ifFalse: [ ^parentTask controlPanel].
+	tools detect: [:each | each isPanel ] ifFound: [:found | ^found ].
+	parentTask ifNotNil: [ ^parentTask controlPanel ].
+	
+	panel := PtyPanel new.
+	self addTool: panel.
+	^panel
 ]
 
 { #category : #controlling }
@@ -162,6 +187,12 @@ PtyTask >> initialize [
 	executionStrategy := self defaultExecutionStrategy.
 	returnStrategy := self defaultReturnStrategy.
 	workflowActivationStrategy := self defaultWorkflowActivationStrategy.
+	tools := OrderedCollection new
+]
+
+{ #category : #testing }
+PtyTask >> isEnabled [
+	^workflow includesTask: self
 ]
 
 { #category : #testing }
@@ -253,7 +284,7 @@ PtyTask >> resumeInitialWorkflow [
 PtyTask >> resumeWorkflow [
 
 	self spawningParentTask ifNotNil: [:spawningTask | spawningTask resumeWorkflow ].
-	(workflow includesTask: self) ifTrue: [ ^self ].
+	self isEnabled ifTrue: [ ^self ].
 	
 	workflow resumeWorkflow: initialWorkflow.
 	workflow registerNewTask: self
@@ -319,6 +350,16 @@ PtyTask >> stopExecution [
 PtyTask >> stopWorkSession [
 	
 	workSession stopWorkflow: workflow
+]
+
+{ #category : #accessing }
+PtyTask >> tools [
+	^ tools
+]
+
+{ #category : #accessing }
+PtyTask >> tools: anObject [
+	tools := anObject
 ]
 
 { #category : #'initialize-release' }

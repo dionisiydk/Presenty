@@ -567,3 +567,26 @@ PtyWorkflowTest >> testStoppingTask [
 	Arg stage should beInstanceOf: PtyTaskStopStage.
 	Arg stage where task should be: #task
 ]
+
+{ #category : #tests }
+PtyWorkflowTest >> testUpdateControlPanel [
+	
+	| task1 task2 |
+	task1 := Mock new. task2 := Mock new.
+	workflow currentTasks: { task1. task2 }.
+	
+	workflow updateControlPanel.
+	
+	task1 should receive attachToolsToPanel.
+	task2 should receive attachToolsToPanel
+]
+
+{ #category : #tests }
+PtyWorkflowTest >> testUpdateControlPanelShouldUpdateSpawnedWorkflows [
+	
+	workflow spawnNew stub.
+	
+	workflow updateControlPanel.
+	
+	workflow spawnedWorkflows first should receive updateControlPanel.
+]

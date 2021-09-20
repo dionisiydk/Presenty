@@ -8,8 +8,8 @@ Class {
 }
 
 { #category : #controlling }
-PtyToolset >> attachToPanel [
-	contents do: [:each | each attachToPanel ]
+PtyToolset >> activateOnPanel [
+	contents do: [:each | each activateOnPanel ]
 ]
 
 { #category : #accessing }

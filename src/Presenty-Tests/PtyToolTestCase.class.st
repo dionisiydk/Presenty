@@ -3,7 +3,8 @@ Class {
 	#superclass : #TestCase,
 	#instVars : [
 		'tool',
-		'panel'
+		'panel',
+		'targetTask'
 	],
 	#category : #'Presenty-Tests-Tools'
 }
@@ -23,6 +24,20 @@ PtyToolTestCase >> setUp [
 	super setUp.
 	
 	panel := Mock new.
+	targetTask := Mock new.
 	tool := self createTool.
-	tool assignToPanel: panel
+	tool targetTask: targetTask.
+	tool panel: panel
+]
+
+{ #category : #tests }
+PtyToolTestCase >> testAttachToPanel [
+
+	panel := Mock new.
+	targetTask stub controlPanel willReturn: panel.
+	
+	tool attachToPanel.
+	
+	tool panel should be: panel.
+	panel should receive addTool: tool.
 ]

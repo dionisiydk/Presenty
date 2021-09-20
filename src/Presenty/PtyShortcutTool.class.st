@@ -2,8 +2,7 @@ Class {
 	#name : #PtyShortcutTool,
 	#superclass : #PtyTool,
 	#instVars : [
-		'keyCombination',
-		'targetTask'
+		'keyCombination'
 	],
 	#category : #'Presenty-Tools'
 }
@@ -16,14 +15,4 @@ PtyShortcutTool >> keyCombination [
 { #category : #accessing }
 PtyShortcutTool >> keyCombination: anObject [
 	keyCombination := anObject
-]
-
-{ #category : #accessing }
-PtyShortcutTool >> targetTask [
-	^ targetTask
-]
-
-{ #category : #accessing }
-PtyShortcutTool >> targetTask: anObject [
-	targetTask := anObject
 ]
