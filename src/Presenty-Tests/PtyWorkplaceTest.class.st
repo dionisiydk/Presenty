@@ -58,6 +58,12 @@ PtyWorkplaceTest >> testHaveDefaultTaskExecutionPriority [
 ]
 
 { #category : #tests }
+PtyWorkplaceTest >> testHaveSettingsByDefault [
+
+	workplace settings should beInstanceOf: PtySettings
+]
+
+{ #category : #tests }
 PtyWorkplaceTest >> testPlanningTaskExecutionShouldFirstAssignItActiveWorkflow [
 
 	| requestedTask |

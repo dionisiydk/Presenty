@@ -26,6 +26,7 @@ PtyTask class >> named: aString [
 
 { #category : #accessing }
 PtyTask >> addTool: aTool [ 
+	aTool targetTask: self.
 	tools add: aTool
 ]
 
@@ -147,6 +148,12 @@ PtyTask >> deliverResult: anObject [
 	continuation ifNil: [ ^self error: 'No continuation for return!' ].
 	
 	workflow deliverResult: anObject of: self
+]
+
+{ #category : #controlling }
+PtyTask >> detachToolsFromPanel [
+
+	tools do: [ :each | each detachFromPanel ]
 ]
 
 { #category : #accessing }
@@ -307,6 +314,11 @@ PtyTask >> returnStrategy [
 { #category : #accessing }
 PtyTask >> returnStrategy: anObject [
 	returnStrategy := anObject
+]
+
+{ #category : #accessing }
+PtyTask >> settings [
+	^workflow settings
 ]
 
 { #category : #controlling }

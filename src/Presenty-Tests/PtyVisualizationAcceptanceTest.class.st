@@ -7,17 +7,19 @@ Class {
 { #category : #tests }
 PtyVisualizationAcceptanceTest >> testSingleLabel [
 
-	| task dashboard mainPanel |
+	| task dashboard mainPanel controlPanel |
 	task := [ #labelExample ] asTask bePermanent.
 	user executeTask: task.
 	
 	task addTool: (PtyTextNoticeTool label: #testLabel).
-	
-	dashboard := PtyDashboard for: workplace.
+	 
+	dashboard := PtyDashboard for: workplace currentWorkflow.
 	dashboard build.
 	
 	mainPanel := dashboard view.
 	mainPanel submorphs should haveSize: 1.
-	mainPanel submorphs first should beInstanceOf: StringMorph.
-	mainPanel submorphs first contents should equal: #testLabel
+	controlPanel := mainPanel submorphs first.
+	controlPanel should beInstanceOf: PtyContainerMorph.
+	controlPanel submorphs first should beInstanceOf: StringMorph.
+	controlPanel submorphs first contents should equal: #testLabel
 ]

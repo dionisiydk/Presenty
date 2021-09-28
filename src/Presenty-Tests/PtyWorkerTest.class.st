@@ -216,6 +216,12 @@ PtyWorkerTest >> testServesWorkflowOfActiveTask [
 ]
 
 { #category : #tests }
+PtyWorkerTest >> testSettings [
+	
+	worker settings should beReturnedFrom: [ workplace settings ]
+]
+
+{ #category : #tests }
 PtyWorkerTest >> testStartingWorkflowShouldBeDoneInBackgroundProcess [
 	worker stub.
 			

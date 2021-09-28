@@ -27,11 +27,6 @@ PtyTool >> attachToPanel [
 	panel addTool: self
 ]
 
-{ #category : #controlling }
-PtyTool >> attachToWorkflow [
-	self subclassResponsibility 
-]
-
 { #category : #accessing }
 PtyTool >> components [
 	^ components
@@ -44,12 +39,9 @@ PtyTool >> components: anObject [
 
 { #category : #controlling }
 PtyTool >> detachFromPanel [
-	self subclassResponsibility 
-]
 
-{ #category : #controlling }
-PtyTool >> detachFromWorkflow [
-	self subclassResponsibility 
+	panel removeTool: self.
+	panel := nil
 ]
 
 { #category : #initialization }
@@ -69,7 +61,7 @@ PtyTool >> panel [
 	^ panel
 ]
 
-{ #category : #controlling }
+{ #category : #accessing }
 PtyTool >> panel: aPanel [
 
 	panel := aPanel

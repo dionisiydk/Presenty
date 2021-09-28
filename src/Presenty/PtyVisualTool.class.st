@@ -16,3 +16,13 @@ PtyVisualTool class >> isAbstract [
 PtyVisualTool >> chooseDefaultViewIn: aViewLibrary [
 	self subclassResponsibility 
 ]
+
+{ #category : #accessing }
+PtyVisualTool >> view [
+	^ view
+]
+
+{ #category : #accessing }
+PtyVisualTool >> view: anObject [
+	view := anObject
+]

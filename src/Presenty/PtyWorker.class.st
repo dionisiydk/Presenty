@@ -104,6 +104,11 @@ PtyWorker >> servesWorkflow: aWorkflow [
 	^activeTask notNil and: [activeTask workflow = aWorkflow]
 ]
 
+{ #category : #accessing }
+PtyWorker >> settings [ 
+	^workplace settings
+]
+
 { #category : #controlling }
 PtyWorker >> startWorkflowWithTask: aTask [
 	self startWorkflowWithTask: aTask usingStartStage: (PtyTaskStartStage for: aTask)

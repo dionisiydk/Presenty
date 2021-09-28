@@ -23,9 +23,13 @@ PtyTaskTest >> setUp [
 { #category : #tests }
 PtyTaskTest >> testAddTool [
 	
-	task addTool: #tool.
+	| tool |
+	tool := PtyTool new.
 	
-	task tools should include: #tool
+	task addTool: tool.
+	
+	task tools should include: tool.
+	tool targetTask should be: task
 ]
 
 { #category : #tests }
@@ -219,6 +223,19 @@ PtyTaskTest >> testDeliveringResultWhenTaskWasNotStarted [
 		
 	error := [task deliverResult: #taskResult] should fail.
 	error where description should includeSubstring: 'No continuation'
+]
+
+{ #category : #tests }
+PtyTaskTest >> testDetachToolsFromPanel [
+	
+	| tool1 tool2 |
+	tool1 := Mock new. tool2 := Mock new.	
+	task tools: {tool1. tool2}.
+	
+	task detachToolsFromPanel.
+	
+	tool1 should receive detachFromPanel.
+	tool2 should receive detachFromPanel
 ]
 
 { #category : #tests }
@@ -461,6 +478,12 @@ PtyTaskTest >> testRetryExecutionWhenTaskWasNotStarted [
 		
 	error := [task retryExecution] should fail.
 	error where description should includeSubstring: 'No continuation'
+]
+
+{ #category : #tests }
+PtyTaskTest >> testSettings [
+	
+	task settings should beReturnedFrom: [ workflow settings ]
 ]
 
 { #category : #tests }

@@ -18,6 +18,19 @@ PtyWorkflowTest >> setUp [
 ]
 
 { #category : #tests }
+PtyWorkflowTest >> testActivationControlPanelWhenOnlySpawnedWorkflowsAndNoOwnTasks [
+	
+	| spawnedWorklow controlPanel |
+	controlPanel := Mock new.
+	spawnedWorklow := workflow spawnNew.
+	spawnedWorklow stub controlPanel willReturn: controlPanel.
+	
+	workflow activateControlPanel.
+	
+	controlPanel should receive activateOnPanel
+]
+
+{ #category : #tests }
 PtyWorkflowTest >> testActiveTask [ 
 
 	workflow worker: worker.
@@ -76,6 +89,44 @@ PtyWorkflowTest >> testCaptureStateShouldCopySpawnedWorkflowsList [
 	
 	capturedWorkflow spawnedWorkflows should include: forkedWorkflow.
 	capturedWorkflow spawnedWorkflows should not be: workflow spawnedWorkflows
+]
+
+{ #category : #tests }
+PtyWorkflowTest >> testCleaningControlPanel [
+	
+	| task1 task2 panel1 panel2 |
+	task1 := Mock new. task2 := Mock new.
+	panel1 := Mock new. panel2 := Mock new.
+	task1 stub controlPanel willReturn: panel1.
+	task2 stub controlPanel willReturn: panel2.
+	workflow currentTasks: { task1. task2 }.
+	
+	workflow cleanControlPanel.
+	
+	panel1 should receive removeAllTools.
+	panel2 should receive removeAllTools
+]
+
+{ #category : #tests }
+PtyWorkflowTest >> testCleaningControlPanelShouldCleanSpawnedWorkflows [
+	
+	workflow spawnNew stub.
+	
+	workflow cleanControlPanel.
+	
+	workflow spawnedWorkflows first should receive cleanControlPanel
+]
+
+{ #category : #tests }
+PtyWorkflowTest >> testControlPanel [
+	
+	| task actual |
+	task := Mock new. 
+	workflow currentTasks: { task }.
+	
+	actual := workflow controlPanel.
+	
+	actual should beReturnedFrom: [ task controlPanel ]
 ]
 
 { #category : #tests }
@@ -522,6 +573,12 @@ PtyWorkflowTest >> testRetryingTask [
 ]
 
 { #category : #tests }
+PtyWorkflowTest >> testSettings [
+	
+	workflow settings should beReturnedFrom: [ worker settings ]
+]
+
+{ #category : #tests }
 PtyWorkflowTest >> testSpawnNewWorkflow [ 
 
 	| newWorkflow |
@@ -569,7 +626,7 @@ PtyWorkflowTest >> testStoppingTask [
 ]
 
 { #category : #tests }
-PtyWorkflowTest >> testUpdateControlPanel [
+PtyWorkflowTest >> testUpdatingControlPanel [
 	
 	| task1 task2 |
 	task1 := Mock new. task2 := Mock new.
@@ -582,7 +639,21 @@ PtyWorkflowTest >> testUpdateControlPanel [
 ]
 
 { #category : #tests }
-PtyWorkflowTest >> testUpdateControlPanelShouldUpdateSpawnedWorkflows [
+PtyWorkflowTest >> testUpdatingControlPanelShouldCleanItFirst [
+	
+	| task |
+	task := Mock new. 
+	workflow currentTasks: { task }.
+	workflow stub.
+	
+	workflow updateControlPanel.
+	
+	[workflow cleanControlPanel.
+	task attachToolsToPanel] should beDoneInOrder 
+]
+
+{ #category : #tests }
+PtyWorkflowTest >> testUpdatingControlPanelShouldUpdateSpawnedWorkflows [
 	
 	workflow spawnNew stub.
 	

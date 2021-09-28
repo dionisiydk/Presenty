@@ -10,14 +10,14 @@ PtyTextNoticeToolTest >> createTool [
 ]
 
 { #category : #tests }
-PtyTextNoticeToolTest >> testAttachingToPanel [
-
-	| view |
+PtyTextNoticeToolTest >> testActivationOnPanelShouldInitializeLabel [
+	| view settings |
+	settings := Mock new.
+	targetTask stub settings willReturn: settings.
 	view := Mock new.
-	(panel stub configureViewForTool: tool) willReturn: view.
+	(settings stub preferredViewFor: tool) willReturn: view.
 	
 	tool activateOnPanel.
 	
-	view should receive contents: tool label.
-	panel should receive placeTool: tool
+	view should receive contents: tool label
 ]

@@ -15,9 +15,9 @@ PtyTextNoticeTool class >> label: aString [
 
 { #category : #controlling }
 PtyTextNoticeTool >> activateOnPanel [
-	view := panel configureViewForTool: self.
+	view := targetTask settings preferredViewFor: self.
 	view contents: label.
-	panel placeTool: self
+	panel placeView: view
 ]
 
 { #category : #initialization }

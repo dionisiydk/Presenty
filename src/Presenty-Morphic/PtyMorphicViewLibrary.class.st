@@ -13,5 +13,5 @@ PtyMorphicViewLibrary >> labelView [
 { #category : #views }
 PtyMorphicViewLibrary >> panelView [
 
-	^Morph new
+	^PtyContainerMorph new
 ]

@@ -3,7 +3,8 @@ Class {
 	#superclass : #Object,
 	#instVars : [
 		'defaultTaskExecutionPriority',
-		'currentWorkflow'
+		'currentWorkflow',
+		'settings'
 	],
 	#category : #'Presenty-Tasks'
 }
@@ -62,6 +63,7 @@ PtyWorkplace >> findPreferredTaskImplementing: requestedTask [
 PtyWorkplace >> initialize [
 	super initialize.
 	
+	settings := PtySettings new.
 	defaultTaskExecutionPriority := Processor userBackgroundPriority.
 	currentWorkflow := PtyWorkflow new
 ]
@@ -78,4 +80,14 @@ PtyWorkplace >> planExecutionOf: aTask by: aUser [
 { #category : #controlling }
 PtyWorkplace >> removeAllTasks [
 	currentWorkflow removeAllTasks
+]
+
+{ #category : #accessing }
+PtyWorkplace >> settings [
+	^ settings
+]
+
+{ #category : #accessing }
+PtyWorkplace >> settings: anObject [
+	settings := anObject
 ]

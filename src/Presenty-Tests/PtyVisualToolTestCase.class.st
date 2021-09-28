@@ -10,6 +10,19 @@ PtyVisualToolTestCase class >> isAbstract [
 ]
 
 { #category : #tests }
+PtyVisualToolTestCase >> testActivationOnPanel [
+	| view settings |
+	settings := Mock new.
+	targetTask stub settings willReturn: settings.
+	view := Mock new.
+	(settings stub preferredViewFor: tool) willReturn: view.
+	
+	tool activateOnPanel.
+	
+	panel should receive placeView: view
+]
+
+{ #category : #tests }
 PtyVisualToolTestCase >> testDefinesDefaultView [
 
 	| settings view |

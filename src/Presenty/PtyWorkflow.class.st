@@ -11,6 +11,12 @@ Class {
 	#category : #'Presenty-Tasks'
 }
 
+{ #category : #controlling }
+PtyWorkflow >> activateControlPanel [
+
+	spawnedWorkflows do: [ :each | each controlPanel activateOnPanel ]
+]
+
 { #category : #accessing }
 PtyWorkflow >> activeTask [ 
 	^worker ifNotNil: [ worker activeTask ]
@@ -25,6 +31,19 @@ PtyWorkflow >> allCurrentTasks [
 { #category : #controlling }
 PtyWorkflow >> captureState [
 	^self copy
+]
+
+{ #category : #controlling }
+PtyWorkflow >> cleanControlPanel [
+
+	"currentTasks do: [ :each | each detachToolsFromPanel ]."
+	currentTasks do: [ :each | each controlPanel removeAllTools ].
+	spawnedWorkflows do: [ :each | each cleanControlPanel ]
+]
+
+{ #category : #accessing }
+PtyWorkflow >> controlPanel [
+	^currentTasks first controlPanel
 ]
 
 { #category : #accessing }
@@ -198,6 +217,11 @@ PtyWorkflow >> retryTask: aTask [
 	worker executeWorkflowStage: (PtyTaskRetryStage for: aTask)
 ]
 
+{ #category : #accessing }
+PtyWorkflow >> settings [ 
+	^worker settings
+]
+
 { #category : #controlling }
 PtyWorkflow >> spawnNew [
 	| newWorkflow |
@@ -231,7 +255,8 @@ PtyWorkflow >> stopTask: aTask [
 
 { #category : #controlling }
 PtyWorkflow >> updateControlPanel [
-
+	self cleanControlPanel.
+	
 	currentTasks do: [ :each | each attachToolsToPanel ].
 	spawnedWorkflows do: [ :each | each updateControlPanel ]
 ]

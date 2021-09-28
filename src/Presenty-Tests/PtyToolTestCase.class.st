@@ -41,3 +41,12 @@ PtyToolTestCase >> testAttachToPanel [
 	tool panel should be: panel.
 	panel should receive addTool: tool.
 ]
+
+{ #category : #tests }
+PtyToolTestCase >> testDetachFromPanel [
+
+	tool detachFromPanel.
+	
+	tool panel should be: nil.
+	panel should receive removeTool: tool
+]
