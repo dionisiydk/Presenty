@@ -18,7 +18,7 @@ PtyUser class >> of: aWorkplace [
 PtyUser >> executeTask: requestedTask [
 	
 	| plannedTask |
-	plannedTask := workplace planExecutionOf: requestedTask by: self.
+	plannedTask := workplace planExecutionOf: requestedTask.
 	^plannedTask requestExecution
 ]
 

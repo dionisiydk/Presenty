@@ -26,6 +26,11 @@ PtyWorker >> activeTask: aTask [
 	activeTask := aTask
 ]
 
+{ #category : #accessing }
+PtyWorker >> activeWorkflow [
+	^ activeTask workflow
+]
+
 { #category : #controlling }
 PtyWorker >> continueWorkflowWithTask: aTask usingStartStage: aTaskStartStage [
 	
@@ -92,11 +97,9 @@ PtyWorker >> runInitialTask: aTask usingStartStage: aTaskStartStage [
 	[	aTask startNewSession.
 		[self continueWorkflowWithTask: aTask usingStartStage: aTaskStartStage] 
 			on: Error do: [:err | self notifyUserAbout: err]
-
-	] on: PtyUserRequest do: [:request | 
-			request executeBy: self].
+	] on: PtyUserRequest do: [:request | ].
 	
-	self waitUserAction
+	workplace endWorkSessionFor: aTask workflow
 ]
 
 { #category : #testing }
@@ -126,10 +129,6 @@ PtyWorker >> startWorkflowWithTask: aTask usingStartStage: aTaskStartStage [
 { #category : #controlling }
 PtyWorker >> stopWorkflow [
 	process ifNotNil: [process terminate]
-]
-
-{ #category : #'task execution' }
-PtyWorker >> waitUserAction [
 ]
 
 { #category : #accessing }

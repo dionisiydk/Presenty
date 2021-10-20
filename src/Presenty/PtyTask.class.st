@@ -13,11 +13,16 @@ Class {
 		'initialWorkflow',
 		'workflow',
 		'continuation',
-		'workSession',
-		'tools'
+		'tools',
+		'workSession'
 	],
 	#category : #'Presenty-Tasks'
 }
+
+{ #category : #testing }
+PtyTask class >> isAbstract [ 
+	^self = PtyTask 
+]
 
 { #category : #'instance creation' }
 PtyTask class >> named: aString [

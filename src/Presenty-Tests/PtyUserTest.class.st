@@ -21,7 +21,7 @@ PtyUserTest >> testTaskExecution [
 	| result plannedTask |
 
 	plannedTask := Mock new.
-	(workplace stub planExecutionOf: #task by: user) willReturn: plannedTask.
+	(workplace stub planExecutionOf: #task) willReturn: plannedTask.
 	
 	result := user executeTask: #task.
 	

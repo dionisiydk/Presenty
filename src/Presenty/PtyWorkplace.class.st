@@ -4,10 +4,24 @@ Class {
 	#instVars : [
 		'defaultTaskExecutionPriority',
 		'currentWorkflow',
-		'settings'
+		'settings',
+		'devices',
+		'announcer',
+		'user'
 	],
 	#category : #'Presenty-Tasks'
 }
+
+{ #category : #accessing }
+PtyWorkplace >> addDevice: aDevice [
+	aDevice workplace: self.
+	devices add: aDevice
+]
+
+{ #category : #controlling }
+PtyWorkplace >> close [
+	devices do: [:each | each detachFromWorkplace ]
+]
 
 { #category : #accessing }
 PtyWorkplace >> currentTasks [
@@ -32,6 +46,21 @@ PtyWorkplace >> defaultTaskExecutionPriority [
 { #category : #accessing }
 PtyWorkplace >> defaultTaskExecutionPriority: anObject [
 	defaultTaskExecutionPriority := anObject
+]
+
+{ #category : #accessing }
+PtyWorkplace >> devices [
+	^ devices
+]
+
+{ #category : #accessing }
+PtyWorkplace >> devices: anObject [
+	devices := anObject
+]
+
+{ #category : #controlling }
+PtyWorkplace >> endWorkSessionFor: aWorkflow [
+	announcer announce: (PtyWorkSessionEnded workSession: aWorkflow currentSession)
 ]
 
 { #category : #'task execution' }
@@ -63,15 +92,22 @@ PtyWorkplace >> findPreferredTaskImplementing: requestedTask [
 PtyWorkplace >> initialize [
 	super initialize.
 	
+	announcer := Announcer new.
 	settings := PtySettings new.
+	devices := OrderedCollection new. 
 	defaultTaskExecutionPriority := Processor userBackgroundPriority.
 	currentWorkflow := PtyWorkflow new
 ]
 
-{ #category : #'task execution' }
-PtyWorkplace >> planExecutionOf: aTask by: aUser [
+{ #category : #controlling }
+PtyWorkplace >> open [
+	devices do: [:each | each attachToWorkplace ]
+]
 
-	aTask user: aUser.
+{ #category : #'task execution' }
+PtyWorkplace >> planExecutionOf: aTask [
+
+	aTask user: user.
 	aTask assignToActiveWorkflowIn: self. 
 		
 	^self findPreferredTaskImplementing: aTask
@@ -90,4 +126,27 @@ PtyWorkplace >> settings [
 { #category : #accessing }
 PtyWorkplace >> settings: anObject [
 	settings := anObject
+]
+
+{ #category : #controlling }
+PtyWorkplace >> unsubscribe: anObject [
+
+	announcer unsubscribe: anObject
+]
+
+{ #category : #accessing }
+PtyWorkplace >> user [
+	^ user
+]
+
+{ #category : #accessing }
+PtyWorkplace >> user: aUser [
+	user := aUser.
+	user workplace: self
+]
+
+{ #category : #controlling }
+PtyWorkplace >> when: aWorkSessionEventClass send: aSelector to: anObject [
+
+	announcer when: aWorkSessionEventClass send: aSelector to: anObject
 ]

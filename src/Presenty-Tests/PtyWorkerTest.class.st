@@ -19,6 +19,14 @@ PtyWorkerTest >> setUp [
 ]
 
 { #category : #tests }
+PtyWorkerTest >> testActiveWorkflow [
+		
+	worker activeTask: task.
+		
+	worker activeWorkflow should beReturnedFrom: [ task workflow ]
+]
+
+{ #category : #tests }
 PtyWorkerTest >> testContinueWithTaskShouldResetActiveTaskAtTheEnd [
 		
 	worker activeTask: task.
@@ -88,22 +96,25 @@ PtyWorkerTest >> testDoesNotServeWorkflowWhenNoActiveTask [
 { #category : #tests }
 PtyWorkerTest >> testInitialTaskExecution [
 	worker stub.
+	task stub workflow willReturn: #workflow.
 	
 	worker runInitialTask: task usingStartStage: #startTaskStage.
 	
-	worker should receive continueWorkflowWithTask: task usingStartStage: #startTaskStage
+	[worker continueWorkflowWithTask: task usingStartStage: #startTaskStage.
+	workplace endWorkSessionFor: #workflow ] should beDoneInOrder 
 ]
 
 { #category : #tests }
 PtyWorkerTest >> testInitialTaskExecutionShouldExpectUserRequest [
 
 	| request |
-	request := PtyUserRequestStub new.
+	request := PtyUserRequest new.
 	(worker stub continueWorkflowWithTask: task usingStartStage: #startTaskStage) willRaise: request.
 		
 	worker runInitialTask: task usingStartStage: #startTaskStage.
 	
-	request should be isExecuted
+	workplace should receive endWorkSessionFor: Any.
+	worker should not receive notifyUserAbout: request
 ]
 
 { #category : #tests }
@@ -132,12 +143,13 @@ PtyWorkerTest >> testInitialTaskFailedExecutionNotificationShouldExpectNewUserRe
 
 	| request |
 	(worker stub continueWorkflowWithTask: task usingStartStage: #startTaskStage) willRaise: Error new.
-	request := PtyUserRequestStub new.
+	request := PtyUserRequest new.
 	(worker stub notifyUserAbout: Any) willRaise: request.
 		
 	worker runInitialTask: task usingStartStage: #startTaskStage.
 	
-	request should be isExecuted
+	workplace should receive endWorkSessionFor: Any.
+	worker should not receive notifyUserAbout: request
 ]
 
 { #category : #tests }

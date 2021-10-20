@@ -558,7 +558,13 @@ PtyTaskTest >> testStopWorkSession [
 ]
 
 { #category : #tests }
-PtyTaskTest >> testUseCleanWorkflow [
+PtyTaskTest >> testUsesInheritedWorkflowByDefault [
+
+	task workflowActivationStrategy should beInstanceOf: PtyInheritWorkflowStrategy 
+]
+
+{ #category : #tests }
+PtyTaskTest >> testUsingCleanWorkflow [
 
 	task useCleanWorkflow.
 
@@ -566,7 +572,7 @@ PtyTaskTest >> testUseCleanWorkflow [
 ]
 
 { #category : #tests }
-PtyTaskTest >> testUseInheritedWorkflow [
+PtyTaskTest >> testUsingInheritedWorkflow [
 
 	task useInheritedWorkflow.
 
@@ -574,7 +580,7 @@ PtyTaskTest >> testUseInheritedWorkflow [
 ]
 
 { #category : #tests }
-PtyTaskTest >> testUseSeparateWorkflow [
+PtyTaskTest >> testUsingSeparateWorkflow [
 
 	| currentExecutionStrategy |
 	currentExecutionStrategy := task executionStrategy.
@@ -583,10 +589,4 @@ PtyTaskTest >> testUseSeparateWorkflow [
 
 	task executionStrategy should beInstanceOf: PtySeparateWorkflowExecutionStrategy.
 	task executionStrategy actualWorkflowExecutionStrategy should be: currentExecutionStrategy
-]
-
-{ #category : #tests }
-PtyTaskTest >> testUsesInheritedWorkflowByDefault [
-
-	task workflowActivationStrategy should beInstanceOf: PtyInheritWorkflowStrategy 
 ]
