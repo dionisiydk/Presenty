@@ -7,25 +7,26 @@ Class {
 { #category : #tests }
 PtyWorkplaceTest >> testAddingNewDevice [
 
-	| device |
+	| device actual |
 	device := PtyUIDevice new.
 	
-	workplace addDevice: device.
+	actual := workplace addDevice: device.
 	
 	workplace devices should include: device.
-	device workplace should be: workplace
+	device workplace should be: workplace.
+	actual should be: device
 ]
 
 { #category : #tests }
 PtyWorkplaceTest >> testAnnouncesTheEndOfWorkSession [
 	| workflow event |
 	workflow := PtyWorkflow new.
-	workflow startNewSession.
 	workplace when: PtyWorkSessionEnded send: #value: to: [:ann | event := ann ].
 	
 	workplace endWorkSessionFor: workflow.
 	
-	event workSession should be: workflow currentSession
+	event workSession should be: workflow currentSession.
+	event workSession finalWorkflow should not be: nil
 ]
 
 { #category : #tests }
@@ -87,6 +88,21 @@ PtyWorkplaceTest >> testFindActiveWorkflowWhenItDoesNotExist [
 	
 	foundWorkflow should beReturnedFrom: [ mainWorkflow spawnNew ].
 	foundWorkflow should receive worker: [ :worker | worker workplace = workplace ]
+]
+
+{ #category : #tests }
+PtyWorkplaceTest >> testGettingDeviceByClass [
+
+	| device actual |
+	device := PtyUIDevice new.
+	
+	workplace addDevice: device.
+	
+	actual := workplace deviceLike: PtyUIDevice.
+	actual should be: device.
+
+	workplace deviceLike: PtyDevice.
+	actual should be: device
 ]
 
 { #category : #tests }

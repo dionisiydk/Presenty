@@ -39,6 +39,24 @@ PtyUIDevice >> registerWorkSession: aWorkSession [
 	workSessionsQueue nextPut: aWorkSession
 ]
 
+{ #category : #controlling }
+PtyUIDevice >> runUIUpdateLoop [
+	[
+		self updateUIFor: workSessionsQueue next
+	] repeat
+]
+
+{ #category : #controlling }
+PtyUIDevice >> updateUIFor: aWorkSession [
+
+	| display workflow |
+	display := workplace deviceLike: PtyDisplayDevice.
+	workflow := aWorkSession finalWorkflow.
+	workflow updateControlPanel.
+	workflow activateControlPanel.
+	display showPanel: workflow controlPanel
+]
+
 { #category : #accessing }
 PtyUIDevice >> workSessionsQueue [
 	^ workSessionsQueue

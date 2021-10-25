@@ -15,7 +15,8 @@ Class {
 { #category : #accessing }
 PtyWorkplace >> addDevice: aDevice [
 	aDevice workplace: self.
-	devices add: aDevice
+	devices add: aDevice.
+	^aDevice
 ]
 
 { #category : #controlling }
@@ -49,6 +50,12 @@ PtyWorkplace >> defaultTaskExecutionPriority: anObject [
 ]
 
 { #category : #accessing }
+PtyWorkplace >> deviceLike: aDeviceClass [
+	
+	^devices detect: [ :each | each isKindOf: aDeviceClass ]
+]
+
+{ #category : #accessing }
 PtyWorkplace >> devices [
 	^ devices
 ]
@@ -60,7 +67,7 @@ PtyWorkplace >> devices: anObject [
 
 { #category : #controlling }
 PtyWorkplace >> endWorkSessionFor: aWorkflow [
-	announcer announce: (PtyWorkSessionEnded workSession: aWorkflow currentSession)
+	announcer announce: (PtyWorkSessionEnded workSession: aWorkflow endSession)
 ]
 
 { #category : #'task execution' }

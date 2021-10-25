@@ -16,6 +16,20 @@ PtyUIDeviceTest >> testHasEmptyWorkSessionsByDefault [
 ]
 
 { #category : #tests }
+PtyUIDeviceTest >> testProcessesEachWorkSessionDuringUIUpdateLoop [
+	| process |
+	device stub.
+	
+	process := [device runUIUpdateLoop] forkAt: Processor activePriority + 1.
+
+	device registerWorkSession: #session1.
+	device should receive updateUIFor: #session1.
+	device registerWorkSession: #session2.
+	device should receive updateUIFor: #session2.
+	process terminate.
+]
+
+{ #category : #tests }
 PtyUIDeviceTest >> testRegisteringNewEndedWorkSession [
 	
 	| event |

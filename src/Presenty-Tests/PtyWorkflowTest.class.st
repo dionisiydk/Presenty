@@ -257,6 +257,19 @@ PtyWorkflowTest >> testDisableIfItIsRootWorkflow [
 ]
 
 { #category : #tests }
+PtyWorkflowTest >> testEndingSession [
+
+	| session |
+	workflow stub.
+	
+	session := workflow endSession.
+	
+	session should be: workflow currentSession.
+	session finalWorkflow should not be: nil.
+	session finalWorkflow should beReturnedFrom: [ workflow captureState ]
+]
+
+{ #category : #tests }
 PtyWorkflowTest >> testExecutingTask [
 
 	| result task |

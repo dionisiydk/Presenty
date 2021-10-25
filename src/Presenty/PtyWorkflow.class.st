@@ -13,8 +13,7 @@ Class {
 
 { #category : #controlling }
 PtyWorkflow >> activateControlPanel [
-
-	spawnedWorkflows do: [ :each | each controlPanel activateOnPanel ]
+	self controlPanel activateOnPanel
 ]
 
 { #category : #accessing }
@@ -94,6 +93,12 @@ PtyWorkflow >> disable [
 PtyWorkflow >> disableIfEmpty [
 	
 	self isEmpty ifTrue: [ self disable ]
+]
+
+{ #category : #controlling }
+PtyWorkflow >> endSession [
+	currentSession finalWorkflow: self captureState.
+	^currentSession
 ]
 
 { #category : #controlling }

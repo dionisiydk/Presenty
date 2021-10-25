@@ -2,7 +2,8 @@ Class {
 	#name : #PtyWorkSession,
 	#superclass : #Object,
 	#instVars : [
-		'initialWorkflow'
+		'initialWorkflow',
+		'finalWorkflow'
 	],
 	#category : #'Presenty-Tasks'
 }
@@ -11,6 +12,16 @@ Class {
 PtyWorkSession class >> for: aWorkflow [
 	^self new 
 		initialWorkflow: aWorkflow captureState 
+]
+
+{ #category : #accessing }
+PtyWorkSession >> finalWorkflow [
+	^ finalWorkflow
+]
+
+{ #category : #accessing }
+PtyWorkSession >> finalWorkflow: anObject [
+	finalWorkflow := anObject
 ]
 
 { #category : #accessing }
@@ -23,7 +34,7 @@ PtyWorkSession >> initialWorkflow: anObject [
 	initialWorkflow := anObject
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #controlling }
 PtyWorkSession >> stopWorkflow: aWorkflow [
 	aWorkflow resumeWorkflow: initialWorkflow
 ]

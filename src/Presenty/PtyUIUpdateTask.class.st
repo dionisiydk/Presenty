@@ -3,3 +3,8 @@ Class {
 	#superclass : #PtyDeviceTask,
 	#category : #'Presenty-Devices'
 }
+
+{ #category : #execution }
+PtyUIUpdateTask >> body [
+	device runUIUpdateLoop
+]

@@ -6,11 +6,11 @@ Class {
 
 { #category : #tests }
 PtyUIUpdateTaskTest >> testExecution [ 
-	| uiDevice task process |
+	| uiDevice task |
 	uiDevice := Mock new.
 	task := PtyUIUpdateTask for: uiDevice.
 	
-	process := [ task body ] forkAt: Processor activePriority + 1.
+	task body.
 	
-	uiDevice should receive processNextWorkSession
+	uiDevice should receive runUIUpdateLoop
 ]
