@@ -253,7 +253,8 @@ PtyTask >> prepareExecutionWorkflow [
 PtyTask >> prepareReturnWorkflow [
 
 	returnStrategy prepareReturnFrom: self.
-	workflow disableIfEmpty
+	workflow disableIfEmpty.
+	parentTask ifNotNil: [ parentTask workSession: workSession ]
 ]
 
 { #category : #printing }
@@ -331,7 +332,8 @@ PtyTask >> spawnWorkflow [
 	"Task belongs to its workflow. It keeps the state of this workflow at the time when the task was requested. The initialWorkflow variable represents this initial state.
 	When task is spawned it must ensure this logic. So the initialWorkflow must represent the initial state of this new spawned workflow"
 	workflow := workflow spawnNew.
-	initialWorkflow := workflow captureState
+	initialWorkflow := workflow captureState.
+	self startNewSession
 ]
 
 { #category : #accessing }

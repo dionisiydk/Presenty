@@ -37,4 +37,6 @@ PtyWorkflowContinuationStageTestCase >> testStartingInInactiveWorkflowShouldStar
 	Arg startedTask should beInstanceOf: PtyContinueWorkflowTask.
 	Arg startedTask where startingTask should be: task.
 	Arg startedTask where continuationStage should be: workflowStage.
+	Arg startedTask where workflow should beReturnedFrom: [ task workflow ].
+	Arg startedTask where executionPriority should beReturnedFrom: [ task executionPriority ].
 ]

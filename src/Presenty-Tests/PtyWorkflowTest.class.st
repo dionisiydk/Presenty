@@ -20,14 +20,13 @@ PtyWorkflowTest >> setUp [
 { #category : #tests }
 PtyWorkflowTest >> testActivationControlPanelWhenOnlySpawnedWorkflowsAndNoOwnTasks [
 	
-	| spawnedWorklow controlPanel |
-	controlPanel := Mock new.
+	| spawnedWorklow |
 	spawnedWorklow := workflow spawnNew.
-	spawnedWorklow stub controlPanel willReturn: controlPanel.
+	spawnedWorklow stub.
 	
 	workflow activateControlPanel.
 	
-	controlPanel should receive activateOnPanel
+	spawnedWorklow should receive activateControlPanel 
 ]
 
 { #category : #tests }

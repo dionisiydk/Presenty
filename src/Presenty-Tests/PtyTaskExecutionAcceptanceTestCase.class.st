@@ -13,6 +13,11 @@ PtyTaskExecutionAcceptanceTestCase class >> isAbstract [
 ]
 
 { #category : #running }
+PtyTaskExecutionAcceptanceTestCase >> runCaseManaged [
+	^ self runCase 
+]
+
+{ #category : #running }
 PtyTaskExecutionAcceptanceTestCase >> setUp [
 	super setUp.
 	

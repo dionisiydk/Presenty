@@ -88,7 +88,7 @@ PtyStopTaskAcceptanceTests >> testDoesNotRemoveSpawningParent [
 ]
 
 { #category : #tests }
-PtyStopTaskAcceptanceTests >> testDoesNotTaskWhenStopHappensAfterRetry [
+PtyStopTaskAcceptanceTests >> testDoesNotRemoveTaskWhenStopHappensAfterRetry [
 
 	| task |
 	task := [ #result ] asTask bePermanent.	
@@ -98,6 +98,41 @@ PtyStopTaskAcceptanceTests >> testDoesNotTaskWhenStopHappensAfterRetry [
 	task stopExecution.
 	
 	workplace currentTasks should include: task
+]
+
+{ #category : #tests }
+PtyStopTaskAcceptanceTests >> testDoesNotRestoreSpawningParentRemovedByChildOfSameWorkflow [
+
+	| task childTask parentTask cleaningChild |
+	childTask := [ #child ] asTask bePermanent.
+	task := [ user executeTask: childTask ] asTask bePermanent useSeparateWorkflow.
+	cleaningChild := [ PtyUserRequest signal ] asTask useCleanWorkflow.
+	parentTask := [ user executeTask: task. user executeTask: cleaningChild ] asTask bePermanent.
+	
+	user executeTask: parentTask.
+	workplace currentTasks should not include: parentTask.
+	parentTask workflow currentTasks should include: cleaningChild.
+	parentTask workflow spawnedWorkflows should be isEmpty.
+	
+	childTask stopExecution.
+	workplace currentTasks should not include: parentTask.
+	workplace currentTasks should include: cleaningChild.
+	parentTask workflow spawnedWorkflows should include: childTask workflow.
+	childTask workflow currentTasks should be isEmpty
+]
+
+{ #category : #tests }
+PtyStopTaskAcceptanceTests >> testKeepsParentOfDeferredTaskAfterStopFromRetry [ 
+
+	| task parentTask |
+	task := [ task stopExecution ] asTask beDeferred.	
+	parentTask := [ user executeTask: task] asTask.
+	user executeTask: parentTask.
+
+	task retryExecution.
+	
+	workplace currentTasks should include: task.
+	workplace currentTasks should include: parentTask
 ]
 
 { #category : #tests }
@@ -132,13 +167,27 @@ PtyStopTaskAcceptanceTests >> testRemovesParentFromSameRun [
 ]
 
 { #category : #tests }
+PtyStopTaskAcceptanceTests >> testRemovesParentOfStoppedDeferredTask [
+
+	| task parentTask |
+	task := [ #deferredTask ] asTask beDeferred.	
+	parentTask := [ user executeTask: task] asTask.
+	user executeTask: parentTask.
+
+	task stopExecution.
+	
+	workplace currentTasks should not include: task.
+	workplace currentTasks should not include: parentTask
+]
+
+{ #category : #tests }
 PtyStopTaskAcceptanceTests >> testRemovesSeparatedChildren [
 
 	| task childTask |
 	childTask := [ #result ] asTask bePermanent useSeparateWorkflow.
 	task := [ user executeTask: childTask ] asTask bePermanent.	
 	user executeTask: task.
-	
+	self error: 'test'.
 	task stopExecution.
 	
 	workplace currentTasks should be isEmpty.
@@ -170,10 +219,82 @@ PtyStopTaskAcceptanceTests >> testRestoresChildrenFromPreviousRun [
 	workplace currentTasks should include: task.
 	
 	retryStep  := true.
+	
 	previousChildTask retryExecution.
+	
 	workplace currentTasks should include: previousChildTask.
 	workplace currentTasks should include: task.
 	workplace currentTasks should not include: activeChildTask.
+]
+
+{ #category : #tests }
+PtyStopTaskAcceptanceTests >> testRestoresPreviousStateOfChildWhenStopIsAfterReturnFromDeferredChildTask [
+
+	| task parentTask result |
+	task := [ #deferredTask ] asTask beDeferred.
+	parentTask := [ result := user executeTask: task. parentTask stopExecution ] asTask bePermanent.	
+	user executeTask: parentTask.
+	
+	result should be: nil.
+	task deliverResult: #newResult.
+	
+	result should be: #newResult.
+	workplace currentTasks should include: task.
+	workplace currentTasks should include: parentTask
+]
+
+{ #category : #tests }
+PtyStopTaskAcceptanceTests >> testRestoresPreviousStateOfChildWhenStopIsAfterSecondReturnFromIt [
+
+	| task parentTask retryStep |
+	retryStep := false.
+	task := [ retryStep ifFalse: [ PtyUserRequest signal ] ] asTask beOneShot.
+	parentTask := [ user executeTask: task. parentTask stopExecution ] asTask bePermanent.	
+	user executeTask: parentTask.
+	
+	retryStep := true.
+	task retryExecution.
+	
+	workplace currentTasks should include: task.
+	workplace currentTasks should include: parentTask
+]
+
+{ #category : #tests }
+PtyStopTaskAcceptanceTests >> testRestoresRemovedSpawningParentWhenItWasActiveDuringPreviousSession [
+
+	| task result childTask parentTask cleaningChild |
+	childTask := [ #child ] asTask.
+	task := [ result := user executeTask: childTask ] asTask useSeparateWorkflow.
+	cleaningChild := [ PtyUserRequest signal ] asTask useCleanWorkflow.
+	parentTask := [ user executeTask: task. user executeTask: cleaningChild ] asTask bePermanent.
+	
+	user executeTask: parentTask.
+	result should be: #child.
+	workplace currentTasks should not include: parentTask.
+	parentTask workflow currentTasks should include: cleaningChild.
+	
+	childTask stopExecution.
+	workplace currentTasks should include: parentTask.
+	workplace currentTasks should not include: cleaningChild
+]
+
+{ #category : #tests }
+PtyStopTaskAcceptanceTests >> testTerminatesRunningChildTask [
+
+	| task done taskTerminated semaphore childTask |
+	taskTerminated := done := false.
+	semaphore := Semaphore new.	
+	childTask := [ [ semaphore wait ] ifCurtailed: [ taskTerminated := true ]. done := true ] asTask bePermanent.
+	task := [ user executeTask: childTask ] asTask.
+	user executeTask: task.
+	taskTerminated should be: false.
+	done should be: false.
+	
+	task stopExecution.
+	
+	taskTerminated should be: true.
+	done should be: false.
+	workplace currentTasks should be isEmpty
 ]
 
 { #category : #tests }

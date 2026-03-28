@@ -35,11 +35,15 @@ PtyWorker >> activeWorkflow [
 PtyWorker >> continueWorkflowWithTask: aTask usingStartStage: aTaskStartStage [
 	
 	| executionStage result |
+	
 	executionStage := aTask currentWorkflowStageStartedWith: aTaskStartStage.	
 	
 	activeTask := aTask.
+	activeTask workSession: aTask workflow currentSession.
 	result := executionStage continueWorkflow.
 	activeTask := aTask parentTask.
+	
+	activeTask ifNotNil: [ activeTask workSession: aTask workSession ].
 	
 	^result
 ]

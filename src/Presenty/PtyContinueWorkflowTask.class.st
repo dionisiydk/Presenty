@@ -31,30 +31,13 @@ PtyContinueWorkflowTask >> continuationStage: anObject [
 ]
 
 { #category : #accessing }
-PtyContinueWorkflowTask >> defaultExecutionPriority [ 
-	^startingTask executionPriority
-]
-
-{ #category : #execution }
-PtyContinueWorkflowTask >> startExecution [ 
-	"This method should never return 
-	because internal call is supposed to resume continuation with specific execution stage"
-	self body.
-	
-	self error: 'It should resume continuation and never return'
-]
-
-{ #category : #controlling }
-PtyContinueWorkflowTask >> startNewSession [
-	startingTask startNewSession
-]
-
-{ #category : #accessing }
 PtyContinueWorkflowTask >> startingTask [
 	^ startingTask
 ]
 
 { #category : #accessing }
-PtyContinueWorkflowTask >> startingTask: anObject [
-	startingTask := anObject
+PtyContinueWorkflowTask >> startingTask: aTask [
+	startingTask := aTask.
+	workflow := aTask workflow.
+	executionPriority := aTask executionPriority
 ]

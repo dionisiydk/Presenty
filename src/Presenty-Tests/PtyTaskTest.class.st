@@ -376,6 +376,18 @@ PtyTaskTest >> testPrepareReturnWorkflow [
 ]
 
 { #category : #tests }
+PtyTaskTest >> testPrepareReturnWorkflowShouldPassWorkSessionToParent [
+	
+	task startNewSession. 
+	task parentTask: PtyTask new.
+	task returnStrategy: Mock new.
+		
+	task prepareReturnWorkflow.
+
+	task parentTask workSession should be: task workSession
+]
+
+{ #category : #tests }
 PtyTaskTest >> testRequestExecution [
 
 	| executionStrategy result |

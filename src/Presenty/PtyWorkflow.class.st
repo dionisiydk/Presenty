@@ -13,7 +13,9 @@ Class {
 
 { #category : #controlling }
 PtyWorkflow >> activateControlPanel [
-	self controlPanel activateOnPanel
+	currentTasks 
+		ifEmpty: [ spawnedWorkflows do: [:each | each activateControlPanel ]]
+		ifNotEmpty: [ self controlPanel activateOnPanel ]
 ]
 
 { #category : #accessing }
@@ -132,7 +134,7 @@ PtyWorkflow >> initialize [
 	
 	currentTasks := OrderedCollection new.
 	spawnedWorkflows := OrderedCollection new.
-	self startNewSession
+"	self startNewSession"
 ]
 
 { #category : #testing }
