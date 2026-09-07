@@ -20,14 +20,13 @@ PtyWorkflowTest >> setUp [
 { #category : #tests }
 PtyWorkflowTest >> testActivationControlPanelWhenOnlySpawnedWorkflowsAndNoOwnTasks [
 	
-	| spawnedWorklow controlPanel |
-	controlPanel := Mock new.
-	spawnedWorklow := workflow spawnNew.
-	spawnedWorklow stub controlPanel willReturn: controlPanel.
+	| spawnedWorklow |
+	spawnedWorklow := workflow spawnNewFor: #task.
+	spawnedWorklow stub.
 	
 	workflow activateControlPanel.
 	
-	controlPanel should receive activateOnPanel
+	spawnedWorklow should receive activateControlPanel 
 ]
 
 { #category : #tests }
@@ -51,9 +50,9 @@ PtyWorkflowTest >> testAllCurrentTasksShouldIncludeSpawnedWorkflows [
 	
 	| spawned1 spawned2 |
 	workflow registerNewTask: #newTask.
-	spawned1 := workflow spawnNew.
+	spawned1 := workflow spawnNewFor: [#spawnedTask] asTask.
 	spawned1 registerNewTask: #newTask2.
-	spawned2 := spawned1 spawnNew.
+	spawned2 := spawned1 spawnNewFor: [#spawnedTask] asTask.
 	spawned2 registerNewTask: #newTask3.
 	
 	workflow allCurrentTasks should equal: #(newTask newTask2 newTask3)
@@ -83,7 +82,7 @@ PtyWorkflowTest >> testCaptureState [
 PtyWorkflowTest >> testCaptureStateShouldCopySpawnedWorkflowsList [
 
 	| capturedWorkflow forkedWorkflow |
-	forkedWorkflow := workflow spawnNew.
+	forkedWorkflow := workflow spawnNewFor: [#spawnedTask] asTask.
 	
 	capturedWorkflow := workflow captureState.
 	
@@ -110,7 +109,7 @@ PtyWorkflowTest >> testCleaningControlPanel [
 { #category : #tests }
 PtyWorkflowTest >> testCleaningControlPanelShouldCleanSpawnedWorkflows [
 	
-	workflow spawnNew stub.
+	(workflow spawnNewFor: [#spawnedTask] asTask) stub.
 	
 	workflow cleanControlPanel.
 	
@@ -201,7 +200,7 @@ PtyWorkflowTest >> testDisableIfEmptyWhenThereAreEmptySpawnedWorkflows [
 	| parentWorkflow |
 	parentWorkflow := Mock new.
 	workflow parentWorkflow: parentWorkflow.
-	workflow spawnNew.
+	workflow spawnNewFor: [#spawnedTask] asTask.
 	
 	workflow disableIfEmpty.
 	
@@ -227,7 +226,7 @@ PtyWorkflowTest >> testDisableIfEmptyWhenThereAreNonEmptySpawnedWorkflows [
 	| parentWorkflow spawnedWorkflow |
 	parentWorkflow := Mock new.
 	workflow parentWorkflow: parentWorkflow.
-	spawnedWorkflow := workflow spawnNew.
+	spawnedWorkflow := workflow spawnNewFor: [ #spawnedTask ] asTask.
 	spawnedWorkflow registerNewTask: #task.
 	
 	workflow disableIfEmpty.
@@ -310,7 +309,7 @@ PtyWorkflowTest >> testFindActiveWorkflowWhenNoneExists [
 PtyWorkflowTest >> testFindActiveWorkflowWhenThereIsActiveSpawnedWorkflow [ 
 
 	| result childWorkflow |
-	childWorkflow := workflow spawnNew.
+	childWorkflow := workflow spawnNewFor: [ #spawnedTask ] asTask.
 	childWorkflow stub isActive willReturn: true.
 	
 	result := workflow findActiveWorkflowIfNone: [#none].
@@ -322,7 +321,7 @@ PtyWorkflowTest >> testFindActiveWorkflowWhenThereIsActiveSpawnedWorkflow [
 PtyWorkflowTest >> testFindActiveWorkflowWhenThereIsSpawnedWorkflowWhichFoundAnActiveOne [
 
 	| result childWorkflow |
-	childWorkflow := workflow spawnNew.
+	childWorkflow := workflow spawnNewFor: [ #spawnedTask ] asTask.
 	childWorkflow stub isActive willReturn: false.
 	(childWorkflow stub findActiveWorkflowIfNone: Any) willReturn: #activeWorkflow.
 	
@@ -335,7 +334,7 @@ PtyWorkflowTest >> testFindActiveWorkflowWhenThereIsSpawnedWorkflowWhichFoundAnA
 PtyWorkflowTest >> testFindActiveWorkflowWhenThereNoSpawnedIsActive [
 
 	| result childWorkflow |
-	childWorkflow := workflow spawnNew.
+	childWorkflow := workflow spawnNewFor: [ #spawnedTask ] asTask.
 	childWorkflow stub isActive willReturn: false.
 	(childWorkflow stub findActiveWorkflowIfNone: Any) will: [:noneBlock | noneBlock value].
 	
@@ -428,6 +427,24 @@ PtyWorkflowTest >> testIsSpawnedFromAnotherWorkflow [
 ]
 
 { #category : #tests }
+PtyWorkflowTest >> testPrinting [
+
+	| task |
+	task := [ #someTask ] asTask.
+	workflow initialTask: task.
+	
+	workflow printString should equal: 'a PtyWorkflow([ #someTask ])'
+]
+
+{ #category : #tests }
+PtyWorkflowTest >> testPrintingWhenRootWorkplaceWorkflowWithoutInitialTask [
+
+	workflow initialTask: nil.
+	
+	workflow printString should equal: 'a PtyWorkflow(workplace)'
+]
+
+{ #category : #tests }
 PtyWorkflowTest >> testRegisteringNewTask [ 
 
 	workflow registerNewTask: #task.
@@ -439,7 +456,7 @@ PtyWorkflowTest >> testRegisteringNewTask [
 PtyWorkflowTest >> testRemoveAllTasks [
 	
 	workflow registerNewTask: #existingTask.
-	workflow spawnNew.
+	workflow spawnNewFor: [ #spawnedTask ] asTask.
 	
 	workflow removeAllTasks.
 	
@@ -451,7 +468,7 @@ PtyWorkflowTest >> testRemoveAllTasks [
 PtyWorkflowTest >> testRemoveSpawnedWorkflow [ 
 
 	| newWorkflow |
-	newWorkflow := workflow spawnNew.
+	newWorkflow := workflow spawnNewFor: [ #spawnedTask ] asTask.
 	
 	workflow removeSpawnedWorkflow: newWorkflow.
 	
@@ -525,8 +542,8 @@ PtyWorkflowTest >> testResumingAnotherWorkflowShouldSetNewParent [
 PtyWorkflowTest >> testResumingAnotherWorkflowShouldSetNewSpawnedWorkflows [ 
 	| anotherWorkflow spawnedWorkflow |
 	anotherWorkflow := PtyWorkflow new.
-	spawnedWorkflow := anotherWorkflow spawnNew.
-	workflow spawnNew.
+	spawnedWorkflow := anotherWorkflow spawnNewFor: [ #spawnedTask ] asTask.
+	workflow spawnNewFor: [ #spawnedTask2 ] asTask.
 	
 	workflow resumeWorkflow: anotherWorkflow.
 	
@@ -554,7 +571,7 @@ PtyWorkflowTest >> testResumingSpawnedWorkflowWhenItIsAlreadyEnabled [
 	| newWorkflow parentWorkflow |
 	parentWorkflow := Mock new.
 	workflow parentWorkflow: parentWorkflow.
-	newWorkflow := workflow spawnNew.
+	newWorkflow := workflow spawnNewFor: [ #spawnedTask ] asTask.
 	
 	workflow resumeSpawnedWorkflow: newWorkflow.
 	
@@ -594,17 +611,30 @@ PtyWorkflowTest >> testSettings [
 { #category : #tests }
 PtyWorkflowTest >> testSpawnNewWorkflow [ 
 
-	| newWorkflow |
+	| newWorkflow spawnedTasl |
 	workflow registerNewTask: #existingTask.
 	workflow worker: #worker.
+	spawnedTasl := [ #spawnedTask ] asTask.
 	
-	newWorkflow := workflow spawnNew.
+	newWorkflow := workflow spawnNewFor: spawnedTasl.
 	
+	newWorkflow initialTask should be: spawnedTasl.
 	newWorkflow parentWorkflow should be: workflow.
 	newWorkflow worker should be: #worker.
 	workflow spawnedWorkflows should include: newWorkflow.
 	newWorkflow currentTasks should be isEmpty.
 	newWorkflow currentTasks should not be: workflow currentTasks
+]
+
+{ #category : #tests }
+PtyWorkflowTest >> testSpawningTask [
+
+	| initialTask |
+	initialTask := PtyTask new.	
+	initialTask parentTask: #parentTask.
+	workflow initialTask: initialTask.
+	
+	workflow spawningTask should be: #parentTask
 ]
 
 { #category : #tests }
@@ -668,7 +698,7 @@ PtyWorkflowTest >> testUpdatingControlPanelShouldCleanItFirst [
 { #category : #tests }
 PtyWorkflowTest >> testUpdatingControlPanelShouldUpdateSpawnedWorkflows [
 	
-	workflow spawnNew stub.
+	(workflow spawnNewFor: [ #spawnedTask ] asTask) stub.
 	
 	workflow updateControlPanel.
 	

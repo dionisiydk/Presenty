@@ -40,7 +40,7 @@ PtyTaskTest >> testAssignToActiveWorkflow [
 	
 	task assignToActiveWorkflowIn: workplace.
 	
-	task workflow should beReturnedFrom: [ workplace findActiveWorkflowOrCreateNewOne ].
+	task workflow should beReturnedFrom: [ workplace findActiveWorkflowOrCreateNewOneFor: task ].
 	task parentTask should beReturnedFrom: [ task workflow activeTask ]
 ]
 
@@ -376,6 +376,33 @@ PtyTaskTest >> testPrepareReturnWorkflow [
 ]
 
 { #category : #tests }
+PtyTaskTest >> testPrepareReturnWorkflowShouldNotPassWorkSessionToSpawningParent [
+	
+	task startNewSession. 
+	task parentTask: PtyTask new.
+	task parentTask workflow: PtyWorkflow new.
+	task parentTask workSession: #existingSession.
+	task returnStrategy: Mock new.
+
+	task prepareReturnWorkflow.
+
+	task parentTask workSession should be: #existingSession
+]
+
+{ #category : #tests }
+PtyTaskTest >> testPrepareReturnWorkflowShouldPassWorkSessionToParentOfSameWorkflow [
+	
+	task startNewSession. 
+	task parentTask: PtyTask new.
+	task parentTask workflow: workflow.
+	task returnStrategy: Mock new.
+
+	task prepareReturnWorkflow.
+
+	task parentTask workSession should be: task workSession
+]
+
+{ #category : #tests }
 PtyTaskTest >> testRequestExecution [
 
 	| executionStrategy result |
@@ -403,26 +430,9 @@ PtyTaskTest >> testRequestExecutionShouldCaptureInitialWorkflow [
 { #category : #tests }
 PtyTaskTest >> testResumingInitialWorkflow [
 
-	| spawningTask |
-	spawningTask := Mock new.
-	task stub spawningParentTask willReturn: spawningTask.
-
-	task resumeInitialWorkflow.
-	
-	[spawningTask resumeWorkflow.
-	workflow resumeWorkflow: initialWorkflow] should beDoneInOrder
-]
-
-{ #category : #tests }
-PtyTaskTest >> testResumingInitialWorkflowOfInitialTask [
-
-	task should be isInitialTask.
-	
 	task resumeInitialWorkflow.
 	
 	workflow should receive resumeWorkflow: initialWorkflow
-
-	
 ]
 
 { #category : #tests }
@@ -521,7 +531,7 @@ PtyTaskTest >> testSpawningWorkflow [
 
 	| newWorkflow |
 	newWorkflow := Mock new.
-	workflow stub spawnNew willReturn: newWorkflow.
+	(workflow stub spawnNewFor: task) willReturn: newWorkflow.
 	
 	task spawnWorkflow.
 	

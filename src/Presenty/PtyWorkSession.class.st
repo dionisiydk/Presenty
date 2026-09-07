@@ -36,5 +36,5 @@ PtyWorkSession >> initialWorkflow: anObject [
 
 { #category : #controlling }
 PtyWorkSession >> stopWorkflow: aWorkflow [
-	aWorkflow resumeWorkflow: initialWorkflow
+	aWorkflow restoreOwnStateFrom: initialWorkflow
 ]

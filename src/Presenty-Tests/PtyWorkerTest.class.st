@@ -253,17 +253,6 @@ PtyWorkerTest >> testStartingWorkflowShouldUseTaskExecutionPriority [
 ]
 
 { #category : #tests }
-PtyWorkerTest >> testStartingWorkflowWithoutExplicitStartStage [
-
-	worker stub startWorkflowWithTask: task usingStartStage: Arg stage.
-			
-	worker startWorkflowWithTask: task.
-
-	Arg stage should beInstanceOf: PtyTaskStartStage. 
-	Arg stage where task should be: task.
-]
-
-{ #category : #tests }
 PtyWorkerTest >> testStoppingWorkflow [
 
 	| process |

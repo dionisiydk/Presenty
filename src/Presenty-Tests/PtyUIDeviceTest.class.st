@@ -18,7 +18,7 @@ PtyUIDeviceTest >> testHasEmptyWorkSessionsByDefault [
 { #category : #tests }
 PtyUIDeviceTest >> testProcessesEachWorkSessionDuringUIUpdateLoop [
 	| process |
-	device stub.
+	(device stub updateUIFor: Any) willReturn: nil.
 	
 	process := [device runUIUpdateLoop] forkAt: Processor activePriority + 1.
 

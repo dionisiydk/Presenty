@@ -35,11 +35,18 @@ PtyWorker >> activeWorkflow [
 PtyWorker >> continueWorkflowWithTask: aTask usingStartStage: aTaskStartStage [
 	
 	| executionStage result |
+	
 	executionStage := aTask currentWorkflowStageStartedWith: aTaskStartStage.	
 	
 	activeTask := aTask.
+	activeTask workSession: aTask workflow currentSession.
 	result := executionStage continueWorkflow.
 	activeTask := aTask parentTask.
+	
+	activeTask ifNotNil: [ 
+		(activeTask belongsToWorkflow: aTask workflow) ifTrue: [  
+			activeTask workSession: aTask workSession ].
+	].
 	
 	^result
 ]
@@ -95,7 +102,7 @@ PtyWorker >> process: anObject [
 PtyWorker >> runInitialTask: aTask usingStartStage: aTaskStartStage [
 
 	[	aTask startNewSession.
-		[self continueWorkflowWithTask: aTask usingStartStage: aTaskStartStage] 
+		[aTaskStartStage startInActiveWorkflowBy: self] 
 			on: Error do: [:err | self notifyUserAbout: err]
 	] on: PtyUserRequest do: [:request | ].
 	
@@ -110,11 +117,6 @@ PtyWorker >> servesWorkflow: aWorkflow [
 { #category : #accessing }
 PtyWorker >> settings [ 
 	^workplace settings
-]
-
-{ #category : #controlling }
-PtyWorker >> startWorkflowWithTask: aTask [
-	self startWorkflowWithTask: aTask usingStartStage: (PtyTaskStartStage for: aTask)
 ]
 
 { #category : #controlling }

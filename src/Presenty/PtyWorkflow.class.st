@@ -3,6 +3,7 @@ Class {
 	#superclass : #Object,
 	#instVars : [
 		'parentWorkflow',
+		'initialTask',
 		'currentTasks',
 		'spawnedWorkflows',
 		'worker',
@@ -13,7 +14,9 @@ Class {
 
 { #category : #controlling }
 PtyWorkflow >> activateControlPanel [
-	self controlPanel activateOnPanel
+	currentTasks 
+		ifEmpty: [ spawnedWorkflows do: [:each | each activateControlPanel ]]
+		ifNotEmpty: [ self controlPanel activateOnPanel ]
 ]
 
 { #category : #accessing }
@@ -126,13 +129,23 @@ PtyWorkflow >> includesTask: aTask [
 	^currentTasks includes: aTask
 ]
 
+{ #category : #accessing }
+PtyWorkflow >> initialTask [
+	^ initialTask
+]
+
+{ #category : #accessing }
+PtyWorkflow >> initialTask: anObject [
+	initialTask := anObject
+]
+
 { #category : #initialization }
 PtyWorkflow >> initialize [
 	super initialize.
 	
 	currentTasks := OrderedCollection new.
 	spawnedWorkflows := OrderedCollection new.
-	self startNewSession
+"	self startNewSession"
 ]
 
 { #category : #testing }
@@ -173,6 +186,17 @@ PtyWorkflow >> postCopy [
 	spawnedWorkflows := spawnedWorkflows copy
 ]
 
+{ #category : #printing }
+PtyWorkflow >> printOn: aStream [
+	super printOn: aStream.
+	
+	aStream nextPut: $(.
+	initialTask 
+		ifNil: [ 	aStream nextPutAll: 'workplace' ]
+		ifNotNil: [ 	initialTask displayStringOn: aStream ].
+	aStream nextPut: $).
+]
+
 { #category : #controlling }
 PtyWorkflow >> registerNewTask: aTask [
 	currentTasks add: aTask
@@ -188,7 +212,7 @@ PtyWorkflow >> removeAllTasks [
 { #category : #controlling }
 PtyWorkflow >> removeSpawnedWorkflow: aWorkflow [
 
-	spawnedWorkflows remove: aWorkflow
+	spawnedWorkflows remove: aWorkflow ifAbsent: [ ]
 ]
 
 { #category : #controlling }
@@ -197,22 +221,32 @@ PtyWorkflow >> removeTask: aTask [
 ]
 
 { #category : #controlling }
-PtyWorkflow >> resumeSpawnedWorkflow: aSpawnedWorkflow [
+PtyWorkflow >> restoreOwnStateFrom: aTemplateWorkflow [
+	parentWorkflow = aTemplateWorkflow parentWorkflow ifFalse: [ 
+		PtyInvalidWorkflowOperationError signal ].
+		
+	currentTasks := aTemplateWorkflow currentTasks copy.
+	spawnedWorkflows := aTemplateWorkflow spawnedWorkflows copy
+]
 
+{ #category : #controlling }
+PtyWorkflow >> resumeSpawnedWorkflow: aSpawnedWorkflow [	
+	parentWorkflow ifNotNil: [ parentWorkflow resumeSpawnedWorkflow: self ].
+	aSpawnedWorkflow spawningTask ifNotNil: [:spawningTask |
+		"spawningTask belongs to me and it must be always enabled for its spawned workflow.
+		If it is already enabled then no need to recover my state. 
+		Otherwise resume me to the state when spawned workflow was started"
+		spawningTask isEnabled ifFalse: [ 
+			self restoreOwnStateFrom: spawningTask initialWorkflow.
+			self registerNewTask: spawningTask ]].
 	(spawnedWorkflows includes: aSpawnedWorkflow) ifFalse: [ 
 		spawnedWorkflows add: aSpawnedWorkflow ].
 	
-	parentWorkflow ifNotNil: [ parentWorkflow resumeSpawnedWorkflow: self ]
 ]
 
 { #category : #controlling }
 PtyWorkflow >> resumeWorkflow: aTemplateWorkflow [
-
-	currentTasks := aTemplateWorkflow currentTasks copy.
-	spawnedWorkflows := aTemplateWorkflow spawnedWorkflows copy.
-	parentWorkflow notNil & (parentWorkflow ~= aTemplateWorkflow parentWorkflow) ifTrue: [ 
-		parentWorkflow removeSpawnedWorkflow: self ].
-	parentWorkflow := aTemplateWorkflow parentWorkflow.
+	self restoreOwnStateFrom: aTemplateWorkflow.
 	parentWorkflow ifNotNil: [ parentWorkflow resumeSpawnedWorkflow: self ]
 ]
 
@@ -228,9 +262,10 @@ PtyWorkflow >> settings [
 ]
 
 { #category : #controlling }
-PtyWorkflow >> spawnNew [
+PtyWorkflow >> spawnNewFor: aTask [
 	| newWorkflow |
 	newWorkflow := self class new.
+	newWorkflow initialTask: aTask.
 	newWorkflow parentWorkflow: self.
 	newWorkflow worker: worker.
 	spawnedWorkflows add: newWorkflow.
@@ -245,6 +280,11 @@ PtyWorkflow >> spawnedWorkflows [
 { #category : #accessing }
 PtyWorkflow >> spawnedWorkflows: anObject [
 	spawnedWorkflows := anObject
+]
+
+{ #category : #accessing }
+PtyWorkflow >> spawningTask [
+	^initialTask ifNotNil: [ initialTask parentTask ]
 ]
 
 { #category : #controlling }

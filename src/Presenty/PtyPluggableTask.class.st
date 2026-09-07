@@ -39,6 +39,12 @@ PtyPluggableTask >> body [
 ]
 
 { #category : #printing }
+PtyPluggableTask >> displayStringOn: aStream [
+		
+	blockBody printOn: aStream
+]
+
+{ #category : #printing }
 PtyPluggableTask >> printOn: aStream [
 	super printOn: aStream.
 	

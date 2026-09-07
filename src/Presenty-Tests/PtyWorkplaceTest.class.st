@@ -71,7 +71,7 @@ PtyWorkplaceTest >> testFindActiveWorkflow [
 	mainWorkflow := Mock new.
 	workplace currentWorkflow: mainWorkflow.
 	
-	foundWorkflow := workplace findActiveWorkflowOrCreateNewOne.
+	foundWorkflow := workplace findActiveWorkflowOrCreateNewOneFor: #task.
 	
 	foundWorkflow should beReturnedFrom: [ mainWorkflow findActiveWorkflowIfNone: Any ]
 ]
@@ -84,9 +84,9 @@ PtyWorkplaceTest >> testFindActiveWorkflowWhenItDoesNotExist [
 	workplace currentWorkflow: mainWorkflow.
 	(mainWorkflow stub findActiveWorkflowIfNone: Any) will: [ :noneBlock | noneBlock value ].
 	
-	foundWorkflow := workplace findActiveWorkflowOrCreateNewOne.
+	foundWorkflow := workplace findActiveWorkflowOrCreateNewOneFor: #task.
 	
-	foundWorkflow should beReturnedFrom: [ mainWorkflow spawnNew ].
+	foundWorkflow should beReturnedFrom: [ mainWorkflow spawnNewFor: #task ].
 	foundWorkflow should receive worker: [ :worker | worker workplace = workplace ]
 ]
 

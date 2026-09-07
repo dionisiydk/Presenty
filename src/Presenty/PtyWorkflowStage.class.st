@@ -34,7 +34,9 @@ PtyWorkflowStage >> startInActiveWorkflowBy: aWorker [
 PtyWorkflowStage >> startInInactiveWorkflowBy: aWorker [
 	"Using this method the system initiates given stage of workflow execution (receiver) from the outside of Presenty context. 
 	For example when new task is requested from playground Presenty will start new worker process"
-	self subclassResponsibility 
+	aWorker startWorkflowWithTask: task usingStartStage: self.
+	
+	^PtyTaskExecutionFutureResult of: task
 ]
 
 { #category : #accessing }

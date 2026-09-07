@@ -25,5 +25,5 @@ PtyWorkSessionTest >> testStopWorkflow [
 
 	session stopWorkflow: workflow.
 	
-	workflow should receive resumeWorkflow: initialWorkflow
+	workflow should receive restoreOwnStateFrom: initialWorkflow
 ]

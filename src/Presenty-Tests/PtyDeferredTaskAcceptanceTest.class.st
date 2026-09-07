@@ -58,6 +58,20 @@ PtyDeferredTaskAcceptanceTest >> testExecutionRetryFromOutsideOfWorkplace [
 ]
 
 { #category : #tests }
+PtyDeferredTaskAcceptanceTest >> testResultDeliveryFromAnotherTask [
+	| task result taskResult reliveryBlockEnds |
+	taskResult := #result.
+	task := [ taskResult ] asTask beDeferred.
+	
+	user executeTask: [ result := user executeTask: task] asTask.
+	result should be: nil.
+	user executeTask: [ task deliverResult: #newResult. reliveryBlockEnds := true ] asTask.
+	
+	result should be: #newResult.
+	reliveryBlockEnds should not be: true
+]
+
+{ #category : #tests }
 PtyDeferredTaskAcceptanceTest >> testResultDeliveryFromOutsideOfWorkplace [ 
 	| task result taskResult |
 	taskResult := #result.
