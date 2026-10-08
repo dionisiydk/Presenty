@@ -79,7 +79,7 @@ PtyWorkplace >> findActiveWorkflowIfNone: noneBlock [
 { #category : #'task execution' }
 PtyWorkplace >> findActiveWorkflowOrCreateNewOneFor: aTask [
 	"Active workflow is one which task is currently executing.
-	When it is not exist we create new one with new servicing worker.
+	When it does not exist we create new one with new servicing worker.
 	For example user can request new task from playground which is not managed by Presenty context.
 	In that case new workflow and new worker will be created to represent this activity"
 

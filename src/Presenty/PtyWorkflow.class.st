@@ -293,9 +293,24 @@ PtyWorkflow >> startNewSession [
 ]
 
 { #category : #controlling }
+PtyWorkflow >> stopSession [
+
+	currentSession stopWorkflow: self
+]
+
+{ #category : #controlling }
 PtyWorkflow >> stopTask: aTask [
 	
-	worker executeWorkflowStage: (PtyTaskStopStage for: aTask)
+	worker isActive ifTrue: [ 
+	"	aTask stopWorkSession."
+		currentSession stopWorkflow: self.
+		worker stopWorkSession.
+		^self
+	].
+	
+	worker stopWorkSession.
+	"aTask stopWorkSession"
+	currentSession stopWorkflow: self
 ]
 
 { #category : #controlling }

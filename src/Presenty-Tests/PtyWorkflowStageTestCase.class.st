@@ -27,3 +27,15 @@ PtyWorkflowStageTestCase >> setUp [
 	task := Mock new.
 	workflowStage := self createWorkflowStage
 ]
+
+{ #category : #tests }
+PtyWorkflowStageTestCase >> testExecutionPriority [
+
+	workflowStage executionPriority should beReturnedFrom: [ task executionPriority ]
+]
+
+{ #category : #tests }
+PtyWorkflowStageTestCase >> testWorkflow [
+
+	workflowStage workflow should beReturnedFrom: [ task workflow ]
+]

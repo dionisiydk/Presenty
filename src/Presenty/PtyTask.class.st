@@ -288,6 +288,12 @@ PtyTask >> requestExecution [
 ]
 
 { #category : #controlling }
+PtyTask >> resumeContinuation [
+	
+	continuation value
+]
+
+{ #category : #controlling }
 PtyTask >> resumeInitialWorkflow [
 
 	workflow resumeWorkflow: initialWorkflow.
@@ -323,6 +329,12 @@ PtyTask >> returnStrategy: anObject [
 	returnStrategy := anObject
 ]
 
+{ #category : #controlling }
+PtyTask >> saveContinuation [
+
+	^Continuation currentDo: [ :cc | continuation := cc ]
+]
+
 { #category : #accessing }
 PtyTask >> settings [
 	^workflow settings
@@ -345,16 +357,6 @@ PtyTask >> spawningParentTask [
 	^parentTask spawningParentTask
 ]
 
-{ #category : #execution }
-PtyTask >> startExecution [ 
-	
-	| result |
-	self prepareExecutionWorkflow.
-	result := self body.
-	self prepareReturnWorkflow.
-	^result
-]
-
 { #category : #controlling }
 PtyTask >> startNewSession [ 
 	workSession := workflow startNewSession
@@ -369,7 +371,7 @@ PtyTask >> stopExecution [
 { #category : #execution }
 PtyTask >> stopWorkSession [
 	
-	workSession stopWorkflow: workflow
+	workflow stopSession.
 ]
 
 { #category : #accessing }

@@ -10,31 +10,28 @@ PtyTaskStartStageTest >> createWorkflowStage [
 ]
 
 { #category : #tests }
-PtyTaskStartStageTest >> testContinueWorkflow [
+PtyTaskStartStageTest >> testContinueWorkflowPreparesReturnWorkflowAtTheEnd [
+
+	workflowStage continueWorkflow.	
+	
+	[ task body. task prepareReturnWorkflow ] should beDoneInOrder
+]
+
+{ #category : #tests }
+PtyTaskStartStageTest >> testContinueWorkflowReturnsTaskResult [
 
 	| result |
 	result := workflowStage continueWorkflow.	
 	
-	result should beReturnedFrom: [ task startExecution ]
+	result should beReturnedFrom: [ task body ]
 ]
 
 { #category : #tests }
-PtyTaskStartStageTest >> testStartingInActiveWorkflow [
+PtyTaskStartStageTest >> testPrepareWorkflow [
+	"This method will be resumed with continuation. 
+	Therefore it is important that the inital workflow preparation is done first.
+	The continuation should not retry it"
+	workflowStage prepareWorkflow.
 
-	| result |
-	result := workflowStage startInActiveWorkflowBy: worker.	
-	
-	result should beReturnedFrom: [ 
-		worker continueWorkflowWithTask: task usingStartStage: workflowStage ]
-]
-
-{ #category : #tests }
-PtyTaskStartStageTest >> testStartingInInactiveWorkflow [
-
-	| result |
-	result := workflowStage startInInactiveWorkflowBy: worker.	
-	
-	result should beInstanceOf: PtyTaskExecutionFutureResult.
-	result task be: task.
-	worker should receive startWorkflowWithTask: task usingStartStage: workflowStage
+	[ task prepareExecutionWorkflow. task saveContinuation ] should beDoneInOrder 
 ]

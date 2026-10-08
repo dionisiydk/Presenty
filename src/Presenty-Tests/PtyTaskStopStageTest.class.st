@@ -15,7 +15,7 @@ PtyTaskStopStageTest >> testStartingInActiveWorkflow [
 	workflowStage startInActiveWorkflowBy: worker.	
 	
 	[task stopWorkSession.
-	worker stopWorkflow] should beDoneInOrder
+	worker stopWorkSession] should beDoneInOrder
 ]
 
 { #category : #tests }
@@ -23,6 +23,6 @@ PtyTaskStopStageTest >> testStartingInInactiveWorkflow [
 
 	workflowStage startInInactiveWorkflowBy: worker.	
 	
-	[worker stopWorkflow.
+	[worker stopWorkSession.
 	task stopWorkSession] should beDoneInOrder
 ]

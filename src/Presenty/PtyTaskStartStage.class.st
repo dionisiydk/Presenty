@@ -6,11 +6,17 @@ Class {
 
 { #category : #controlling }
 PtyTaskStartStage >> continueWorkflow [
-	^task startExecution
+	| result |
+	result := task body.
+	task prepareReturnWorkflow.
+	^result
 ]
 
-{ #category : #execution }
-PtyTaskStartStage >> startInActiveWorkflowBy: aWorker [
-
-	^aWorker continueWorkflowWithTask: task usingStartStage: self
+{ #category : #controlling }
+PtyTaskStartStage >> prepareWorkflow [
+	"This method will be resumed with continuation. 
+	Therefore it is important that the inital workflow preparation is done first.
+	The continuation should never retry it"
+	task prepareExecutionWorkflow.
+	task saveContinuation.
 ]

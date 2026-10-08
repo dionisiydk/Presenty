@@ -16,11 +16,16 @@ PtyTaskResultDeliveryStage class >> for: aTask withResult: anObject [
 { #category : #controlling }
 PtyTaskResultDeliveryStage >> continueWorkflow [
 	
+	^result
+]
+
+{ #category : #controlling }
+PtyTaskResultDeliveryStage >> prepareWorkflow [
+	"The continuation must be resumed at the end because it will restore the original context of the task and then nothing after #resumeContinuation call will be executed"
 	task resumeInitialWorkflow.
 	task prepareExecutionWorkflow.
 	task prepareReturnWorkflow.
-	
-	^result
+	task resumeContinuation
 ]
 
 { #category : #accessing }

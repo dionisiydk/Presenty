@@ -23,20 +23,28 @@ PtyWorkflowStage >> continueWorkflow [
 	self subclassResponsibility 
 ]
 
-{ #category : #execution }
-PtyWorkflowStage >> startInActiveWorkflowBy: aWorker [
-	"Using this method the system continues the workflow execution from the current stage to new one (receiver).
-	For example when new task is requested from another task Presenty will simply execute it in current process"
-	self subclassResponsibility 
+{ #category : #accessing }
+PtyWorkflowStage >> executionPriority [
+	^task executionPriority
 ]
 
 { #category : #execution }
-PtyWorkflowStage >> startInInactiveWorkflowBy: aWorker [
-	"Using this method the system initiates given stage of workflow execution (receiver) from the outside of Presenty context. 
-	For example when new task is requested from playground Presenty will start new worker process"
-	aWorker startWorkflowWithTask: task usingStartStage: self.
+PtyWorkflowStage >> prepareWorkflow [
+	self subclassResponsibility 
+]
+
+{ #category : #printing }
+PtyWorkflowStage >> printOn: aStream [
+	super printOn: aStream.
 	
-	^PtyTaskExecutionFutureResult of: task
+	aStream nextPut: $(.
+	task displayStringOn: aStream.
+	aStream nextPut: $).
+]
+
+{ #category : #execution }
+PtyWorkflowStage >> startNewSession [
+	task startNewSession
 ]
 
 { #category : #accessing }
@@ -47,4 +55,9 @@ PtyWorkflowStage >> task [
 { #category : #accessing }
 PtyWorkflowStage >> task: anObject [
 	task := anObject
+]
+
+{ #category : #accessing }
+PtyWorkflowStage >> workflow [
+	^task workflow
 ]

@@ -239,31 +239,6 @@ PtyTaskTest >> testDetachToolsFromPanel [
 ]
 
 { #category : #tests }
-PtyTaskTest >> testExecutionShouldPassThrough3Steps [
-	
-	task stub.
-	
-	task startExecution.
-
-	[task prepareExecutionWorkflow.
-	task body.
-	task prepareReturnWorkflow] should beDoneInOrder 
-]
-
-{ #category : #tests }
-PtyTaskTest >> testExecutionShouldReturnResultOfBody [
-
-	| result |
-	task := [ #done ] asTask.
-	task executionStrategy: Mock new.
-	task workflow: Mock new.
-	
-	result := task startExecution.
-
-	result should be: #done
-]
-
-{ #category : #tests }
 PtyTaskTest >> testHasDefaultExecutionStrategy [
 
 	task executionStrategy class should equal: task defaultExecutionStrategy class
@@ -558,13 +533,9 @@ PtyTaskTest >> testStopExecution [
 { #category : #tests }
 PtyTaskTest >> testStopWorkSession [
 
-	| session |
-	session := Mock new.
-	task workSession: session.
-
 	task stopWorkSession.
 
-	session should receive stopWorkflow: workflow
+	workflow should receive stopSession
 ]
 
 { #category : #tests }

@@ -16,17 +16,9 @@ PtyTaskDefermentStageTest >> testContinueWorkflow [
 ]
 
 { #category : #tests }
-PtyTaskDefermentStageTest >> testStartingInActiveWorkflow [
+PtyTaskDefermentStageTest >> testPrepareWorkflowShouldSaveContinuation [
 
-	| result |
-	result := workflowStage startInActiveWorkflowBy: worker.	
+	workflowStage prepareWorkflow.
 	
-	result should beReturnedFrom: [ 
-		worker continueWorkflowWithTask: task usingStartStage: workflowStage ]
-]
-
-{ #category : #tests }
-PtyTaskDefermentStageTest >> testStartingInInactiveWorkflowShouldDoNothing [
-
-	workflowStage startInInactiveWorkflowBy: nil
+	task should receive saveContinuation
 ]

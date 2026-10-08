@@ -21,11 +21,12 @@ PtyTaskResultDeliveryStageTest >> testContinueWorkflow [
 ]
 
 { #category : #tests }
-PtyTaskResultDeliveryStageTest >> testContinueWorkflowShouldPassTaskThrough3Steps [
-
-	workflowStage continueWorkflow.	
+PtyTaskResultDeliveryStageTest >> testPrepareWorkflowShouldSimulateItsStateLikeIfTaskWouldBeExecuted [
+	"The continuation must be resumed at the end because it will restore the original context of the task and then nothing after #resumeContinuation call will be executed"
+	workflowStage prepareWorkflow.	
 	
 	[task resumeInitialWorkflow.
 	task prepareExecutionWorkflow.
-	task prepareReturnWorkflow] should beDoneInOrder 
+	task prepareReturnWorkflow.
+	task resumeContinuation] should beDoneInOrder 
 ]

@@ -4,7 +4,8 @@ Class {
 	#instVars : [
 		'workplace',
 		'process',
-		'activeTask'
+		'activeTask',
+		'activeWorkflowStage'
 	],
 	#category : #'Presenty-Tasks'
 }
@@ -18,36 +19,33 @@ PtyWorker class >> inWorkplace: aWorkplace [
 
 { #category : #accessing }
 PtyWorker >> activeTask [
-	^ activeTask
-]
-
-{ #category : #accessing }
-PtyWorker >> activeTask: aTask [
-	activeTask := aTask
+	^ activeWorkflowStage ifNotNil: [ activeWorkflowStage task ]
 ]
 
 { #category : #accessing }
 PtyWorker >> activeWorkflow [
-	^ activeTask workflow
+	^ activeWorkflowStage workflow
+]
+
+{ #category : #accessing }
+PtyWorker >> activeWorkflowStage [
+	^ activeWorkflowStage
+]
+
+{ #category : #accessing }
+PtyWorker >> activeWorkflowStage: anObject [
+	activeWorkflowStage := anObject
 ]
 
 { #category : #controlling }
-PtyWorker >> continueWorkflowWithTask: aTask usingStartStage: aTaskStartStage [
+PtyWorker >> continueWorkflowIntoStage: aWorkflowStage [
 	
-	| executionStage result |
-	
-	executionStage := aTask currentWorkflowStageStartedWith: aTaskStartStage.	
-	
-	activeTask := aTask.
-	activeTask workSession: aTask workflow currentSession.
-	result := executionStage continueWorkflow.
-	activeTask := aTask parentTask.
-	
-	activeTask ifNotNil: [ 
-		(activeTask belongsToWorkflow: aTask workflow) ifTrue: [  
-			activeTask workSession: aTask workSession ].
-	].
-	
+	| result previousStage |
+	previousStage := activeWorkflowStage.
+	activeWorkflowStage := aWorkflowStage.
+	activeWorkflowStage prepareWorkflow.
+	result := activeWorkflowStage continueWorkflow.
+	activeWorkflowStage := previousStage.
 	^result
 ]
 
@@ -59,13 +57,13 @@ PtyWorker >> defaultTaskExecutionPriority [
 { #category : #controlling }
 PtyWorker >> executeWorkflowStage: aWorkflowStage [
 	
-	| futureResult |
-	self isActive ifTrue: [ ^aWorkflowStage startInActiveWorkflowBy: self].
-	
-	futureResult := aWorkflowStage startInInactiveWorkflowBy: self.
+	self isActive ifTrue: [ ^self continueWorkflowIntoStage: aWorkflowStage ].
+	"Here it is the case where the system initiates aWorkflowStage from the outside of Presenty context. For example when new task is requested from the playground Presenty will start new worker process"
+	self startWorkSessionFor: aWorkflowStage.
 	^self isAnotherWorkerActive 
 		ifTrue: [ PtyUserRequest signal ]
-		ifFalse: [ futureResult ]
+		ifFalse: [ PtyTaskExecutionFutureResult of: aWorkflowStage task ].
+		
 ]
 
 { #category : #testing }
@@ -99,19 +97,19 @@ PtyWorker >> process: anObject [
 ]
 
 { #category : #controlling }
-PtyWorker >> runInitialTask: aTask usingStartStage: aTaskStartStage [
+PtyWorker >> runWorkSessionFor: aWorkflowStage [
 
-	[	aTask startNewSession.
-		[aTaskStartStage startInActiveWorkflowBy: self] 
+	[	aWorkflowStage startNewSession.
+		[ self continueWorkflowIntoStage: aWorkflowStage ] 
 			on: Error do: [:err | self notifyUserAbout: err]
 	] on: PtyUserRequest do: [:request | ].
 	
-	workplace endWorkSessionFor: aTask workflow
+	workplace endWorkSessionFor: aWorkflowStage workflow
 ]
 
 { #category : #testing }
 PtyWorker >> servesWorkflow: aWorkflow [
-	^activeTask notNil and: [activeTask workflow = aWorkflow]
+	^activeWorkflowStage notNil and: [ activeWorkflowStage workflow = aWorkflow ]
 ]
 
 { #category : #accessing }
@@ -120,16 +118,16 @@ PtyWorker >> settings [
 ]
 
 { #category : #controlling }
-PtyWorker >> startWorkflowWithTask: aTask usingStartStage: aTaskStartStage [
+PtyWorker >> startWorkSessionFor: aWorkflowStage [
 	
-	process := [ self runInitialTask: aTask usingStartStage: aTaskStartStage ] newProcess.
-	process name: 'Worker process of ', aTask printString.
-	process priority: aTask executionPriority.
+	process := [ self runWorkSessionFor: aWorkflowStage ] newProcess.
+	process name: 'WorkSession for ', aWorkflowStage printString.
+	process priority: aWorkflowStage executionPriority.
 	process resume
 ]
 
 { #category : #controlling }
-PtyWorker >> stopWorkflow [
+PtyWorker >> stopWorkSession [
 	process ifNotNil: [process terminate]
 ]
 

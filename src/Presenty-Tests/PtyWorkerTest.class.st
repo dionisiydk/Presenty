@@ -3,7 +3,7 @@ Class {
 	#superclass : #PtyWorkplaceTestCase,
 	#instVars : [
 		'worker',
-		'task'
+		'workflowStage'
 	],
 	#category : #'Presenty-Tests-Tasks'
 }
@@ -14,57 +14,72 @@ PtyWorkerTest >> setUp [
 	
 	workplace := Mock new.
 	worker := PtyWorker inWorkplace: workplace.
-	task := Mock new.
-	task stub executionPriority willReturn: Processor activePriority + 1
+	workflowStage := Mock new.
+	workflowStage stub executionPriority willReturn: Processor activePriority + 1
+]
+
+{ #category : #tests }
+PtyWorkerTest >> testActiveTask [
+		
+	worker activeWorkflowStage: workflowStage.
+		
+	worker activeTask should beReturnedFrom: [ workflowStage task ]
+]
+
+{ #category : #tests }
+PtyWorkerTest >> testActiveTaskWhenNoStage [
+		
+	worker activeWorkflowStage: nil.
+		
+	worker activeTask should be: nil
 ]
 
 { #category : #tests }
 PtyWorkerTest >> testActiveWorkflow [
 		
-	worker activeTask: task.
+	worker activeWorkflowStage: workflowStage.
 		
-	worker activeWorkflow should beReturnedFrom: [ task workflow ]
+	worker activeWorkflow should beReturnedFrom: [ workflowStage workflow ]
 ]
 
 { #category : #tests }
-PtyWorkerTest >> testContinueWithTaskShouldResetActiveTaskAtTheEnd [
-		
-	worker activeTask: task.
-		
-	worker continueWorkflowWithTask: task usingStartStage: #startTaskStage.
+PtyWorkerTest >> testContinueWorkflowShouldPrepareWorkflowBeforeStageExecution [
 	
-	worker activeTask should beReturnedFrom: [ task parentTask ]
+	worker activeWorkflowStage: workflowStage.
+		
+	worker continueWorkflowIntoStage: workflowStage.
+	
+	[ workflowStage prepareWorkflow. workflowStage continueWorkflow ] should beDoneInOrder
 ]
 
 { #category : #tests }
-PtyWorkerTest >> testContinueWithTaskShouldSetActiveTaskBeforeRun [
+PtyWorkerTest >> testContinueWorkflowShouldRestorePreviousStageAtTheEnd [
+		
+	worker activeWorkflowStage: #previousStage.
+		
+	worker continueWorkflowIntoStage: workflowStage.
 	
-	| currentWorkflowStage |
-	currentWorkflowStage := Mock new.
-	(task stub currentWorkflowStageStartedWith: #startTaskStage) willReturn: currentWorkflowStage.	
-
-	currentWorkflowStage stub continueWorkflow when: [ worker activeTask ] is: task.	
-	worker continueWorkflowWithTask: task usingStartStage: #startTaskStage
+	worker activeWorkflowStage should be: #previousStage
 ]
 
 { #category : #tests }
-PtyWorkerTest >> testContinueWithTaskShouldUseCurrentWorkflowStageOfThisTask [
+PtyWorkerTest >> testContinueWorkflowShouldReturnResultOfNewStageExecution [
 	
-	| currentWorkflowStage result |
-	currentWorkflowStage := Mock new.
-	(task stub currentWorkflowStageStartedWith: #startTaskStage) willReturn: currentWorkflowStage.	
+	| result |
+	worker activeWorkflowStage: workflowStage.
 		
-	result := worker continueWorkflowWithTask: task usingStartStage: #startTaskStage.
+	result := worker continueWorkflowIntoStage: workflowStage.
 	
-	result should beReturnedFrom: [currentWorkflowStage continueWorkflow]
+	result should beReturnedFrom: [ workflowStage continueWorkflow ]
 ]
 
 { #category : #tests }
-PtyWorkerTest >> testContinueWithTaskUsingGivenExecutionStage [
-		
-	worker continueWorkflowWithTask: task usingStartStage: #taskStartStage.
+PtyWorkerTest >> testContinueWorkflowShouldSetNewActiveStageBeforeExecution [
 	
-	task should receive currentWorkflowStageStartedWith: #taskStartStage.
+	worker activeWorkflowStage: #previousStage.
+
+	workflowStage stub prepareWorkflow when: [ worker activeWorkflowStage ] is: workflowStage.	
+	worker continueWorkflowIntoStage: workflowStage.
 ]
 
 { #category : #tests }
@@ -79,8 +94,8 @@ PtyWorkerTest >> testDefaultTaskExecutionPriority [
 { #category : #tests }
 PtyWorkerTest >> testDoesNotServeWorkflowDifferentThanActiveTask [
 		
-	worker activeTask: task.
-	task stub workflow willReturn: #anotherWorkflow. 
+	worker activeWorkflowStage: workflowStage.
+	workflowStage stub workflow willReturn: #anotherWorkflow. 
 		
 	worker should not be servesWorkflow: #workflow
 ]
@@ -88,65 +103,56 @@ PtyWorkerTest >> testDoesNotServeWorkflowDifferentThanActiveTask [
 { #category : #tests }
 PtyWorkerTest >> testDoesNotServeWorkflowWhenNoActiveTask [
 		
-	worker activeTask should be: nil.
+	worker activeWorkflowStage should be: nil.
 		
 	worker should not be servesWorkflow: #workflow
 ]
 
 { #category : #tests }
-PtyWorkerTest >> testInitialTaskExecution [
+PtyWorkerTest >> testInitialStageExecution [
 	worker stub.
-	task stub workflow willReturn: #workflow.
+	workflowStage stub workflow willReturn: #workflow.
 	
-	worker runInitialTask: task usingStartStage: #startTaskStage.
+	worker runWorkSessionFor: workflowStage.
 	
-	[worker continueWorkflowWithTask: task usingStartStage: #startTaskStage.
+	[workflowStage startNewSession.
+	worker continueWorkflowIntoStage: workflowStage.
 	workplace endWorkSessionFor: #workflow ] should beDoneInOrder 
 ]
 
 { #category : #tests }
-PtyWorkerTest >> testInitialTaskExecutionShouldExpectUserRequest [
+PtyWorkerTest >> testInitialStageExecutionShouldExpectUserRequest [
 
 	| request |
 	request := PtyUserRequest new.
-	(worker stub continueWorkflowWithTask: task usingStartStage: #startTaskStage) willRaise: request.
+	(worker stub continueWorkflowIntoStage: workflowStage) willRaise: request.
 		
-	worker runInitialTask: task usingStartStage: #startTaskStage.
+	worker runWorkSessionFor: workflowStage.
 	
 	workplace should receive endWorkSessionFor: Any.
 	worker should not receive notifyUserAbout: request
 ]
 
 { #category : #tests }
-PtyWorkerTest >> testInitialTaskExecutionShouldFirstStartNewSession [
-	worker stub.
-	
-	worker runInitialTask: task usingStartStage: #startTaskStage.
-
-	[task startNewSession.	
-	worker continueWorkflowWithTask: task usingStartStage: #startTaskStage] should beDoneInOrder 
-]
-
-{ #category : #tests }
-PtyWorkerTest >> testInitialTaskFailedExecution [
+PtyWorkerTest >> testInitialStageFailedExecution [
 
 	| error |
 	error := Error new.
-	(worker stub continueWorkflowWithTask: task usingStartStage: #startTaskStage) willRaise: error.
+	(worker stub continueWorkflowIntoStage: workflowStage) willRaise: error.
 		
-	[worker runInitialTask: task usingStartStage: #startTaskStage] should raise: error.
+	[worker runWorkSessionFor: workflowStage] should raise: error.
 	worker should receive notifyUserAbout: error
 ]
 
 { #category : #tests }
-PtyWorkerTest >> testInitialTaskFailedExecutionNotificationShouldExpectNewUserRequests [
+PtyWorkerTest >> testInitialStageFailedExecutionShouldExpectNewUserRequestsFromErrorNotification [
 
 	| request |
-	(worker stub continueWorkflowWithTask: task usingStartStage: #startTaskStage) willRaise: Error new.
+	(worker stub continueWorkflowIntoStage: workflowStage) willRaise: Error new.
 	request := PtyUserRequest new.
 	(worker stub notifyUserAbout: Any) willRaise: request.
 		
-	worker runInitialTask: task usingStartStage: #startTaskStage.
+	worker runWorkSessionFor: workflowStage.
 	
 	workplace should receive endWorkSessionFor: Any.
 	worker should not receive notifyUserAbout: request
@@ -221,8 +227,8 @@ PtyWorkerTest >> testNotifyingUserAboutError [
 { #category : #tests }
 PtyWorkerTest >> testServesWorkflowOfActiveTask [
 		
-	worker activeTask: task.
-	task stub workflow willReturn: #workflow. 
+	worker activeWorkflowStage: workflowStage.
+	workflowStage stub workflow willReturn: #workflow. 
 		
 	worker should be servesWorkflow: #workflow
 ]
@@ -234,42 +240,42 @@ PtyWorkerTest >> testSettings [
 ]
 
 { #category : #tests }
-PtyWorkerTest >> testStartingWorkflowShouldBeDoneInBackgroundProcess [
+PtyWorkerTest >> testStartingWorkSessionShouldRunWorkflowInBackgroundProcess [
 	worker stub.
 			
-	worker startWorkflowWithTask: task usingStartStage: #taskStartStage.
+	worker startWorkSessionFor: workflowStage.
 
-	(worker should receive continueWorkflowWithTask: task usingStartStage: #taskStartStage) inAnotherProcess
+	(worker should receive continueWorkflowIntoStage: workflowStage) inAnotherProcess
 ]
 
 { #category : #tests }
-PtyWorkerTest >> testStartingWorkflowShouldUseTaskExecutionPriority [
+PtyWorkerTest >> testStartingWorkSessionShouldUseTaskExecutionPriority [
 	worker stub.
 	
-	worker startWorkflowWithTask: task usingStartStage: #taskStartStage.
+	worker startWorkSessionFor: workflowStage.
 	
-	(worker should receive continueWorkflowWithTask: task usingStartStage: #taskStartStage)
-		inProcessWhich priority should equal: task executionPriority
+	(worker should receive continueWorkflowIntoStage:  workflowStage)
+		inProcessWhich priority should equal: workflowStage executionPriority
 ]
 
 { #category : #tests }
-PtyWorkerTest >> testStoppingWorkflow [
+PtyWorkerTest >> testStoppingWorkSession [
 
 	| process |
 	process := Mock new.
 
 	worker process: process.	
-	worker stopWorkflow.
+	worker stopWorkSession.
 	
 	process should receive terminate
 ]
 
 { #category : #tests }
-PtyWorkerTest >> testStoppingWorkflowWhenNoProcess [
+PtyWorkerTest >> testStoppingWorkSessionWhenNoProcess [
 
 	worker process: nil.
 	
-	worker stopWorkflow
+	worker stopWorkSession
 ]
 
 { #category : #tests }
@@ -279,9 +285,10 @@ PtyWorkerTest >> testWorkflowStageExecutionFromAnotherActiveWorker [
 	worker stub isActive willReturn: false.
 	worker stub isAnotherWorkerActive willReturn: true.
 	stage := Mock new.
+	(worker stub startWorkSessionFor: stage) willReturnYourself.
 	
 	[worker executeWorkflowStage: stage] should raise: PtyUserRequest.
-	stage should receive startInInactiveWorkflowBy: worker
+	worker should receive startWorkSessionFor: stage
 ]
 
 { #category : #tests }
@@ -291,10 +298,11 @@ PtyWorkerTest >> testWorkflowStageExecutionFromOutsideOfWorkplace [
 	worker stub isActive willReturn: false.
 	worker stub isAnotherWorkerActive willReturn: false.
 	stage := Mock new.
+	(worker stub startWorkSessionFor: stage) willReturnYourself.	
 	
 	result := worker executeWorkflowStage: stage.
 	
-	result should beReturnedFrom: [ stage startInInactiveWorkflowBy: worker]
+	result should beKindOf: PtyTaskExecutionFutureResult
 ]
 
 { #category : #tests }
@@ -306,5 +314,5 @@ PtyWorkerTest >> testWorkflowStageExecutionItsActiveWorker [
 	
 	result := worker executeWorkflowStage: stage.
 	
-	result should beReturnedFrom: [ stage startInActiveWorkflowBy: worker]
+	result should beReturnedFrom: [ worker continueWorkflowIntoStage: stage ]
 ]
